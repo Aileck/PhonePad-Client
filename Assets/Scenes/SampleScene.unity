@@ -1502,7 +1502,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &918432181
 Transform:
   m_ObjectHideFlags: 0
@@ -1530,6 +1530,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 145385370cbb367438ea4ae3bc086d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameplayActions: {fileID: 0}
+  leftStickAction:
+    m_Name: 
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 1c73f089-a291-417b-b788-7b133ec3f047
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
   joystickBackground: {fileID: 1328875432}
   joystickKnob: {fileID: 1825896487}
 --- !u!1 &1215179918
@@ -1745,6 +1755,7 @@ MonoBehaviour:
   inputField: {fileID: 385043158}
   statusText: {fileID: 430596945}
   messageInputField: {fileID: 1757295717}
+  gamepad: {fileID: 1738392823}
 --- !u!4 &1564537014
 Transform:
   m_ObjectHideFlags: 0
@@ -2062,6 +2073,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1738392822}
+  - component: {fileID: 1738392823}
   m_Layer: 0
   m_Name: VirtualGamePad
   m_TagString: Untagged
@@ -2085,6 +2097,19 @@ Transform:
   - {fileID: 918432181}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1738392823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1738392821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 170777d1abf99a9449ec038ddcc417c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftStick: {fileID: 1825896490}
 --- !u!1 &1757295715
 GameObject:
   m_ObjectHideFlags: 0
@@ -2274,8 +2299,9 @@ GameObject:
   - component: {fileID: 1825896487}
   - component: {fileID: 1825896489}
   - component: {fileID: 1825896488}
+  - component: {fileID: 1825896490}
   m_Layer: 5
-  m_Name: Image
+  m_Name: Left Stick Knob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2338,6 +2364,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1825896486}
   m_CullTransparentMesh: 1
+--- !u!114 &1825896490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825896486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27216dc0cc72d9844808c5b93481324d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameplayActions: {fileID: -944628639613478452, guid: 5020fe35fa12b2841a7763ddf7a2849a, type: 3}
+  leftStickAction:
+    m_Name: Left Stick
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: 221cde52-79c6-4162-80e1-5fb78730fe3f
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings: []
+    m_Flags: 0
+  virtualStickBackground: {fileID: 1328875432}
+  virtualStickKnob: {fileID: 1825896487}
 --- !u!1 &1845733707
 GameObject:
   m_ObjectHideFlags: 0

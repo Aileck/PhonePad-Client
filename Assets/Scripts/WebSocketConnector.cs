@@ -1,9 +1,6 @@
 using UnityEngine;
 using NativeWebSocket;
-using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Networking;
-using System.Collections;
 
 public class WebSocketConnector : MonoBehaviour
 {
@@ -19,6 +16,8 @@ public class WebSocketConnector : MonoBehaviour
     // To send message
     public TMP_InputField messageInputField;
 
+    // For testing
+    [SerializeField] private GamepadMocker gamepad;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -27,24 +26,6 @@ public class WebSocketConnector : MonoBehaviour
         string savedIP = PlayerPrefs.GetString(ipPrefKey, "192.168.1.100");
 
         inputField.text = savedIP;
-
-        StartCoroutine(TestInternetConnection());
-
-    }
-
-    IEnumerator TestInternetConnection()
-    {
-        UnityWebRequest request = UnityWebRequest.Get("https://www.google.com"); 
-        yield return request.SendWebRequest();
-
-        if (request.result == UnityWebRequest.Result.Success)
-        {
-            Debug.Log("Internet");
-        }
-        else
-        {
-            Debug.LogWarning("No Internet " + request.error);
-        }
     }
 
     // Update is called once per frame
@@ -53,6 +34,7 @@ public class WebSocketConnector : MonoBehaviour
 #if !UNITY_WEBGL
 //#if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
+        SendMessageToServer();
 #endif
     }
 
@@ -112,7 +94,7 @@ public class WebSocketConnector : MonoBehaviour
     {
         if (websocket != null && websocket.State == WebSocketState.Open)
         {
-            string message = messageInputField.text;
+            string message = gamepad.GetGamepadStateAsJson();
             websocket.SendText(message);
             statusText.text = "Sent: " + message;
             Debug.Log("Sent message: " + message);
