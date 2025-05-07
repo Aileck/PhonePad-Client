@@ -1,6 +1,8 @@
 using UnityEngine;
 using NativeWebSocket;
 using TMPro;
+using MessagePack;
+using UnityEngine.InputSystem;
 
 public class WebSocketConnector : MonoBehaviour
 {
@@ -34,8 +36,13 @@ public class WebSocketConnector : MonoBehaviour
 #if !UNITY_WEBGL
 //#if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
-        SendMessageToServer();
 #endif
+
+        if (gamepad.IsConnected())
+        {
+            // Send gamepad state to server
+            SendMessageToServer();
+        }
     }
 
     private async void OnApplicationQuit()
@@ -62,8 +69,15 @@ public class WebSocketConnector : MonoBehaviour
 
         websocket.OnOpen += () =>
         {
-            statusText.text = "Connection open!";
-            websocket.SendText("Hello from Unity!");
+            WebSockerPayload payload = new WebSockerPayload
+            {
+                action = WebSocketAction.handshake.ToString(),
+                id = gamepad.GetUUID().ToString(),
+                gamepadType = gamepad.GetGamepadType().ToString(),
+                gamepadData = null
+            };
+
+            byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
             Debug.Log("Connection open!");
         };
 
@@ -82,9 +96,19 @@ public class WebSocketConnector : MonoBehaviour
         websocket.OnMessage += (bytes) =>
         {
             // May send with https://zh.wikipedia.org/wiki/%C3%98MQ
+            WebSocketResponse response = MessagePackSerializer.Deserialize<WebSocketResponse>(bytes);
 
-            var message = System.Text.Encoding.UTF8.GetString(bytes);
-            Debug.Log("Received OnMessage! (" + bytes.Length + " bytes) " + message);
+            if (response.action.Equals("handshake_ack"))
+            {
+                Debug.Log("Conencted! ");
+            }
+            else if (response.action.Equals("register_ack"))
+            {
+                gamepad.SetConnected(true);
+                gamepad.SetGamepadID(int.Parse(response.payload));
+                statusText.text = "Registered! " + response.payload;
+                Debug.Log("Registered! " + response.payload);
+            }
         };
 
         await websocket.Connect();
@@ -94,10 +118,42 @@ public class WebSocketConnector : MonoBehaviour
     {
         if (websocket != null && websocket.State == WebSocketState.Open)
         {
-            string message = gamepad.GetGamepadStateAsJson();
-            websocket.SendText(message);
-            statusText.text = "Sent: " + message;
-            Debug.Log("Sent message: " + message);
+            GamepadData data = gamepad.GetGamepadStateAsJson();
+
+            WebSockerPayload payload = new WebSockerPayload
+            {
+                action = WebSocketAction.input.ToString(),
+                id = gamepad.GetUUID().ToString(),
+                gamepadType = gamepad.GetGamepadType().ToString(),
+                gamepadData = data
+            };
+
+            byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
+
+            websocket.Send(msgpackBytes);
+        }
+        else
+        {
+            statusText.text = "Not connected!";
+            Debug.Log("Send failed: not connected.");
+        }
+    }
+
+    public void RegisterMyGamepad()
+    {
+        if (websocket != null && websocket.State == WebSocketState.Open)
+        {
+            WebSockerPayload payload = new WebSockerPayload
+            {
+                action = WebSocketAction.register.ToString(),
+                id = null,
+                gamepadType = gamepad.GetGamepadType().ToString(),
+                gamepadData = null
+            };
+
+            byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
+
+            websocket.Send(msgpackBytes);
         }
         else
         {

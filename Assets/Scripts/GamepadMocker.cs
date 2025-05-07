@@ -6,13 +6,14 @@ public class GamepadMocker: MonoBehaviour
 {
     [SerializeField] private LeftStickMock leftStick;
 
-    private Guid gamepadID;
+    private int gamepadID;
     private GamepadType gamepadType;
+    private bool connected = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public GamepadMocker(GamepadType type)
     {
-        gamepadID = Guid.NewGuid();
+        gamepadID = -1;
         gamepadType = type; 
     }
 
@@ -20,7 +21,7 @@ public class GamepadMocker: MonoBehaviour
     // Public methods
     // ---------------
 
-    public Guid GetUUID()
+    public int GetUUID()
     {
         return gamepadID;
     }
@@ -41,7 +42,21 @@ public class GamepadMocker: MonoBehaviour
         return leftStick.GetJoystickInput();
     }
 
-    public string GetGamepadStateAsJson()
+    public void SetGamepadID(int id)
+    {
+        gamepadID = id;
+    }
+
+    public void SetConnected(bool isConnected)
+    {
+        connected = isConnected;
+    }
+
+    public bool IsConnected()
+    {
+        return connected;
+    }
+    public GamepadData GetGamepadStateAsJson()
     {
         GamepadData data = new GamepadData
         {
@@ -49,8 +64,6 @@ public class GamepadMocker: MonoBehaviour
             leftStick = GetLeftStickInput()
         };
 
-        string json = JsonUtility.ToJson(data);
-        Debug.Log("Gamepad JSON: " + json);
-        return json;
+        return data;
     }
 }
