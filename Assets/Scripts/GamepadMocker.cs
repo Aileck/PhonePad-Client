@@ -4,7 +4,8 @@ using UnityEngine.InputSystem;
 
 public class GamepadMocker: MonoBehaviour
 {
-    [SerializeField] private LeftStickMock leftStick;
+    [SerializeField] private StickComponent leftStick;
+    [SerializeField] private StickComponent rightStick;
 
     private int gamepadID;
     private GamepadType gamepadType;
@@ -21,7 +22,7 @@ public class GamepadMocker: MonoBehaviour
     // Public methods
     // ---------------
 
-    public int GetUUID()
+    public int GetID()
     {
         return gamepadID;
     }

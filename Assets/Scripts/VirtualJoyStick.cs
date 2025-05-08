@@ -7,8 +7,8 @@ using System.Collections;
 
 public class VirtualJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
 {
-    [SerializeField] private InputActionAsset gameplayActions;
-    [SerializeField] private InputAction leftStickAction;
+    [SerializeField] private GamepadAction action;
+    [SerializeField] private InputAction joyStickAction;
 
     [SerializeField] private RectTransform joystickBackground;
     [SerializeField] private RectTransform joystickKnob;
@@ -21,26 +21,38 @@ public class VirtualJoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHan
     {
         joystickRadius = joystickBackground.rect.width * 0.5f;
 
-        leftStickAction = gameplayActions.FindAction("LeftStick");
-
         ResetKnob();
     }
 
     public Vector2 GetJoystickInput()
     {
+        Gamepad gamepad = Gamepad.current;
+
+        // If no gamepad is connected, return the virtual joystick input
+        if (gamepad == null)
+        {
+            return joystickInput;
+        }
+
+        Vector2 gamepadInput = gamepad.leftStick.ReadValue();
+
+        // If gamepad input is not (0,0), use it instead of virtual joystick input
+        if (gamepadInput != Vector2.zero)
+        {
+            return gamepadInput;
+        }
+
+        // If gamepad input is (0,0), fall back to virtual joystick input
         return joystickInput;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        Debug.Log("OnPointerDown called");
-
         OnDrag(eventData);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("OnDrag called");
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
             joystickBackground,
             eventData.position,

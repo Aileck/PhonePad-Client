@@ -72,7 +72,7 @@ public class WebSocketConnector : MonoBehaviour
             WebSockerPayload payload = new WebSockerPayload
             {
                 action = WebSocketAction.handshake.ToString(),
-                id = gamepad.GetUUID().ToString(),
+                id = gamepad.GetID().ToString(),
                 gamepadType = gamepad.GetGamepadType().ToString(),
                 gamepadData = null
             };
@@ -123,7 +123,7 @@ public class WebSocketConnector : MonoBehaviour
             WebSockerPayload payload = new WebSockerPayload
             {
                 action = WebSocketAction.input.ToString(),
-                id = gamepad.GetUUID().ToString(),
+                id = gamepad.GetID().ToString(),
                 gamepadType = gamepad.GetGamepadType().ToString(),
                 gamepadData = data
             };
