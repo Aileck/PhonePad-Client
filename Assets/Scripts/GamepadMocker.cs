@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public class GamepadMocker: MonoBehaviour
 {
+    [SerializeField] private GamepadConfig gamepadConfig;
+
     [SerializeField] private StickComponent leftStick;
     [SerializeField] private StickComponent rightStick;
 
@@ -11,7 +13,12 @@ public class GamepadMocker: MonoBehaviour
     private GamepadType gamepadType;
     private bool connected = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void Awake()
+    {
+        leftStick.SetConfig(gamepadConfig);
+        rightStick.SetConfig(gamepadConfig);
+    }
+
     public GamepadMocker(GamepadType type)
     {
         gamepadID = -1;

@@ -7,6 +7,11 @@ public class DPadComponent : MonoBehaviour
 {
     [SerializeField] private RectTransform dPadBackground;
 
+    [SerializeField] private RectTransform UpArrowSprite;
+    [SerializeField] private RectTransform DownArrowSprite;
+    [SerializeField] private RectTransform LeftArrowSprite;
+    [SerializeField] private RectTransform RightArrowSprite;
+
     [SerializeField] private Button northButton;
     [SerializeField] private Button southButton;
     [SerializeField] private Button eastButton;

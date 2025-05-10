@@ -3255,6 +3255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 170777d1abf99a9449ec038ddcc417c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gamepadConfig: {fileID: 11400000, guid: 9f3a3ce90b613de4bb7ce1f1962b6e4c, type: 2}
   leftStick: {fileID: 1825896490}
   rightStick: {fileID: 264011225}
 --- !u!1 &1757295715

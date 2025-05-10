@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -9,10 +11,15 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private RectTransform stickBackground;
     [SerializeField] private RectTransform stickKnob;
 
-    private float joystickRadius;
+    private float virtualStickRadius;
+    
+    private InputType lastInputType = InputType.VIRTUAL;
 
     private Vector2 virtualStick;
     private InputAction physicalStick;
+
+    // Congfiguration
+    private GamepadConfig gamepadConfig;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -20,9 +27,33 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         physicalStick = InputActionManager.Instance.GetAction(action);
 
-        joystickRadius = stickBackground.rect.width * 0.5f;
+        virtualStickRadius = stickBackground.rect.width * 0.5f;
 
         ResetKnob();
+    }
+
+    void Update()
+    {
+        if (physicalStick != null && physicalStick.ReadValue<Vector2>() != Vector2.zero)
+        {
+            lastInputType = InputType.PYSHICAL;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // Only update the virtual joystick if the gamepad is connected and no virtual input is being used
+        if (gamepadConfig.syncVirtualInputWithGamepad &&
+            lastInputType == InputType.PYSHICAL)
+        {
+            Vector2 input = physicalStick.ReadValue<Vector2>() * virtualStickRadius;
+            Vector2 clampedInput = GetClampedStickInput(input);
+            SetKnobPosition(clampedInput);
+
+            Debug.Log("PS " + physicalStick.ReadValue<Vector2>());
+            Debug.Log("CI " + clampedInput);
+
+        }
     }
 
     public Vector2 GetJoystickInput()
@@ -58,17 +89,11 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             eventData.pressEventCamera,
             out Vector2 localPoint))
         {
-            Vector2 direction = localPoint;
-            float magnitude = direction.magnitude;
+            Vector2 clampedInput = GetClampedStickInput(localPoint);
+            SetKnobPosition(clampedInput);
+            SetVirtulInput(clampedInput);
 
-            if (magnitude > joystickRadius)
-            {
-                direction = direction.normalized * joystickRadius;
-            }
-
-            stickKnob.localPosition = direction;
-
-            virtualStick = direction / joystickRadius;
+            SetLastInputType(InputType.VIRTUAL);
         }
     }
 
@@ -83,6 +108,32 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         stickKnob.localPosition = Vector2.zero;
     }
 
+    private Vector2 GetClampedStickInput(Vector2 input)
+    {
+        // Clamp input to joystick radius
+        float magnitude = input.magnitude;
+        Vector2 clampedInput = input;
+
+        if (magnitude > virtualStickRadius)
+        {
+            clampedInput = input.normalized * virtualStickRadius;
+        }
+
+        return clampedInput;
+    }
+
+    private void SetKnobPosition(Vector2 position)
+    {
+        stickKnob.localPosition = position;
+    }
+
+    private void SetVirtulInput(Vector2 position)
+    {
+        virtualStick = position / virtualStickRadius;
+    }
+
+    // Implements IGamepadComponent interface
+
     public Vector2 GetPosition()
     {
         return stickBackground.anchoredPosition;
@@ -91,5 +142,15 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public void SetPosition(Vector2 position)
     {
         stickBackground.anchoredPosition = position;
+    }
+
+    public void SetConfig(GamepadConfig config)
+    {
+        gamepadConfig = config;
+    }
+
+    public void SetLastInputType(InputType type)
+    {
+        lastInputType = type;
     }
 }
