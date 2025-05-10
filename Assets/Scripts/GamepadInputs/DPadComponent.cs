@@ -197,7 +197,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
             physicalInput.Normalize();
         }
 
-        Debug.Log($"Physical DPad Input: {physicalInput}");
         return physicalInput;
     }
 

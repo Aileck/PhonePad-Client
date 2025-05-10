@@ -114,13 +114,13 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "LeftStrickButton",
+                    "name": "LeftStickButton",
                     "type": "Button",
                     "id": "cfeb118c-c503-474d-83c4-f45db3260c1d",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "RightStickButton",
@@ -339,7 +339,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "LeftStrickButton",
+                    "action": "LeftStickButton",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
