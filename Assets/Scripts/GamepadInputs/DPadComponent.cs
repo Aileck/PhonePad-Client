@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public class DPadComponent : MonoBehaviour
+public class DPadComponent : MonoBehaviour, IGamepadComponent
 {
     [SerializeField] private RectTransform dPadBackground;
 
@@ -12,36 +13,99 @@ public class DPadComponent : MonoBehaviour
     [SerializeField] private RectTransform LeftArrowSprite;
     [SerializeField] private RectTransform RightArrowSprite;
 
-    [SerializeField] private Button northButton;
-    [SerializeField] private Button southButton;
-    [SerializeField] private Button eastButton;
-    [SerializeField] private Button westButton;
+    [SerializeField] private Button upButton;
+    [SerializeField] private Button downButton;
+    [SerializeField] private Button rightButton;
+    [SerializeField] private Button leftButton;
 
-    [SerializeField] private Button northWestButton;
-    [SerializeField] private Button northEastButton;
-    [SerializeField] private Button southWestButton;
-    [SerializeField] private Button southEastButton;
+    [SerializeField] private Button upLeftButton;
+    [SerializeField] private Button upRightButton;
+    [SerializeField] private Button downLeftButton;
+    [SerializeField] private Button downRightButton;
 
-    private InputAction physicalDPad;
+    private InputAction physicalUp;
+    private InputAction physicalDown;
+    private InputAction physicalLeft;
+    private InputAction physicalRight;
+
+    // Up, Down, Right, Left = Vector2.up, Vector2.down, Vector2.right, Vector2.left
+    // U_L, U_R, D_L, D_R = Vector2(1, 1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, -1)
+    private Vector2 virtualDPad;
+
+    private InputType lastInputType = InputType.VIRTUAL;
+    // Congfiguration
+    private GamepadConfig gamepadConfig;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        AddButtonEvents(northButton, Vector2.up);
-        AddButtonEvents(southButton, Vector2.down);
-        AddButtonEvents(eastButton, Vector2.right);
-        AddButtonEvents(westButton, Vector2.left);
+        // Initialize all arrow sprites to be inactive
+        DeactivateAllArrows();
 
-        AddButtonEvents(northEastButton, new Vector2(1, 1));
-        AddButtonEvents(northWestButton, new Vector2(-1, 1));
-        AddButtonEvents(southEastButton, new Vector2(1, -1));
-        AddButtonEvents(southWestButton, new Vector2(-1, -1));
+        AddButtonEvents(upButton, Vector2.up);
+        AddButtonEvents(downButton, Vector2.down);
+        AddButtonEvents(rightButton, Vector2.right);
+        AddButtonEvents(leftButton, Vector2.left);
+
+        AddButtonEvents(upRightButton, new Vector2(1, 1));
+        AddButtonEvents(upLeftButton, new Vector2(-1, 1));
+        AddButtonEvents(downRightButton, new Vector2(1, -1));
+        AddButtonEvents(downLeftButton, new Vector2(-1, -1));
+
+        // Initialize the physical DPad actions
+        physicalUp = InputActionManager.Instance.GetAction(GamepadAction.Up);
+        physicalDown = InputActionManager.Instance.GetAction(GamepadAction.Down);
+        physicalLeft = InputActionManager.Instance.GetAction(GamepadAction.Left);
+        physicalRight = InputActionManager.Instance.GetAction(GamepadAction.Right);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        if (isPhysicalInputActive())
+        {
+            lastInputType = InputType.PYSHICAL;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        // Only update the animation  if the gamepad is connected and no virtual input is being used
+        if (gamepadConfig.syncVirtualInputWithGamepad &&
+            lastInputType == InputType.PYSHICAL)
+        {
+            Vector2 input = GetPhysicalPadInput();
+
+            if (input != Vector2.zero)
+            {
+                ActivateArrows(input);
+            }
+            else
+            {
+                ResetDPad();
+            }
+        }
+
+    }
+
+    public Vector2 GetDpadInput()
+    {
+        // If no gamepad is connected, return the virtual input
+        if (Gamepad.current == null)
+        {
+            return virtualDPad;
+        }
+
+        // Return depending on the last input type
+        if (lastInputType == InputType.PYSHICAL)
+        {
+            Vector2 physicalInput = GetPhysicalPadInput();
+            return physicalInput;
+        }
+        else
+        {
+            return virtualDPad;
+        }
+
     }
 
     private void AddButtonEvents(Button button, Vector2 direction)
@@ -59,21 +123,102 @@ public class DPadComponent : MonoBehaviour
 
     private void OnButtonPress(Vector2 direction)
     {
-        // Simulate the D-Pad press animation
-        float skewAmount = 5f; // Angle of skew in degrees
-        float scaleAmount = 0.95f;
+        virtualDPad = direction;
+        ActivateArrows(direction);
 
-        dPadBackground.localEulerAngles = new Vector3(0, 0, -direction.x * skewAmount);
-
-        dPadBackground.localScale = new Vector3(
-            1 - Mathf.Abs(direction.x) * 0.05f,
-            1 - Mathf.Abs(direction.y) * 0.05f,
-            1);
+        SetLastInputType(InputType.VIRTUAL);
     }
 
     private void ResetDPad()
     {
         dPadBackground.localEulerAngles = Vector3.zero;
         dPadBackground.localScale = Vector3.one;
+
+        // Deactivate all arrow sprites when released
+        DeactivateAllArrows();
+    }
+
+    private void ActivateArrows(Vector2 direction)
+    {
+        // Deactivate all arrows first
+        DeactivateAllArrows();
+
+        // Apply only visual scale change
+        float scaleAmount = gamepadConfig.buttonPressTransformScale;
+        dPadBackground.localScale = new Vector3(scaleAmount, scaleAmount, 1);
+
+        // Activate arrows based on the direction
+        // Check horizontal direction
+        if (direction.x > 0)
+        {
+            RightArrowSprite.gameObject.SetActive(true);
+        }
+        else if (direction.x < 0)
+        {
+            LeftArrowSprite.gameObject.SetActive(true);
+        }
+
+        // Check vertical direction
+        if (direction.y > 0)
+        {
+            UpArrowSprite.gameObject.SetActive(true);
+        }
+        else if (direction.y < 0)
+        {
+            DownArrowSprite.gameObject.SetActive(true);
+        }
+    }
+
+    private void DeactivateAllArrows()
+    {
+        // Deactivate all arrow sprites
+        if (UpArrowSprite != null) UpArrowSprite.gameObject.SetActive(false);
+        if (DownArrowSprite != null) DownArrowSprite.gameObject.SetActive(false);
+        if (LeftArrowSprite != null) LeftArrowSprite.gameObject.SetActive(false);
+        if (RightArrowSprite != null) RightArrowSprite.gameObject.SetActive(false);
+    }
+
+    private bool isPhysicalInputActive()
+    {
+        return physicalUp != null && physicalDown != null && physicalLeft != null && physicalRight != null &&
+               (physicalUp.IsPressed() || physicalDown.IsPressed() || physicalLeft.IsPressed() || physicalRight.IsPressed());
+    }
+
+    private Vector2 GetPhysicalPadInput()
+    {
+        float horizontalInput = -physicalLeft.ReadValue<float>() + physicalRight.ReadValue<float>();
+
+        float verticalInput = physicalUp.ReadValue<float>() - physicalDown.ReadValue<float>();
+
+        Vector2 physicalInput = new Vector2(horizontalInput, verticalInput);
+
+        if (physicalInput.magnitude > 1)
+        {
+            physicalInput.Normalize();
+        }
+
+        Debug.Log($"Physical DPad Input: {physicalInput}");
+        return physicalInput;
+    }
+
+    // Implementing IGamepadComponent interface
+    public Vector2 GetPosition()
+    {
+        return dPadBackground.anchoredPosition;
+    }
+
+    public void SetPosition(Vector2 position)
+    {
+        dPadBackground.anchoredPosition = position;
+    }
+
+    public void SetConfig(GamepadConfig config)
+    {
+        gamepadConfig = config;
+    }
+
+    public void SetLastInputType(InputType type)
+    {
+        lastInputType = type;
     }
 }

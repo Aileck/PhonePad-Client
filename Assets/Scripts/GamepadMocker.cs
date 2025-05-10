@@ -9,6 +9,8 @@ public class GamepadMocker: MonoBehaviour
     [SerializeField] private StickComponent leftStick;
     [SerializeField] private StickComponent rightStick;
 
+    [SerializeField] private DPadComponent dPad;
+
     private int gamepadID;
     private GamepadType gamepadType;
     private bool connected = false;
@@ -17,6 +19,7 @@ public class GamepadMocker: MonoBehaviour
     {
         leftStick.SetConfig(gamepadConfig);
         rightStick.SetConfig(gamepadConfig);
+        dPad.SetConfig(gamepadConfig);
     }
 
     public GamepadMocker(GamepadType type)

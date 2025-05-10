@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c497f1cf5a889b4eb7b81655dcb63cc, type: 3}
   m_Name: GamepadProfile_0
   m_EditorClassIdentifier: 
+  buttonPressTransformScale: 0.98
   syncVirtualInputWithGamepad: 1

@@ -49,31 +49,28 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             Vector2 input = physicalStick.ReadValue<Vector2>() * virtualStickRadius;
             Vector2 clampedInput = GetClampedStickInput(input);
             SetKnobPosition(clampedInput);
-
-            Debug.Log("PS " + physicalStick.ReadValue<Vector2>());
-            Debug.Log("CI " + clampedInput);
-
         }
     }
 
     public Vector2 GetJoystickInput()
     {
         // If no gamepad is connected, return the virtual joystick input
-        if (physicalStick == null)
+        if (Gamepad.current == null)
         {
             return virtualStick;
         }
 
-        Vector2 physicalInput = physicalStick.ReadValue<Vector2>();
-
-        // If gamepad input is not (0,0), use it instead of virtual joystick input
-        if (physicalInput != Vector2.zero)
+        // Return depending on the last input type
+        if (lastInputType == InputType.PYSHICAL)
         {
+            Vector2 physicalInput = physicalStick.ReadValue<Vector2>();
+
             return physicalInput;
         }
-
-        // If gamepad input is (0,0), fall back to virtual joystick input
-        return virtualStick;
+        else
+        {
+            return virtualStick;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
