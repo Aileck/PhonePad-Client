@@ -18,7 +18,7 @@ public enum GamepadType
 public class WebSockerPayload
 {
     public string action;
-    public string id;
+    public int id;
     public string gamepadType;
     public GamepadData gamepadData;
 

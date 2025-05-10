@@ -35,6 +35,8 @@ public class GamepadMocker: MonoBehaviour
 
     private void Awake()
     {
+        gamepadID = -1;
+
         leftStick.SetConfig(gamepadConfig);
         rightStick.SetConfig(gamepadConfig);
 
@@ -107,8 +109,30 @@ public class GamepadMocker: MonoBehaviour
     {
         GamepadData data = new GamepadData
         {
-            uuid = gamepadID.ToString(),
-            leftStick = GetLeftStickInput()
+            buttonEast = buttonEast.GetButtonInput(),
+            buttonWest = buttonWest.GetButtonInput(),
+            buttonNorth = buttonNorth.GetButtonInput(),
+            buttonSouth = buttonSouth.GetButtonInput(),
+
+            up = dPad.GetUpInput(),
+            down = dPad.GetDownInput(),
+            left = dPad.GetLeftInput(),
+            right = dPad.GetRightInput(),
+
+            leftShoulder = leftShoulder.GetButtonInput(),
+            rightShoulder = rightShoulder.GetButtonInput(),
+
+            leftTrigger = leftTrigger.GetButtonInput(),
+            rightTrigger = rightTrigger.GetButtonInput(),
+
+            leftStickButton = leftStickButton.GetButtonInput(),
+            rightStickButton = rightStickButton.GetButtonInput(),
+
+            leftStick = leftStick.GetJoystickInput(),
+            rightStick = rightStick.GetJoystickInput(),
+
+            buttonStart = buttonStart.GetButtonInput(),
+            buttonSelect = buttonSelect.GetButtonInput(),
         };
 
         return data;

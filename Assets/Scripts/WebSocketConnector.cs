@@ -72,7 +72,7 @@ public class WebSocketConnector : MonoBehaviour
             WebSockerPayload payload = new WebSockerPayload
             {
                 action = WebSocketAction.handshake.ToString(),
-                id = gamepad.GetID().ToString(),
+                id = gamepad.GetID(),
                 gamepadType = gamepad.GetGamepadType().ToString(),
                 gamepadData = null
             };
@@ -106,6 +106,7 @@ public class WebSocketConnector : MonoBehaviour
             {
                 gamepad.SetConnected(true);
                 gamepad.SetGamepadID(int.Parse(response.payload));
+                Debug.Log("Gamepad ID: " + response.payload);
                 statusText.text = "Registered! " + response.payload;
                 Debug.Log("Registered! " + response.payload);
             }
@@ -123,7 +124,7 @@ public class WebSocketConnector : MonoBehaviour
             WebSockerPayload payload = new WebSockerPayload
             {
                 action = WebSocketAction.input.ToString(),
-                id = gamepad.GetID().ToString(),
+                id = gamepad.GetID(),
                 gamepadType = gamepad.GetGamepadType().ToString(),
                 gamepadData = data
             };
@@ -146,7 +147,7 @@ public class WebSocketConnector : MonoBehaviour
             WebSockerPayload payload = new WebSockerPayload
             {
                 action = WebSocketAction.register.ToString(),
-                id = null,
+                id = -1,
                 gamepadType = gamepad.GetGamepadType().ToString(),
                 gamepadData = null
             };

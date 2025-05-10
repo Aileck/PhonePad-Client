@@ -10,7 +10,7 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
     [SerializeField] private Button button;
 
     private InputAction physicalButton;
-    private bool virtualButtonPressed;
+    [SerializeField] private bool virtualButtonPressed;
 
     private InputType lastInputType = InputType.VIRTUAL;
 
@@ -29,6 +29,11 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
 
     void Update()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return;
+        }
+
         if (physicalButton != null && physicalButton.IsPressed())
         {
             lastInputType = InputType.PYSHICAL;
@@ -37,6 +42,11 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
 
     void FixedUpdate()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return;
+        }
+
         // Only update the virtual button if the gamepad is connected and no virtual input is being used
         if (gamepadConfig.syncVirtualInputWithGamepad &&
             lastInputType == InputType.PYSHICAL)
@@ -110,8 +120,12 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
         button.targetGraphic.color = colors.normalColor;
     }
 
-    public bool GetButtonState()
+    public bool GetButtonInput()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return virtualButtonPressed;
+        }
         // If no gamepad is connected, return the virtual button state
         if (Gamepad.current == null)
         {

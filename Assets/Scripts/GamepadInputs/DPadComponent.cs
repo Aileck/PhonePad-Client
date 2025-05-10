@@ -30,7 +30,7 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
     // Up, Down, Right, Left = Vector2.up, Vector2.down, Vector2.right, Vector2.left
     // U_L, U_R, D_L, D_R = Vector2(1, 1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, -1)
-    private Vector2 virtualDPad;
+    [SerializeField] private Vector2 virtualDPad;
 
     private InputType lastInputType = InputType.VIRTUAL;
     // Congfiguration
@@ -61,6 +61,12 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
     void Update()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return;
+        }
+
+        // Check if any physical input is active
         if (isPhysicalInputActive())
         {
             lastInputType = InputType.PYSHICAL;
@@ -69,6 +75,11 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
     void FixedUpdate()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return;
+        }
+
         // Only update the animation  if the gamepad is connected and no virtual input is being used
         if (gamepadConfig.syncVirtualInputWithGamepad &&
             lastInputType == InputType.PYSHICAL)
@@ -89,6 +100,11 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
     public Vector2 GetDpadInput()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return virtualDPad;
+        }
+
         // If no gamepad is connected, return the virtual input
         if (Gamepad.current == null)
         {
@@ -108,6 +124,30 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
     }
 
+    public bool GetUpInput()
+    {
+        Vector2 input = GetDpadInput();
+        return input.y > 0;
+    }
+
+    public bool GetDownInput()
+    {
+        Vector2 input = GetDpadInput();
+        return input.y < 0;
+    }
+
+    public bool GetLeftInput()
+    {
+        Vector2 input = GetDpadInput();
+        return input.x < 0;
+    }
+
+    public bool GetRightInput()
+    {
+        Vector2 input = GetDpadInput();
+        return input.x > 0;
+    }
+
     private void AddButtonEvents(Button button, Vector2 direction)
     {
         EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
@@ -118,6 +158,7 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
         var pointerUp = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
         pointerUp.callback.AddListener((_) => ResetDPad());
+        pointerUp.callback.AddListener((_) => ResetDPadValue());
         trigger.triggers.Add(pointerUp);
     }
 
@@ -136,6 +177,11 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
         // Deactivate all arrow sprites when released
         DeactivateAllArrows();
+    }
+
+    private void ResetDPadValue()
+    {
+        virtualDPad = Vector2.zero;
     }
 
     private void ActivateArrows(Vector2 direction)

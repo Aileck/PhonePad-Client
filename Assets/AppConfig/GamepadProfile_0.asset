@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: GamepadProfile_0
   m_EditorClassIdentifier: 
   buttonPressTransformScale: 0.98
-  syncVirtualInputWithGamepad: 1
+  syncVirtualInputWithGamepad: 0
+  ignorePhysicalGamepad: 1

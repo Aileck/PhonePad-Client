@@ -15,7 +15,7 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     
     private InputType lastInputType = InputType.VIRTUAL;
 
-    private Vector2 virtualStick;
+    [SerializeField] private Vector2 virtualStick;
     private InputAction physicalStick;
 
     // Congfiguration
@@ -34,6 +34,11 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     void Update()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return;
+        }
+
         if (physicalStick != null && physicalStick.ReadValue<Vector2>() != Vector2.zero)
         {
             lastInputType = InputType.PYSHICAL;
@@ -42,6 +47,11 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     void FixedUpdate()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return;
+        }
+
         // Only update the virtual joystick if the gamepad is connected and no virtual input is being used
         if (gamepadConfig.syncVirtualInputWithGamepad &&
             lastInputType == InputType.PYSHICAL)
@@ -54,6 +64,11 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public Vector2 GetJoystickInput()
     {
+        if (gamepadConfig.ignorePhysicalGamepad)
+        {
+            return virtualStick;
+        }
+
         // If no gamepad is connected, return the virtual joystick input
         if (Gamepad.current == null)
         {

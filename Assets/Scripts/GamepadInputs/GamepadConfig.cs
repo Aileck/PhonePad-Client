@@ -6,4 +6,5 @@ public class GamepadConfig : ScriptableObject
     public float buttonPressTransformScale;
 
     public bool syncVirtualInputWithGamepad;
+    public bool ignorePhysicalGamepad;
 }
