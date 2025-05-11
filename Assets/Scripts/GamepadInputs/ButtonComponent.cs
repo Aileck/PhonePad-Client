@@ -17,6 +17,9 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
     // Congfiguration
     private GamepadConfig gamepadConfig;
 
+    private RectTransform referenceParent;
+
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -25,6 +28,9 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
 
         // Add button events
         AddButtonEvents();
+
+        referenceParent = GameObject.FindGameObjectWithTag("Reference").GetComponent<RectTransform>();
+
     }
 
     void Update()
@@ -145,14 +151,23 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
     }
 
     // Implementing IGamepadComponent interface
-    public Vector2 GetPosition()
+    public Vector2 GetNormalizedPosition()
     {
-        return ((RectTransform)button.transform).anchoredPosition;
+        Vector2 normalized = new Vector2(
+            button.GetComponent<RectTransform>().anchoredPosition.x / referenceParent.rect.width,
+            button.GetComponent<RectTransform>().anchoredPosition.y / referenceParent.rect.height
+        );
+        return normalized;
     }
 
-    public void SetPosition(Vector2 position)
+    public void SetNormalizedPosition(Vector2 position)
     {
-        ((RectTransform)button.transform).anchoredPosition = position;
+        Vector2 anchored = new Vector2(
+            position.x * referenceParent.rect.width,
+            position.y * referenceParent.rect.height
+        );
+
+        button.GetComponent<RectTransform>().anchoredPosition = anchored;
     }
 
     public void SetConfig(GamepadConfig config)

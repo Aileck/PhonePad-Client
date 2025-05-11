@@ -18,6 +18,8 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private Vector2 virtualStick;
     private InputAction physicalStick;
 
+    private RectTransform referenceParent;
+
     // Congfiguration
     private GamepadConfig gamepadConfig;
 
@@ -28,6 +30,8 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         physicalStick = InputActionManager.Instance.GetAction(action);
 
         virtualStickRadius = stickBackground.rect.width * 0.5f;
+
+        referenceParent = GameObject.FindGameObjectWithTag("Reference").GetComponent<RectTransform>();
 
         ResetKnob();
     }
@@ -146,14 +150,23 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     // Implements IGamepadComponent interface
 
-    public Vector2 GetPosition()
+    public Vector2 GetNormalizedPosition()
     {
-        return stickBackground.anchoredPosition;
+        Vector2 normalized = new Vector2(
+            stickBackground.anchoredPosition.x / referenceParent.rect.width,
+            stickBackground.anchoredPosition.y / referenceParent.rect.height
+        );
+        return normalized;
     }
 
-    public void SetPosition(Vector2 position)
+    public void SetNormalizedPosition(Vector2 position)
     {
-        stickBackground.anchoredPosition = position;
+        Vector2 anchored = new Vector2(
+            position.x * referenceParent.rect.width,
+            position.y * referenceParent.rect.height
+        );
+
+        stickBackground.anchoredPosition = anchored;
     }
 
     public void SetConfig(GamepadConfig config)

@@ -8,8 +8,8 @@ public enum InputType
 
 public interface IGamepadComponent
 {
-    Vector2 GetPosition();
-    void SetPosition(Vector2 position);
+    Vector2 GetNormalizedPosition();
+    void SetNormalizedPosition(Vector2 position);
     void SetConfig(GamepadConfig config);
     void SetLastInputType(InputType type);
 }

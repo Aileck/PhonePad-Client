@@ -66,6 +66,25 @@ public class GamepadMocker: MonoBehaviour
         gamepadType = type; 
     }
 
+    public void Update()
+    {
+        Debug.Log("leftStick : " + buttonStart.GetNormalizedPosition());
+        Debug.Log("rightStick : " + buttonSelect.GetNormalizedPosition());
+        Debug.Log("leftShoulder : " + leftShoulder.GetNormalizedPosition());
+        Debug.Log("rightShoulder : " + rightShoulder.GetNormalizedPosition());
+        Debug.Log("leftTrigger : " + leftTrigger.GetNormalizedPosition());
+        Debug.Log("rightTrigger : " + rightTrigger.GetNormalizedPosition());
+        Debug.Log("buttonStart : " + buttonStart.GetNormalizedPosition());
+        Debug.Log("buttonSelect : " + buttonSelect.GetNormalizedPosition());
+        Debug.Log("buttonNorth : " + buttonNorth.GetNormalizedPosition());
+        Debug.Log("buttonSouth : " + buttonSouth.GetNormalizedPosition());
+        Debug.Log("buttonWest : " + buttonWest.GetNormalizedPosition());
+        Debug.Log("buttonEast : " + buttonEast.GetNormalizedPosition());
+        Debug.Log("dPad : " + dPad.GetNormalizedPosition());
+        Debug.Log("leftStickButton : " + leftStickButton.GetNormalizedPosition());
+        Debug.Log("rightStickButton : " + rightStickButton.GetNormalizedPosition());
+    }
+
     // ---------------
     // Public methods
     // ---------------

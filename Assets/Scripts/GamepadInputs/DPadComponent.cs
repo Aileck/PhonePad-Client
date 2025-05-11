@@ -28,6 +28,8 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
     private InputAction physicalLeft;
     private InputAction physicalRight;
 
+    private RectTransform referenceParent;
+
     // Up, Down, Right, Left = Vector2.up, Vector2.down, Vector2.right, Vector2.left
     // U_L, U_R, D_L, D_R = Vector2(1, 1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, -1)
     [SerializeField] private Vector2 virtualDPad;
@@ -57,6 +59,8 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
         physicalDown = InputActionManager.Instance.GetAction(GamepadAction.Down);
         physicalLeft = InputActionManager.Instance.GetAction(GamepadAction.Left);
         physicalRight = InputActionManager.Instance.GetAction(GamepadAction.Right);
+
+        referenceParent = GameObject.FindGameObjectWithTag("Reference").GetComponent<RectTransform>();
     }
 
     void Update()
@@ -247,14 +251,23 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
     }
 
     // Implementing IGamepadComponent interface
-    public Vector2 GetPosition()
+    public Vector2 GetNormalizedPosition()
     {
-        return dPadBackground.anchoredPosition;
+        Vector2 normalized = new Vector2(
+            dPadBackground.anchoredPosition.x / referenceParent.rect.width,
+            dPadBackground.anchoredPosition.y / referenceParent.rect.height
+        );
+        return normalized;
     }
 
-    public void SetPosition(Vector2 position)
+    public void SetNormalizedPosition(Vector2 position)
     {
-        dPadBackground.anchoredPosition = position;
+        Vector2 anchored = new Vector2(
+            position.x * referenceParent.rect.width,
+            position.y * referenceParent.rect.height
+        );
+
+        dPadBackground.anchoredPosition = anchored;
     }
 
     public void SetConfig(GamepadConfig config)
