@@ -140,7 +140,7 @@ public class WebSocketConnector : MonoBehaviour
         }
     }
 
-    public void RegisterMyGamepad()
+    public void RegisterMyXboxGamepad()
     {
         Debug.Log("Registering gamepad...");
         if (websocket != null && websocket.State == WebSocketState.Open)
@@ -149,9 +149,39 @@ public class WebSocketConnector : MonoBehaviour
             {
                 action = WebSocketAction.register.ToString(),
                 id = -1,
-                gamepadType = gamepad.GetGamepadType().ToString(),
+                gamepadType = GamepadType.GAMEPAD_XBOX360.ToString(),
                 gamepadData = null
             };
+
+            gamepad.SetGamepadType(GamepadType.GAMEPAD_XBOX360);
+
+            byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
+
+            websocket.Send(msgpackBytes);
+            Debug.Log("Gamepad registered");
+
+        }
+        else
+        {
+            statusText.text = "Not connected!";
+            Debug.Log("Send failed: not connected.");
+        }
+    }
+
+    public void RegisterMyDualShockGamepad()
+    {
+        Debug.Log("Registering gamepad...");
+        if (websocket != null && websocket.State == WebSocketState.Open)
+        {
+            WebSockerPayload payload = new WebSockerPayload
+            {
+                action = WebSocketAction.register.ToString(),
+                id = -1,
+                gamepadType = GamepadType.GAMEPAD_DUALSHOCK.ToString(),
+                gamepadData = null
+            };
+
+            gamepad.SetGamepadType(GamepadType.GAMEPAD_DUALSHOCK);
 
             byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
 

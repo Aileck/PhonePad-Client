@@ -6,15 +6,13 @@ using System.Collections.Generic;
 public class GamepadConfig : ScriptableObject
 {
     public List<XboxProfile> xboxProfiles = new List<XboxProfile>();
-    public float buttonPressTransformScale;
+    public List<DualShockProfile> dualShockProfiles = new List<DualShockProfile>();
 
-    public bool syncVirtualInputWithGamepad;
-    public bool ignorePhysicalGamepad;
 
     //private void OnEnable()
     //{
 
-    //        AddDefaultProfile();
+    //    AddDefaultProfile();
 
     //}
 
@@ -142,6 +140,9 @@ public class GamepadConfig : ScriptableObject
             rightStick.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_right_stick.png");
         }
     }
+   
+    [Serializable]
+    public class DualShockProfile : Profile { }
 
     [Serializable]
     public class ButtonProfile

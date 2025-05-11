@@ -11,7 +11,7 @@ public enum WebSocketAction
 public enum GamepadType
 {
     GAMEPAD_XBOX360,
-    GAMEPAD_DUALSHOCK4,
+    GAMEPAD_DUALSHOCK,
 };
 
 [MessagePackObject(keyAsPropertyName: true)]

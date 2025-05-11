@@ -44,7 +44,7 @@ MonoBehaviour:
     rightShoulder:
       position: {x: 0.44, y: 0.78}
       scale: {x: 1, y: 1}
-      iconImage: {fileID: 21300000, guid: 9ec54de92f8a7c64dbf255e7285a2a0e, type: 3}
+      iconImage: {fileID: 21300000, guid: 83360ebdaa640bb4cb994f5dbfa488ad, type: 3}
       backgoundImage: {fileID: 0}
     leftTrigger:
       position: {x: -0.71, y: 0.78}
@@ -91,6 +91,82 @@ MonoBehaviour:
       scale: {x: 1, y: 1}
       iconImage: {fileID: 0}
       backgoundImage: {fileID: 0}
-  buttonPressTransformScale: 0.98
-  syncVirtualInputWithGamepad: 0
-  ignorePhysicalGamepad: 1
+  dualShockProfiles:
+  - buttonPressTransformScale: 0.95
+    syncVirtualInputWithGamepad: 0
+    ignorePhysicalGamepad: 1
+    buttonEast:
+      position: {x: 0.69, y: 0.25}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: d851c6cb259b89b4d9927f66ffd80af3, type: 3}
+      backgoundImage: {fileID: 0}
+    buttonSouth:
+      position: {x: 0.58, y: 0.06}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: a0c0e9488ab3901448d520ce3ed727d8, type: 3}
+      backgoundImage: {fileID: 0}
+    buttonWest:
+      position: {x: 0.48, y: 0.25}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: bf3e61f4d2472b44c9ddc86b312a9752, type: 3}
+      backgoundImage: {fileID: 0}
+    buttonNorth:
+      position: {x: 0.58, y: 0.44}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: 249d4bba0cb1ea34885188873bdf736c, type: 3}
+      backgoundImage: {fileID: 0}
+    leftShoulder:
+      position: {x: -0.44, y: 0.78}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: 5655b5fdcb06886469ad5417cf9c4df1, type: 3}
+      backgoundImage: {fileID: 0}
+    rightShoulder:
+      position: {x: 0.44, y: 0.78}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: 0ba4e31559cb25a4cba3aed6f5c88ae6, type: 3}
+      backgoundImage: {fileID: 0}
+    leftTrigger:
+      position: {x: -0.71, y: 0.78}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: ca3799a85b71188409b776da4bc5ba13, type: 3}
+      backgoundImage: {fileID: 0}
+    rightTrigger:
+      position: {x: 0.71, y: 0.78}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: ee02152c7f5ae224587c1ad66fb7db5c, type: 3}
+      backgoundImage: {fileID: 0}
+    leftStickButton:
+      position: {x: -0.65, y: -0.24}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: bc500153b3fea4a48bb4141ced6add0f, type: 3}
+      backgoundImage: {fileID: 0}
+    rightStickButton:
+      position: {x: 0.65, y: -0.24}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: d7ee489937462f447902d134135073e9, type: 3}
+      backgoundImage: {fileID: 0}
+    startButton:
+      position: {x: 0.16, y: 0.51}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: be811aee7a1f39d41a8f7a7ed741cd24, type: 3}
+      backgoundImage: {fileID: 0}
+    selectButton:
+      position: {x: -0.16, y: 0.51}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: e90efa75581ee8a48a9be2548b8d83dd, type: 3}
+      backgoundImage: {fileID: 0}
+    dPad:
+      position: {x: -0.58, y: 0.25}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 0}
+      backgoundImage: {fileID: 0}
+    leftStick:
+      position: {x: -0.39, y: -0.57}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 0}
+      backgoundImage: {fileID: 0}
+    rightStick:
+      position: {x: 0.39, y: -0.57}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 0}
+      backgoundImage: {fileID: 0}

@@ -31,7 +31,7 @@ public class GamepadMocker: MonoBehaviour
 
 
     private int gamepadID;
-    private GamepadType gamepadType;
+    [SerializeField] private GamepadType gamepadType;
     private bool connected = false;
 
     private void Start()
@@ -41,6 +41,7 @@ public class GamepadMocker: MonoBehaviour
         // Should not initialize here
         //gamepadConfig.Initialize();
 
+        // TODO: Fefactr to optimize this S/H/*/T
         if (gamepadType == GamepadType.GAMEPAD_XBOX360)
         {
             XboxProfile profile = gamepadConfig.xboxProfiles[0];
@@ -118,7 +119,79 @@ public class GamepadMocker: MonoBehaviour
             buttonSelect.SetIcon(profile.selectButton.iconImage);
         }
         else {
-            
+            DualShockProfile profile = gamepadConfig.dualShockProfiles[0];
+
+            leftStick.SetProfile(profile);
+            leftStick.SetNormalizedPosition(profile.leftStick.position);
+            //leftStick.SetScale(profile.leftStick.scale);
+
+            rightStick.SetProfile(profile);
+            rightStick.SetNormalizedPosition(profile.rightStick.position);
+            //rightStick.SetScale(profile.rightStick.scale);
+
+            dPad.SetProfile(profile);
+            dPad.SetNormalizedPosition(profile.dPad.position);
+            dPad.SetScale(profile.dPad.scale);
+
+            buttonNorth.SetProfile(profile);
+            buttonNorth.SetNormalizedPosition(profile.buttonNorth.position);
+            //buttonNorth.SetScale(profile.buttonNorth.scale);
+            buttonNorth.SetIcon(profile.buttonNorth.iconImage);
+
+            buttonSouth.SetProfile(profile);
+            buttonSouth.SetNormalizedPosition(profile.buttonSouth.position);
+            //buttonSouth.SetScale(profile.buttonSouth.scale);
+            buttonSouth.SetIcon(profile.buttonSouth.iconImage);
+
+            buttonWest.SetProfile(profile);
+            buttonWest.SetNormalizedPosition(profile.buttonWest.position);
+            //buttonWest.SetScale(profile.buttonWest.scale);
+            buttonWest.SetIcon(profile.buttonWest.iconImage);
+
+            buttonEast.SetProfile(profile);
+            buttonEast.SetNormalizedPosition(profile.buttonEast.position);
+            //buttonEast.SetScale(profile.buttonEast.scale);
+            buttonEast.SetIcon(profile.buttonEast.iconImage);
+
+            leftStickButton.SetProfile(profile);
+            leftStickButton.SetNormalizedPosition(profile.leftStickButton.position);
+            //leftStickButton.SetScale(profile.leftStickButton.scale);
+            leftStickButton.SetIcon(profile.leftStickButton.iconImage);
+
+            rightStickButton.SetProfile(profile);
+            rightStickButton.SetNormalizedPosition(profile.rightStickButton.position);
+            //rightStickButton.SetScale(profile.rightStickButton.scale);
+            rightStickButton.SetIcon(profile.rightStickButton.iconImage);
+
+            leftShoulder.SetProfile(profile);
+            leftShoulder.SetNormalizedPosition(profile.leftShoulder.position);
+            //leftShoulder.SetScale(profile.leftShoulder.scale);
+            leftShoulder.SetIcon(profile.leftShoulder.iconImage);
+
+            rightShoulder.SetProfile(profile);
+            rightShoulder.SetNormalizedPosition(profile.rightShoulder.position);
+            //rightShoulder.SetScale(profile.rightShoulder.scale);
+            rightShoulder.SetIcon(profile.rightShoulder.iconImage);
+
+            leftTrigger.SetProfile(profile);
+            leftTrigger.SetNormalizedPosition(profile.leftTrigger.position);
+            //leftTrigger.SetScale(profile.leftTrigger.scale);
+            leftTrigger.SetIcon(profile.leftTrigger.iconImage);
+
+            rightTrigger.SetProfile(profile);
+            rightTrigger.SetNormalizedPosition(profile.rightTrigger.position);
+            //rightTrigger.SetScale(profile.rightTrigger.scale);
+            rightTrigger.SetIcon(profile.rightTrigger.iconImage);
+
+            buttonStart.SetProfile(profile);
+            buttonStart.SetNormalizedPosition(profile.startButton.position);
+            //buttonStart.SetScale(profile.startButton.scale);
+            buttonStart.SetIcon(profile.startButton.iconImage);
+
+            buttonSelect.SetProfile(profile);
+            buttonSelect.SetNormalizedPosition(profile.selectButton.position);
+            //buttonSelect.SetScale(profile.selectButton.scale);
+            buttonSelect.SetIcon(profile.selectButton.iconImage);
         }
          
 
