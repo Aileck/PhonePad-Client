@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static GamepadConfig;
 
 public class GamepadMocker: MonoBehaviour
 {
@@ -33,31 +34,94 @@ public class GamepadMocker: MonoBehaviour
     private GamepadType gamepadType;
     private bool connected = false;
 
-    private void Awake()
+    private void Start()
     {
         gamepadID = -1;
 
-        leftStick.SetConfig(gamepadConfig);
-        rightStick.SetConfig(gamepadConfig);
+        // Should not initialize here
+        //gamepadConfig.Initialize();
 
-        dPad.SetConfig(gamepadConfig);
+        if (gamepadType == GamepadType.GAMEPAD_XBOX360)
+        {
+            XboxProfile profile = gamepadConfig.xboxProfiles[0];
 
-        buttonNorth.SetConfig(gamepadConfig);
-        buttonSouth.SetConfig(gamepadConfig);
-        buttonWest.SetConfig(gamepadConfig);
-        buttonEast.SetConfig(gamepadConfig);
+            leftStick.SetProfile(profile);
+            leftStick.SetNormalizedPosition(profile.leftStick.position);
+            //leftStick.SetScale(profile.leftStick.scale);
 
-        leftStickButton.SetConfig(gamepadConfig);
-        rightStickButton.SetConfig(gamepadConfig);
+            rightStick.SetProfile(profile);
+            rightStick.SetNormalizedPosition(profile.rightStick.position);
+            //rightStick.SetScale(profile.rightStick.scale);
 
-        leftShoulder.SetConfig(gamepadConfig);
-        rightShoulder.SetConfig(gamepadConfig);
+            dPad.SetProfile(profile);
+            dPad.SetNormalizedPosition(profile.dPad.position);
+            dPad.SetScale(profile.dPad.scale);
 
-        leftTrigger.SetConfig(gamepadConfig);
-        rightTrigger.SetConfig(gamepadConfig);
+            buttonNorth.SetProfile(profile);
+            buttonNorth.SetNormalizedPosition(profile.buttonNorth.position);
+            //buttonNorth.SetScale(profile.buttonNorth.scale);
+            buttonNorth.SetIcon(profile.buttonNorth.iconImage);
 
-        buttonStart.SetConfig(gamepadConfig);
-        buttonSelect.SetConfig(gamepadConfig);
+            buttonSouth.SetProfile(profile);
+            buttonSouth.SetNormalizedPosition(profile.buttonSouth.position);
+            //buttonSouth.SetScale(profile.buttonSouth.scale);
+            buttonSouth.SetIcon(profile.buttonSouth.iconImage);
+
+            buttonWest.SetProfile(profile);
+            buttonWest.SetNormalizedPosition(profile.buttonWest.position);
+            //buttonWest.SetScale(profile.buttonWest.scale);
+            buttonWest.SetIcon(profile.buttonWest.iconImage);
+
+            buttonEast.SetProfile(profile);
+            buttonEast.SetNormalizedPosition(profile.buttonEast.position);
+            //buttonEast.SetScale(profile.buttonEast.scale);
+            buttonEast.SetIcon(profile.buttonEast.iconImage);
+
+            leftStickButton.SetProfile(profile);
+            leftStickButton.SetNormalizedPosition(profile.leftStickButton.position);
+            //leftStickButton.SetScale(profile.leftStickButton.scale);
+            leftStickButton.SetIcon(profile.leftStickButton.iconImage);
+
+            rightStickButton.SetProfile(profile);
+            rightStickButton.SetNormalizedPosition(profile.rightStickButton.position);
+            //rightStickButton.SetScale(profile.rightStickButton.scale);
+            rightStickButton.SetIcon(profile.rightStickButton.iconImage);
+
+            leftShoulder.SetProfile(profile);
+            leftShoulder.SetNormalizedPosition(profile.leftShoulder.position);
+            //leftShoulder.SetScale(profile.leftShoulder.scale);
+            leftShoulder.SetIcon(profile.leftShoulder.iconImage);
+
+            rightShoulder.SetProfile(profile);
+            rightShoulder.SetNormalizedPosition(profile.rightShoulder.position);
+            //rightShoulder.SetScale(profile.rightShoulder.scale);
+            rightShoulder.SetIcon(profile.rightShoulder.iconImage);
+
+            leftTrigger.SetProfile(profile);
+            leftTrigger.SetNormalizedPosition(profile.leftTrigger.position);
+            //leftTrigger.SetScale(profile.leftTrigger.scale);
+            leftTrigger.SetIcon(profile.leftTrigger.iconImage);
+
+            rightTrigger.SetProfile(profile);
+            rightTrigger.SetNormalizedPosition(profile.rightTrigger.position);
+            //rightTrigger.SetScale(profile.rightTrigger.scale);
+            rightTrigger.SetIcon(profile.rightTrigger.iconImage);
+
+            buttonStart.SetProfile(profile);
+            buttonStart.SetNormalizedPosition(profile.startButton.position);
+            //buttonStart.SetScale(profile.startButton.scale);
+            buttonStart.SetIcon(profile.startButton.iconImage);
+
+            buttonSelect.SetProfile(profile);
+            buttonSelect.SetNormalizedPosition(profile.selectButton.position);
+            //buttonSelect.SetScale(profile.selectButton.scale);
+            buttonSelect.SetIcon(profile.selectButton.iconImage);
+        }
+        else {
+            
+        }
+         
+
     }
 
     public GamepadMocker(GamepadType type)
@@ -68,21 +132,7 @@ public class GamepadMocker: MonoBehaviour
 
     public void Update()
     {
-        Debug.Log("leftStick : " + buttonStart.GetNormalizedPosition());
-        Debug.Log("rightStick : " + buttonSelect.GetNormalizedPosition());
-        Debug.Log("leftShoulder : " + leftShoulder.GetNormalizedPosition());
-        Debug.Log("rightShoulder : " + rightShoulder.GetNormalizedPosition());
-        Debug.Log("leftTrigger : " + leftTrigger.GetNormalizedPosition());
-        Debug.Log("rightTrigger : " + rightTrigger.GetNormalizedPosition());
-        Debug.Log("buttonStart : " + buttonStart.GetNormalizedPosition());
-        Debug.Log("buttonSelect : " + buttonSelect.GetNormalizedPosition());
-        Debug.Log("buttonNorth : " + buttonNorth.GetNormalizedPosition());
-        Debug.Log("buttonSouth : " + buttonSouth.GetNormalizedPosition());
-        Debug.Log("buttonWest : " + buttonWest.GetNormalizedPosition());
-        Debug.Log("buttonEast : " + buttonEast.GetNormalizedPosition());
-        Debug.Log("dPad : " + dPad.GetNormalizedPosition());
-        Debug.Log("leftStickButton : " + leftStickButton.GetNormalizedPosition());
-        Debug.Log("rightStickButton : " + rightStickButton.GetNormalizedPosition());
+
     }
 
     // ---------------

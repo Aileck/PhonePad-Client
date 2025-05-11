@@ -1,4 +1,5 @@
 using UnityEngine;
+using static GamepadConfig;
 
 public enum InputType
 {
@@ -10,6 +11,9 @@ public interface IGamepadComponent
 {
     Vector2 GetNormalizedPosition();
     void SetNormalizedPosition(Vector2 position);
-    void SetConfig(GamepadConfig config);
+    void SetProfile(Profile config);
     void SetLastInputType(InputType type);
+    void SetIcon(Sprite sprite);
+    Vector2 GetScale();
+    void SetScale(Vector2 scale);
 }

@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using static GamepadConfig;
 
 public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IGamepadComponent
 {
@@ -21,8 +22,12 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private RectTransform referenceParent;
 
     // Congfiguration
-    private GamepadConfig gamepadConfig;
+    private Profile gamepadConfig;
 
+    void Awake()
+    {
+        referenceParent = GameObject.FindGameObjectWithTag("Reference").GetComponent<RectTransform>();
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -31,7 +36,6 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         virtualStickRadius = stickBackground.rect.width * 0.5f;
 
-        referenceParent = GameObject.FindGameObjectWithTag("Reference").GetComponent<RectTransform>();
 
         ResetKnob();
     }
@@ -152,24 +156,34 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public Vector2 GetNormalizedPosition()
     {
+        Vector2 inputOffset = stickBackground.anchoredPosition;
+
+        float maxHorizontal = referenceParent.rect.width / 2;
+        float maxVertical = referenceParent.rect.height / 2;
+
+        // Normalize to range -1 to 1
         Vector2 normalized = new Vector2(
-            stickBackground.anchoredPosition.x / referenceParent.rect.width,
-            stickBackground.anchoredPosition.y / referenceParent.rect.height
+            Mathf.Clamp(inputOffset.x / maxHorizontal, -1f, 1f),
+            Mathf.Clamp(inputOffset.y / maxVertical, -1f, 1f)
         );
+
         return normalized;
     }
 
-    public void SetNormalizedPosition(Vector2 position)
+    public void SetNormalizedPosition(Vector2 normalizedPos)
     {
-        Vector2 anchored = new Vector2(
-            position.x * referenceParent.rect.width,
-            position.y * referenceParent.rect.height
-        );
+        normalizedPos.x = Mathf.Clamp(normalizedPos.x, -1f, 1f);
+        normalizedPos.y = Mathf.Clamp(normalizedPos.y, -1f, 1f);
 
-        stickBackground.anchoredPosition = anchored;
+        // Calculate the actual position based on the normalized values
+        float posX = normalizedPos.x * (referenceParent.rect.width / 2);
+        float posY = normalizedPos.y * (referenceParent.rect.height / 2);
+
+        // Set the anchored position
+        stickBackground.anchoredPosition = new Vector2(posX, posY);
     }
 
-    public void SetConfig(GamepadConfig config)
+    public void SetProfile(Profile config)
     {
         gamepadConfig = config;
     }
@@ -178,4 +192,20 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         lastInputType = type;
     }
+
+    public void SetIcon(Sprite sprite)
+    {
+        // Donot set icon for stick
+    }
+
+    public Vector2 GetScale()
+    {
+        return stickBackground.localScale;
+    }
+
+    public void SetScale(Vector2 scale)
+    {
+        stickBackground.localScale = scale;
+    }
+
 }

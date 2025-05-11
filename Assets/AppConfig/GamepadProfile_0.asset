@@ -12,6 +12,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c497f1cf5a889b4eb7b81655dcb63cc, type: 3}
   m_Name: GamepadProfile_0
   m_EditorClassIdentifier: 
+  xboxProfiles:
+  - buttonPressTransformScale: 0.95
+    syncVirtualInputWithGamepad: 0
+    ignorePhysicalGamepad: 1
+    buttonEast:
+      position: {x: 0.69, y: 0.25}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: 10bb9b75d74f7fc4b9dc584bc8e995ec, type: 3}
+      backgoundImage: {fileID: 0}
+    buttonSouth:
+      position: {x: 0.58, y: 0.06}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: 2a81cfa437393a346a687229a264bf60, type: 3}
+      backgoundImage: {fileID: 0}
+    buttonWest:
+      position: {x: 0.48, y: 0.25}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: c1cc7d9e01608594fb0d60da0f4db4e7, type: 3}
+      backgoundImage: {fileID: 0}
+    buttonNorth:
+      position: {x: 0.58, y: 0.44}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: a496c6a0a30b77a40bdd369c7b031fa7, type: 3}
+      backgoundImage: {fileID: 0}
+    leftShoulder:
+      position: {x: -0.44, y: 0.78}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: 83360ebdaa640bb4cb994f5dbfa488ad, type: 3}
+      backgoundImage: {fileID: 0}
+    rightShoulder:
+      position: {x: 0.44, y: 0.78}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: 9ec54de92f8a7c64dbf255e7285a2a0e, type: 3}
+      backgoundImage: {fileID: 0}
+    leftTrigger:
+      position: {x: -0.71, y: 0.78}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: f8d2b322944b63944b9e08e4a7b9f5c0, type: 3}
+      backgoundImage: {fileID: 0}
+    rightTrigger:
+      position: {x: 0.71, y: 0.78}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: fc28ea008d77d8644bca977a2bbb0953, type: 3}
+      backgoundImage: {fileID: 0}
+    leftStickButton:
+      position: {x: -0.65, y: -0.24}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: fa2d72fe9e49021459f1d9e26e8aeda9, type: 3}
+      backgoundImage: {fileID: 0}
+    rightStickButton:
+      position: {x: 0.65, y: -0.24}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: e88e757713a594b429752faef7b6d7a5, type: 3}
+      backgoundImage: {fileID: 0}
+    startButton:
+      position: {x: 0.16, y: 0.51}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: b20a7505cca6f7449a45f38f43c364e4, type: 3}
+      backgoundImage: {fileID: 0}
+    selectButton:
+      position: {x: -0.16, y: 0.51}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 21300000, guid: 65a120980cbfb9440a726578b1e3db71, type: 3}
+      backgoundImage: {fileID: 0}
+    dPad:
+      position: {x: -0.39, y: -0.57}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 0}
+      backgoundImage: {fileID: 0}
+    leftStick:
+      position: {x: -0.58, y: 0.25}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 0}
+      backgoundImage: {fileID: 0}
+    rightStick:
+      position: {x: 0.39, y: -0.57}
+      scale: {x: 1, y: 1}
+      iconImage: {fileID: 0}
+      backgoundImage: {fileID: 0}
   buttonPressTransformScale: 0.98
   syncVirtualInputWithGamepad: 0
   ignorePhysicalGamepad: 1
