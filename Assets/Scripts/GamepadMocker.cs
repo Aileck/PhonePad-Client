@@ -128,8 +128,11 @@ public class GamepadMocker: MonoBehaviour
             leftStickButton = leftStickButton.GetButtonInput(),
             rightStickButton = rightStickButton.GetButtonInput(),
 
-            leftStick = leftStick.GetJoystickInput(),
-            rightStick = rightStick.GetJoystickInput(),
+            leftStickX = leftStick.GetJoystickInput().x,
+            leftStickY = leftStick.GetJoystickInput().y,
+
+            rightStickX = rightStick.GetJoystickInput().x,
+            rightStickY = rightStick.GetJoystickInput().y,
 
             buttonStart = buttonStart.GetButtonInput(),
             buttonSelect = buttonSelect.GetButtonInput(),

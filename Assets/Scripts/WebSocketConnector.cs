@@ -142,6 +142,7 @@ public class WebSocketConnector : MonoBehaviour
 
     public void RegisterMyGamepad()
     {
+        Debug.Log("Registering gamepad...");
         if (websocket != null && websocket.State == WebSocketState.Open)
         {
             WebSockerPayload payload = new WebSockerPayload
@@ -155,6 +156,8 @@ public class WebSocketConnector : MonoBehaviour
             byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
 
             websocket.Send(msgpackBytes);
+            Debug.Log("Gamepad registered");
+
         }
         else
         {

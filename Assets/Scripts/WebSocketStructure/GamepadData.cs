@@ -24,8 +24,11 @@ public class GamepadData
     public bool leftStickButton;
     public bool rightStickButton;
 
-    public Vector2 leftStick;
-    public Vector2 rightStick;
+    public float leftStickX;
+    public float leftStickY;
+
+    public float rightStickX;
+    public float rightStickY;
 
     public bool buttonStart;
     public bool buttonSelect;
