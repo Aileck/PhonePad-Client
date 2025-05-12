@@ -6,6 +6,8 @@ Currently supports Android devices.
 
 It allows your phone and connected controller to function similarly to popular game controllers such as the DualShock 4 and Xbox 360 controller.
 
+Demostrative Video: https://www.youtube.com/watch?v=13fSelx3i2I 
+
 ## Technical specification
 ![image](https://github.com/user-attachments/assets/e65f9655-76ed-431d-8856-86d3384e1114)
 
