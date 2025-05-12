@@ -1,6 +1,6 @@
 PhonePad (Code Name)
 -----------------------
-A lightweight and fast-communication app that turns your smartphone into a gamepad. 
+A fast-communication app that turns your smartphone into a gamepad. 
 
 Currently supports Android devices. 
 
