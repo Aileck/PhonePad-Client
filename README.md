@@ -9,7 +9,7 @@ It allows your phone and connected controller to function similarly to popular g
 Demostrative Video: https://www.youtube.com/watch?v=13fSelx3i2I 
 
 ## Technical specification
-![image](https://github.com/user-attachments/assets/e65f9655-76ed-431d-8856-86d3384e1114)
+![image](https://github.com/user-attachments/assets/432fb0d9-eaa7-4acf-bb2f-1d7e95a6a074)
 
 ### Architecture:
  - Gamepad services library (C++): https://github.com/Aileck/Gamepad_API
