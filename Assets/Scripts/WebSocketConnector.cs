@@ -33,8 +33,8 @@ public class WebSocketConnector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-#if !UNITY_WEBGL
-//#if !UNITY_WEBGL || UNITY_EDITOR
+        //#if !UNITY_WEBGL
+#if !UNITY_WEBGL || UNITY_EDITOR
         websocket?.DispatchMessageQueue();
 #endif
 
@@ -56,7 +56,7 @@ public class WebSocketConnector : MonoBehaviour
         string ip = (connectionTesting)? "echo.websocket.org" : inputField.text;
         string port = (connectionTesting) ? "8080": defaultPort;
 
-        string wsUrl = "ws://" + ip + ":" + port;
+        string wsUrl = "wss://192.168.1.185:8080";
 
 
         PlayerPrefs.SetString(ipPrefKey, ip);
@@ -65,7 +65,6 @@ public class WebSocketConnector : MonoBehaviour
         statusText.text = testing + " to " + wsUrl;
 
         websocket = new WebSocket(wsUrl);
-        //websocket = new WebSocket("wss://ws.postman-echo.com/raw");
 
         websocket.OnOpen += () =>
         {
@@ -90,7 +89,7 @@ public class WebSocketConnector : MonoBehaviour
         websocket.OnClose += (e) =>
         {
             statusText.text = "Connection closed!";
-            Debug.Log("Connection closed!");
+            Debug.Log("Connection closed! " + e);
         };
 
         websocket.OnMessage += (bytes) =>

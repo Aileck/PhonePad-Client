@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xboxProfiles:
   - buttonPressTransformScale: 0.95
-    syncVirtualInputWithGamepad: 0
-    ignorePhysicalGamepad: 1
+    syncVirtualInputWithGamepad: 1
+    ignorePhysicalGamepad: 0
     buttonEast:
       position: {x: 0.69, y: 0.25}
       scale: {x: 1, y: 1}
@@ -93,8 +93,8 @@ MonoBehaviour:
       backgoundImage: {fileID: 0}
   dualShockProfiles:
   - buttonPressTransformScale: 0.95
-    syncVirtualInputWithGamepad: 0
-    ignorePhysicalGamepad: 1
+    syncVirtualInputWithGamepad: 1
+    ignorePhysicalGamepad: 0
     buttonEast:
       position: {x: 0.69, y: 0.25}
       scale: {x: 1, y: 1}
