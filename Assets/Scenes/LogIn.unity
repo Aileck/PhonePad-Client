@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 68bd250937a771047b803fa656a5f80d, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -513,6 +513,7 @@ MonoBehaviour:
   action: 15
   stickBackground: {fileID: 2017713925}
   stickKnob: {fileID: 264011226}
+  virtualStick: {x: 0, y: 0}
 --- !u!224 &264011226
 RectTransform:
   m_ObjectHideFlags: 0
@@ -588,7 +589,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &273189454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -719,7 +720,7 @@ Camera:
   m_GameObject: {fileID: 330585543}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -1422,6 +1423,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 13
   button: {fileID: 439844142}
+  virtualButtonPressed: 0
 --- !u!114 &439844142
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1696,6 +1698,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 8
   button: {fileID: 544623132}
+  virtualButtonPressed: 0
 --- !u!114 &544623132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1913,6 +1916,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 12
   button: {fileID: 629542728}
+  virtualButtonPressed: 0
 --- !u!1 &632885709
 GameObject:
   m_ObjectHideFlags: 0
@@ -2582,6 +2586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 2
   button: {fileID: 856927855}
+  virtualButtonPressed: 0
 --- !u!1 &882741236
 GameObject:
   m_ObjectHideFlags: 0
@@ -2928,6 +2933,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 3
   button: {fileID: 1059255168}
+  virtualButtonPressed: 0
 --- !u!1 &1103460356
 GameObject:
   m_ObjectHideFlags: 0
@@ -3280,6 +3286,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 10
   button: {fileID: 1304881380}
+  virtualButtonPressed: 0
 --- !u!114 &1304881380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3671,6 +3678,7 @@ MonoBehaviour:
   upRightButton: {fileID: 63465711}
   downLeftButton: {fileID: 467839952}
   downRightButton: {fileID: 1658240750}
+  virtualDPad: {x: 0, y: 0}
 --- !u!1 &1420157574
 GameObject:
   m_ObjectHideFlags: 0
@@ -3724,6 +3732,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 17
   button: {fileID: 1420157577}
+  virtualButtonPressed: 0
 --- !u!114 &1420157577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4493,6 +4502,7 @@ MonoBehaviour:
   rightShoulder: {fileID: 2116659837}
   buttonStart: {fileID: 1789719732}
   buttonSelect: {fileID: 1420157576}
+  gamepadType: 0
 --- !u!1 &1757295715
 GameObject:
   m_ObjectHideFlags: 0
@@ -4724,6 +4734,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 16
   button: {fileID: 1789719733}
+  virtualButtonPressed: 0
 --- !u!114 &1789719733
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4897,6 +4908,7 @@ MonoBehaviour:
   action: 14
   stickBackground: {fileID: 1328875432}
   stickKnob: {fileID: 1825896487}
+  virtualStick: {x: 0, y: 0}
 --- !u!1 &1845733707
 GameObject:
   m_ObjectHideFlags: 0
@@ -5400,6 +5412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 1
   button: {fileID: 1963602713}
+  virtualButtonPressed: 0
 --- !u!1 &2017713924
 GameObject:
   m_ObjectHideFlags: 0
@@ -5611,6 +5624,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 0
   button: {fileID: 2029793484}
+  virtualButtonPressed: 0
 --- !u!1 &2065070866
 GameObject:
   m_ObjectHideFlags: 0
@@ -5743,6 +5757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 11
   button: {fileID: 2094694650}
+  virtualButtonPressed: 0
 --- !u!114 &2094694650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5878,6 +5893,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: 9
   button: {fileID: 2116659838}
+  virtualButtonPressed: 0
 --- !u!114 &2116659838
 MonoBehaviour:
   m_ObjectHideFlags: 0
