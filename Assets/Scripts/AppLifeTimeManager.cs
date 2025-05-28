@@ -24,7 +24,7 @@ public class AppLifeTimeManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<AppLifeTimeManager>();
+                _instance = FindFirstObjectByType<AppLifeTimeManager>();
                 if (_instance == null)
                 {
                     GameObject go = new GameObject("AppLifeTimeManager");
@@ -71,8 +71,8 @@ public class AppLifeTimeManager : MonoBehaviour
         appStates = (AppState[])System.Enum.GetValues(typeof(AppState));
         currentAppState = AppState.RequestingLogin;
 
-        // Some app
-        Application.targetFrameRate = 30;
+        // App configuration
+        Application.targetFrameRate = 120;
         QualitySettings.vSyncCount = 0;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
     }
