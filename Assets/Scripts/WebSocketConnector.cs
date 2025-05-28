@@ -4,13 +4,13 @@ using TMPro;
 using MessagePack;
 using System.Collections;
 using System;
+using System.Threading.Tasks;
 
 public class WebSocketConnector : MonoBehaviour
 {
     public bool connectionTesting = false; 
     // For connection
     public TMP_InputField inputField;
-    public TMP_Text statusText;
     private WebSocket websocket;
 
     // Connection testing
@@ -25,13 +25,21 @@ public class WebSocketConnector : MonoBehaviour
     // For testing
     [SerializeField] private GamepadMocker gamepad;
 
+    private int sessionID = -1;
+    private GamepadType sessionGamepad;
+
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         // Get the saved IP address from PlayerPrefs
-        string savedIP = PlayerPrefs.GetString(ipPrefKey, "192.168.1.100");
+        //string savedIP = PlayerPrefs.GetString(ipPrefKey, "192.168.1.100");
 
-        inputField.text = savedIP;
+        //inputField.text = savedIP;
 
         // The ping coroutine is not neccesary for now
         //StartPingCoroutine();
@@ -44,17 +52,22 @@ public class WebSocketConnector : MonoBehaviour
         websocket?.DispatchMessageQueue();
 #endif
 
-        if (gamepad.IsConnected())
-        {
-            // Send gamepad state to server
-            HandleInputAction();
-        }
+        //if (gamepad.IsConnected())
+        //{
+        //    // Send gamepad state to server
+        //    HandleInputAction();
+        //}
     }
 
     private async void OnApplicationQuit()
     {
         if (websocket != null)
+        {
+            Send_Disconnect();
             await websocket.Close();
+            websocket = null;
+
+        }
     }
 
     public async void TryConnect()
@@ -68,7 +81,6 @@ public class WebSocketConnector : MonoBehaviour
         PlayerPrefs.SetString(ipPrefKey, ip);
 
         string testing = (connectionTesting) ? "Testing" : "Connecting";
-        statusText.text = testing + " to " + wsUrl;
 
         websocket = new WebSocket(wsUrl);
         //websocket = new WebSocket("wss://ws.postman-echo.com/raw");
@@ -89,13 +101,13 @@ public class WebSocketConnector : MonoBehaviour
 
         websocket.OnError += (e) =>
         {
-            statusText.text = "Error! " + e;
+            Send_Disconnect();
             Debug.Log("Error! " + e);
         };
 
         websocket.OnClose += (e) =>
         {
-            statusText.text = "Connection closed!";
+            Send_Disconnect();
             Debug.Log("Connection closed!");
         };
 
@@ -114,8 +126,8 @@ public class WebSocketConnector : MonoBehaviour
             {
                 gamepad.SetConnected(true);
                 gamepad.SetGamepadID(int.Parse(response.payload));
+
                 Debug.Log("Gamepad ID: " + response.payload);
-                statusText.text = "Registered! " + response.payload;
                 Debug.Log("Registered! " + response.payload);
             }
 
@@ -152,6 +164,173 @@ public class WebSocketConnector : MonoBehaviour
         await websocket.Connect();
     }
 
+    public async Task<bool> Send_ConnectionPetition(string ip, string port)
+    {
+        string wsUrl = "ws://" + ip + ":" + port;
+        websocket = new WebSocket(wsUrl);
+
+        var connectionTcs = new TaskCompletionSource<bool>();
+
+        websocket.OnOpen += () =>
+        {
+            WebSocketPayload payload = new WebSocketPayload
+            {
+                action = WebSocketAction.handshake.ToString(),
+                id = -1,
+                gamepadType = "",
+                gamepadData = null,
+            };
+
+            byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
+
+            websocket.Send(msgpackBytes); 
+
+            Debug.Log("Connection open!");
+            connectionTcs.SetResult(true); 
+        };
+
+        websocket.OnError += (e) =>
+        {
+            Debug.Log("Error! " + e);
+
+            connectionTcs.SetResult(false); 
+        };
+
+        websocket.OnClose += (e) =>
+        {
+            Debug.Log("Connection closed!");
+
+            if (!connectionTcs.Task.IsCompleted)
+                connectionTcs.SetResult(false);
+        };
+
+        websocket.OnMessage += (bytes) =>
+        {
+            WebSocketResponse response = MessagePackSerializer.Deserialize<WebSocketResponse>(bytes);
+            Debug.Log("Message received: " + response.action + " " + response.payload);
+
+            if (response.action.Equals("handshake_ack"))
+            {
+                Debug.Log("Connected! ");
+            }
+            else if (response.action.Equals("register_ack"))
+            {
+                sessionID = (int.Parse(response.payload));
+
+                Debug.Log("Gamepad ID: " + response.payload);
+            }
+            else if (response.action.Equals("delay_test_request"))
+            {
+                long receivedLocalTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+
+                WebSocketPingPayload pingPayload = new WebSocketPingPayload
+                {
+                    action = WebSocketAction.delay_test_request_ack.ToString(),
+                    id = sessionID,
+                    timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds(),
+                    payload = receivedLocalTime.ToString()
+                };
+
+                byte[] msgpackBytes = MessagePackSerializer.Serialize(pingPayload);
+
+                websocket.Send(msgpackBytes);
+
+                isDelayTesting = true;
+            }
+            else if (response.action.Equals("delay_end"))
+            {
+                isDelayTesting = false;
+            }
+        };
+        Debug.Log("Try open connection!");
+
+        websocket.Connect();
+
+        var timeoutTask = Task.Delay(5000); // 5s timeout   
+
+        var completedTask = await Task.WhenAny(connectionTcs.Task, timeoutTask);
+
+        if (completedTask == timeoutTask)
+        {
+            Debug.Log("Connection timeout!");
+            return false;
+        }
+
+        return connectionTcs.Task.Result;
+    }
+
+    public void Send_RegisterGamepad(GamepadType type)
+    {
+        if (websocket != null && websocket.State == WebSocketState.Open)
+        {
+            WebSocketPayload payload = new WebSocketPayload
+            {
+                action = WebSocketAction.register.ToString(),
+                id = -1,
+                gamepadType = type.ToString(),
+                gamepadData = null
+            };
+
+            sessionGamepad = type;
+
+            byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
+            websocket.Send(msgpackBytes);
+            Debug.Log("Gamepad registered");
+        }
+        else
+        {
+            Debug.Log("Send failed: not connected.");
+        }
+    }
+
+    public void Send_Input(GamepadData data)
+    {
+        if (websocket != null && websocket.State == WebSocketState.Open)
+        {
+            WebSocketPayload payload = new WebSocketPayload
+            {
+                action = WebSocketAction.input.ToString(),
+                id = sessionID,
+                gamepadType = sessionGamepad.ToString(),
+                gamepadData = data,
+            };
+
+            if (isDelayTesting)
+            {
+                payload.timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            }
+
+            byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
+            websocket.Send(msgpackBytes);
+        }
+        else
+        {
+            Debug.Log("Send failed: not connected.");
+        }
+    }
+
+    public void Send_Disconnect()
+    {
+        if (websocket.State == WebSocketState.Open)
+        {
+            WebSocketPayload payload = new WebSocketPayload
+            {
+                action = WebSocketAction.disconnect.ToString(),
+                id = sessionID,
+                gamepadType = sessionGamepad.ToString(),
+                gamepadData = null,
+            };
+
+            if (isDelayTesting)
+            {
+                payload.timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            }
+            byte[] msgpackBytes = MessagePackSerializer.Serialize(payload);
+
+            websocket.Send(msgpackBytes);
+        }
+    }
+
     public void HandleInputAction()
     {
         if (websocket != null && websocket.State == WebSocketState.Open)
@@ -176,7 +355,6 @@ public class WebSocketConnector : MonoBehaviour
         }
         else
         {
-            statusText.text = "Not connected!";
             Debug.Log("Send failed: not connected.");
         }
     }
@@ -205,7 +383,6 @@ public class WebSocketConnector : MonoBehaviour
         }
         else
         {
-            statusText.text = "Not connected!";
             Debug.Log("Send failed: not connected.");
         }
     }
@@ -233,7 +410,6 @@ public class WebSocketConnector : MonoBehaviour
         }
         else
         {
-            statusText.text = "Not connected!";
             Debug.Log("Send failed: not connected.");
         }
     }
@@ -261,9 +437,13 @@ public class WebSocketConnector : MonoBehaviour
         }
         else
         {
-            statusText.text = "Not connected!";
             Debug.Log("Send failed: not connected.");
         }
+    }
+
+    public GamepadType GetSessionGamepadType()
+    {
+        return sessionGamepad;
     }
 
     //private void StartPingCoroutine()

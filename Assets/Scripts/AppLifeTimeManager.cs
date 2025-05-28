@@ -1,0 +1,121 @@
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class AppLifeTimeManager : MonoBehaviour
+{
+    public enum AppState
+    {
+        RequestingLogin,
+        SelectingGamepad,
+        Playing,
+    }
+
+    public enum Error
+    {
+        None,
+        NoGamepad,
+        GamepadNotSupported,
+    }
+
+    private static AppLifeTimeManager _instance;
+    public static AppLifeTimeManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindObjectOfType<AppLifeTimeManager>();
+                if (_instance == null)
+                {
+                    GameObject go = new GameObject("AppLifeTimeManager");
+                    _instance = go.AddComponent<AppLifeTimeManager>();
+                    DontDestroyOnLoad(go);
+                }
+            }
+            return _instance;
+        }
+    }
+
+    public static event System.Action<AppState> OnStateChanged;
+
+    private AppState[] appStates;
+    private AppState currentAppState;
+
+    // Unique global web socket connector instance
+    [SerializeField] private WebSocketConnector webSocketConnector;
+
+    void Awake()
+    {
+        if (_instance == null)
+        {
+            _instance = this;
+            DontDestroyOnLoad(gameObject);
+            Initialize();
+        }
+        else if (_instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    void Start()
+    {
+        if (_instance == this)
+        {
+            appStates = (AppState[])System.Enum.GetValues(typeof(AppState));
+        }
+    }
+
+    private void Initialize()
+    {
+        appStates = (AppState[])System.Enum.GetValues(typeof(AppState));
+        currentAppState = AppState.RequestingLogin;
+
+        // Some app
+        Application.targetFrameRate = 30;
+        QualitySettings.vSyncCount = 0;
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+    }
+
+    public AppState CurrentState => currentAppState;
+
+
+    public void NextState()
+    {
+        int currentIndex = System.Array.IndexOf(appStates, currentAppState);
+        currentAppState = appStates[(currentIndex + 1) % appStates.Length];
+        InvokeStateChangeEvent();
+    }
+
+    public WebSocketConnector GetWebSocket()
+    {
+        return webSocketConnector;
+    }
+
+    public void ToQuestLogin()
+    {
+        currentAppState = AppState.RequestingLogin;
+        SceneManager.LoadScene("Login");
+        InvokeStateChangeEvent();
+    }
+
+    public void ToSelectGamepad()
+    {
+        currentAppState = AppState.SelectingGamepad;
+        InvokeStateChangeEvent();
+    }
+
+    public void ToPlaying()
+    {
+        currentAppState = AppState.Playing;
+
+        // Change scene
+        SceneManager.LoadScene("Play");
+        InvokeStateChangeEvent();
+    }
+
+    private void InvokeStateChangeEvent()
+    {
+        OnStateChanged?.Invoke(currentAppState);
+    }
+}

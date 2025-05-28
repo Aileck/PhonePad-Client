@@ -30,13 +30,13 @@ public class GamepadMocker: MonoBehaviour
     [SerializeField] private ButtonComponent buttonSelect;
 
 
-    private int gamepadID;
+    private int gamepadID = -1; // -1 means not assigned
     [SerializeField] private GamepadType gamepadType;
     private bool connected = false;
 
     private void Start()
     {
-        gamepadID = -1;
+        gamepadType = AppLifeTimeManager.Instance.GetWebSocket().GetSessionGamepadType();
 
         // Should not initialize here
         //gamepadConfig.Initialize();
@@ -199,13 +199,13 @@ public class GamepadMocker: MonoBehaviour
 
     public GamepadMocker(GamepadType type)
     {
-        gamepadID = -1;
+        //gamepadID = -1;
         gamepadType = type; 
     }
 
     public void Update()
     {
-
+        AppLifeTimeManager.Instance.GetWebSocket().Send_Input(GetGamepadStateAsJson());
     }
 
     // ---------------

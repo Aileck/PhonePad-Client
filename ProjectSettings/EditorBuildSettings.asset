@@ -6,7 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Xbox.unity
+    path: Assets/Scenes/LogIn.unity
+    guid: 155b778f88bcf1f49a0c36dc225d640a
+  - enabled: 0
+    path: Assets/Scenes/LogInV2.unity
+    guid: 70f06b79a764f7441bfc7c1664dca4bd
+  - enabled: 1
+    path: Assets/Scenes/Play.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

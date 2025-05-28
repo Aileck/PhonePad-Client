@@ -79,17 +79,17 @@ MonoBehaviour:
     dPad:
       position: {x: -0.39, y: -0.57}
       scale: {x: 1, y: 1}
-      iconImage: {fileID: 0}
+      iconImage: {fileID: 21300000, guid: f8bcee330d0bd764bb2d46ea2092aca4, type: 3}
       backgoundImage: {fileID: 0}
     leftStick:
       position: {x: -0.58, y: 0.25}
       scale: {x: 1, y: 1}
-      iconImage: {fileID: 0}
+      iconImage: {fileID: 21300000, guid: d2b75f3cb608b914b89f111eb9745c9f, type: 3}
       backgoundImage: {fileID: 0}
     rightStick:
       position: {x: 0.39, y: -0.57}
       scale: {x: 1, y: 1}
-      iconImage: {fileID: 0}
+      iconImage: {fileID: 21300000, guid: edc8a6d8c2449d14fb1521fd3d913956, type: 3}
       backgoundImage: {fileID: 0}
   dualShockProfiles:
   - buttonPressTransformScale: 0.95
@@ -158,15 +158,15 @@ MonoBehaviour:
     dPad:
       position: {x: -0.58, y: 0.25}
       scale: {x: 1, y: 1}
-      iconImage: {fileID: 0}
+      iconImage: {fileID: 21300000, guid: 1bc05d6d096aa9543b2b84a93402b93b, type: 3}
       backgoundImage: {fileID: 0}
     leftStick:
       position: {x: -0.39, y: -0.57}
       scale: {x: 1, y: 1}
-      iconImage: {fileID: 0}
+      iconImage: {fileID: 21300000, guid: d2b75f3cb608b914b89f111eb9745c9f, type: 3}
       backgoundImage: {fileID: 0}
     rightStick:
       position: {x: 0.39, y: -0.57}
       scale: {x: 1, y: 1}
-      iconImage: {fileID: 0}
+      iconImage: {fileID: 21300000, guid: edc8a6d8c2449d14fb1521fd3d913956, type: 3}
       backgoundImage: {fileID: 0}
