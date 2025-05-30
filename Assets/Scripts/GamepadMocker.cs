@@ -34,9 +34,10 @@ public class GamepadMocker: MonoBehaviour
     [SerializeField] private GamepadType gamepadType;
     private bool connected = false;
 
+    private int currentProfileIndex = 0;
     private void Start()
     {
-        gamepadType = AppLifeTimeManager.Instance.GetWebSocket().GetSessionGamepadType();
+        gamepadType = AppLifeTimeManager.Instance.GetSessionGamepad();
 
         // Should not initialize here
         //gamepadConfig.Initialize();
@@ -44,7 +45,7 @@ public class GamepadMocker: MonoBehaviour
         // TODO: Fefactr to optimize this S/H/*/T
         if (gamepadType == GamepadType.GAMEPAD_XBOX360)
         {
-            XboxProfile profile = gamepadConfig.xboxProfiles[0];
+            XboxProfile profile = gamepadConfig.xboxProfiles[currentProfileIndex];
 
             leftStick.SetProfile(profile);
             leftStick.SetNormalizedPosition(profile.leftStick.position);
@@ -247,6 +248,17 @@ public class GamepadMocker: MonoBehaviour
     {
         return connected;
     }
+
+    public void SetCurrentProfileIndex(int index) 
+    {
+        currentProfileIndex = index; 
+    }
+
+    public int GetCurrentProfileIndex()
+    {
+        return currentProfileIndex;
+    }
+
     public GamepadData GetGamepadStateAsJson()
     {
         GamepadData data = new GamepadData

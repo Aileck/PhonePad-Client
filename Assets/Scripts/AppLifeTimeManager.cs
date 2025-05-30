@@ -42,7 +42,11 @@ public class AppLifeTimeManager : MonoBehaviour
     private AppState currentAppState;
 
     // Unique global web socket connector instance
-    [SerializeField] private WebSocketConnector webSocketConnector;
+    private WebSocketConnector webSocketConnector;
+
+    [SerializeField] int SessionID = -1;
+    [SerializeField] GamepadType sessionGamepad = GamepadType.GAMEPAD_XBOX360;
+    [SerializeField] int sessionConfigProfileIndex = 0;
 
     void Awake()
     {
@@ -75,9 +79,44 @@ public class AppLifeTimeManager : MonoBehaviour
         Application.targetFrameRate = 120;
         QualitySettings.vSyncCount = 0;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
+        webSocketConnector = gameObject.GetComponent<WebSocketConnector>();
     }
 
-    public AppState CurrentState => currentAppState;
+    public AppState GetCurrentState()
+    {
+        return currentAppState;
+    }
+
+    public int GetSessionID()
+    {
+        return SessionID;
+    }
+
+    public void SetSessionID(int sessionID)
+    {
+        SessionID = sessionID;
+    }
+
+    public GamepadType GetSessionGamepad()
+    {
+        return sessionGamepad;
+    }
+
+    public void SetSessionGamepad(GamepadType gamepadType)
+    {
+        sessionGamepad = gamepadType;
+    }
+
+    public int GetSessionConfigProfileIndex()
+    {
+        return sessionConfigProfileIndex;
+    }
+
+    public void SetSessionConfigProfileIndex(int index)
+    {
+        sessionConfigProfileIndex = index;
+    }
+    //public AppState CurrentState => currentAppState;
 
 
     public void NextState()

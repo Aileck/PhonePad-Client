@@ -22,7 +22,9 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     private RectTransform referenceParent;
 
     // Congfiguration
+    private bool isDisabled = false;
     private Profile gamepadConfig;
+
 
     void Awake()
     {
@@ -42,7 +44,7 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     void Update()
     {
-        if (gamepadConfig.ignorePhysicalGamepad)
+        if (gamepadConfig.ignorePhysicalGamepad || isDisabled)
         {
             return;
         }
@@ -206,6 +208,11 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public void SetScale(Vector2 scale)
     {
         stickBackground.localScale = scale;
+    }
+
+    public void SetDisabled(bool disabled)
+    {
+        isDisabled = disabled;
     }
 
 }
