@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum ButtonsName
+public enum ButtonName
 {
     ButtonEast,
     ButtonSouth,

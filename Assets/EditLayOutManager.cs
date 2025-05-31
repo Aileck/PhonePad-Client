@@ -1,5 +1,4 @@
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -78,8 +77,6 @@ public class EditLayOutManager : MonoBehaviour
 
         RectTransform panelRect = layoutPanel.GetComponent<RectTransform>();
 
-        Debug.Log($"PrintLayout: {gamepadType}, Profile Index: {profileIndex}");
-
         if (gamepadType == GamepadType.GAMEPAD_XBOX360)
         {
             XboxProfile profile = gamepadConfig.xboxProfiles[profileIndex];
@@ -136,10 +133,75 @@ public class EditLayOutManager : MonoBehaviour
                 Image image = imageGO.GetComponent<Image>();
                 image.sprite = button.iconImage;
 
-                image.rectTransform.anchoredPosition = new Vector2(posX, posY);
-                image.rectTransform.localScale = new Vector3(button.scale.x, button.scale.y, 1f);
+                EditableButton editableProperty = imageGO.AddComponent<EditableButton>();
+                editableProperty.Initialice(button.name, layoutPanel.GetComponent<RectTransform>(), image);
+                editableProperty.SetNormalizedPosition(normalizedPos);
+                editableProperty.SetScale(button.scale);
             }
         }
 
+    }
+
+    public void Button_SaveLayout()
+    {
+        RectTransform panelRect = layoutPanel.GetComponent<RectTransform>();
+
+        GamepadType gamepadType = AppLifeTimeManager.Instance.GetSessionGamepad();
+        int profileIndex = 1;
+
+        AppLifeTimeManager.Instance.SetSessionConfigProfileIndex(profileIndex);
+
+        if (gamepadType == GamepadType.GAMEPAD_XBOX360)
+        {
+            XboxProfile profile = gamepadConfig.GetXboxProfile(profileIndex);
+
+            for (int i = panelRect.childCount - 1; i >= 0; i--)
+            {
+                EditableButton editableButton = panelRect.GetChild(i).GetComponent<EditableButton>();
+
+                profile.UpdateButtonPosition(
+                    editableButton.GetButtonName(),
+                    editableButton.GetNormalizedPosition()
+                );
+
+                profile.UpdateButtonScale(
+                    editableButton.GetButtonName(),
+                    editableButton.GetScale()
+                );
+            }
+
+            this.gameObject.SetActive(false);
+        }
+        else if (gamepadType == GamepadType.GAMEPAD_DUALSHOCK)
+        {
+            DualShockProfile profile = gamepadConfig.GetDualShockProfile(profileIndex);
+
+            for (int i = panelRect.childCount - 1; i >= 0; i--)
+            {
+                EditableButton editableButton = panelRect.GetChild(i).GetComponent<EditableButton>();
+
+                if (editableButton == null)
+                {
+                    continue; // Skip if the button is not editable
+                }
+                profile.UpdateButtonPosition(
+                    editableButton.GetButtonName(),
+                    editableButton.GetNormalizedPosition()
+                );
+
+                profile.UpdateButtonScale(
+                    editableButton.GetButtonName(),
+                    editableButton.GetScale()
+                );
+            }
+
+            this.gameObject.SetActive(false);
+        }
+        // Optionally, you can provide feedback to the user that the layout has been saved
+    }
+
+    public void Button_CancelEdit()
+    {
+        this.gameObject.SetActive(false);
     }
 }

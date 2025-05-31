@@ -5,31 +5,156 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "GamepadConfig", menuName = "Scriptable Objects/GamepadConfig")]
 public class GamepadConfig : ScriptableObject
 {
+    [Header("Resource Paths Configuration")]
+    public GamepadResourcePaths resourcePaths = new GamepadResourcePaths();
+
     public List<XboxProfile> xboxProfiles = new List<XboxProfile>();
     public List<DualShockProfile> dualShockProfiles = new List<DualShockProfile>();
 
+    private void OnEnable()
+    {
+        if (xboxProfiles.Count == 0)
+        {
+            AddDefaultXboxProfile();
+        }
 
-    //private void OnEnable()
-    //{
+        if (dualShockProfiles.Count == 0)
+        {
+            AddDefaultDualShockProfile();
+        }
+    }
 
-    //    AddDefaultProfile();
+    public XboxProfile GetXboxProfile(int index)
+    {
+        if (xboxProfiles.Count < index)
+        {
+            XboxProfile newProfile = new XboxProfile();
+            newProfile.SetDefaultProfile(resourcePaths.xboxPaths);
+            xboxProfiles.Add(newProfile);
+        }
 
-    //}
+        return xboxProfiles[xboxProfiles.Count - 1];
+    }
 
-    //// Method to add a default profile
-    //public void AddDefaultProfile()
-    //{
-    //    XboxProfile defaultProfile = new XboxProfile();
-    //    defaultProfile.SetDefaultProfile();
-    //    xboxProfiles.Add(defaultProfile);
-    //}
+    public DualShockProfile GetDualShockProfile(int index)
+    {
+        if (dualShockProfiles.Count < index)
+        {
+            DualShockProfile newProfile = new DualShockProfile();
+            newProfile.SetDefaultProfile(resourcePaths.playStationPaths);
+            dualShockProfiles.Add(newProfile);
+        }
+
+        return dualShockProfiles[dualShockProfiles.Count - 1];
+    }
+
+    public void AddDefaultXboxProfile()
+    {
+        XboxProfile defaultProfile = new XboxProfile();
+        defaultProfile.SetDefaultProfile(resourcePaths.xboxPaths);
+        xboxProfiles.Add(defaultProfile);
+    }
+
+    public void AddDefaultDualShockProfile()
+    {
+        DualShockProfile defaultProfile = new DualShockProfile();
+        defaultProfile.SetDefaultProfile(resourcePaths.playStationPaths);
+        dualShockProfiles.Add(defaultProfile);
+    }
+
+    public void RefreshAllProfileIcons()
+    {
+        foreach (var profile in xboxProfiles)
+        {
+            profile.RefreshIcons(resourcePaths.xboxPaths);
+        }
+
+        foreach (var profile in dualShockProfiles)
+        {
+            profile.RefreshIcons(resourcePaths.playStationPaths);
+        }
+
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this);
+#endif
+    }
+
+    private void OnValidate()
+    {
+        RefreshAllProfileIcons();
+    }
+
+    [Serializable]
+    public class GamepadResourcePaths
+    {
+        [Header("Xbox Resource Paths")]
+        public XboxResourcePaths xboxPaths = new XboxResourcePaths();
+
+        [Header("PlayStation Resource Paths")]
+        public PlayStationResourcePaths playStationPaths = new PlayStationResourcePaths();
+    }
+
+    [Serializable]
+    public class XboxResourcePaths
+    {
+        [Header("Button Icons")]
+        public Sprite buttonA;
+        public Sprite buttonB;
+        public Sprite buttonX;
+        public Sprite buttonY;
+
+        [Header("Shoulder & Trigger Icons")]
+        public Sprite leftBumper;
+        public Sprite rightBumper;
+        public Sprite leftTrigger;
+        public Sprite rightTrigger;
+
+        [Header("Stick Icons")]
+        public Sprite leftStick;
+        public Sprite rightStick;
+        public Sprite leftStickButton;
+        public Sprite rightStickButton;
+
+        [Header("Menu & D-Pad Icons")]
+        public Sprite startButton;
+        public Sprite selectButton;
+        public Sprite dPad;
+    }
+
+    [Serializable]
+    public class PlayStationResourcePaths
+    {
+        [Header("Face Button Icons")]
+        public Sprite buttonCross;
+        public Sprite buttonCircle;
+        public Sprite buttonSquare;
+        public Sprite buttonTriangle;
+
+        [Header("Shoulder & Trigger Icons")]
+        public Sprite l1Button;
+        public Sprite r1Button;
+        public Sprite l2Trigger;
+        public Sprite r2Trigger;
+
+        [Header("Stick Icons")]
+        public Sprite l3Button;
+        public Sprite r3Button;
+
+        [Header("Menu Icons")]
+        public Sprite optionsButton;
+        public Sprite shareButton;
+
+        [Header("D-Pad & Stick Icons")]
+        public Sprite dPad;
+        public Sprite leftStick;
+        public Sprite rightStick;
+    }
 
     [Serializable]
     public class Profile
     {
         [Header("General Settings")]
         public float buttonPressTransformScale;
-
         public bool syncVirtualInputWithGamepad;
         public bool ignorePhysicalGamepad;
 
@@ -55,215 +180,196 @@ public class GamepadConfig : ScriptableObject
 
         public ButtonProfile leftStick;
         public ButtonProfile rightStick;
+
+        protected void InitializeButtonProfiles()
+        {
+            buttonEast = buttonEast ?? new ButtonProfile();
+            buttonSouth = buttonSouth ?? new ButtonProfile();
+            buttonWest = buttonWest ?? new ButtonProfile();
+            buttonNorth = buttonNorth ?? new ButtonProfile();
+            leftShoulder = leftShoulder ?? new ButtonProfile();
+            rightShoulder = rightShoulder ?? new ButtonProfile();
+            leftTrigger = leftTrigger ?? new ButtonProfile();
+            rightTrigger = rightTrigger ?? new ButtonProfile();
+            leftStickButton = leftStickButton ?? new ButtonProfile();
+            rightStickButton = rightStickButton ?? new ButtonProfile();
+            startButton = startButton ?? new ButtonProfile();
+            selectButton = selectButton ?? new ButtonProfile();
+            dPad = dPad ?? new ButtonProfile();
+            leftStick = leftStick ?? new ButtonProfile();
+            rightStick = rightStick ?? new ButtonProfile();
+        }
+
+        public void UpdateButtonScale(ButtonName buttonName, Vector2 newScale)
+        {
+            ButtonProfile button = GetButtonProfile(buttonName);
+            if (button != null)
+            {
+                button.scale = newScale;
+            }
+        }
+
+        public void UpdateButtonPosition(ButtonName buttonName, Vector2 newPosition)
+        {
+            ButtonProfile button = GetButtonProfile(buttonName);
+            if (button != null)
+            {
+                button.position = newPosition;
+            }
+        }
+
+        protected ButtonProfile GetButtonProfile(ButtonName buttonName)
+        {
+            switch (buttonName)
+            {
+                case ButtonName.ButtonEast: return buttonEast;
+                case ButtonName.ButtonSouth: return buttonSouth;
+                case ButtonName.ButtonWest: return buttonWest;
+                case ButtonName.ButtonNorth: return buttonNorth;
+                case ButtonName.LeftShoulder: return leftShoulder;
+                case ButtonName.RightShoulder: return rightShoulder;
+                case ButtonName.LeftTrigger: return leftTrigger;
+                case ButtonName.RightTrigger: return rightTrigger;
+                case ButtonName.LeftStickButton: return leftStickButton;
+                case ButtonName.RightStickButton: return rightStickButton;
+                case ButtonName.StartButton: return startButton;
+                case ButtonName.SelectButton: return selectButton;
+                case ButtonName.DPad: return dPad;
+                case ButtonName.LeftStick: return leftStick;
+                case ButtonName.RightStick: return rightStick;
+                default: return null;
+            }
+        }
     }
 
     [Serializable]
     public class XboxProfile : Profile
     {
-        public void SetDefaultProfile()
+        public void SetDefaultProfile(XboxResourcePaths paths)
         {
-            // Initialize all button profiles if they're null
-            buttonEast = buttonEast ?? new ButtonProfile();
-            buttonSouth = buttonSouth ?? new ButtonProfile();
-            buttonWest = buttonWest ?? new ButtonProfile();
-            buttonNorth = buttonNorth ?? new ButtonProfile();
-            leftShoulder = leftShoulder ?? new ButtonProfile();
-            rightShoulder = rightShoulder ?? new ButtonProfile();
-            leftTrigger = leftTrigger ?? new ButtonProfile();
-            rightTrigger = rightTrigger ?? new ButtonProfile();
-            leftStickButton = leftStickButton ?? new ButtonProfile();
-            rightStickButton = rightStickButton ?? new ButtonProfile();
-            startButton = startButton ?? new ButtonProfile();
-            selectButton = selectButton ?? new ButtonProfile();
-            dPad = dPad ?? new ButtonProfile();
-            leftStick = leftStick ?? new ButtonProfile();
-            rightStick = rightStick ?? new ButtonProfile();
+            buttonPressTransformScale = 0.9f;
+            InitializeButtonProfiles();
 
-            buttonEast.position = new Vector2(0.69f, 0.25f);
-            buttonEast.scale = new Vector2(1f, 1f);
-            buttonEast.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_b.png");
-            buttonEast.name = ButtonsName.ButtonEast.ToString();
+            SetupButton(buttonEast, new Vector2(0.69f, 0.25f), paths.buttonB, ButtonName.ButtonEast);
+            SetupButton(buttonSouth, new Vector2(0.58f, 0.06f), paths.buttonA, ButtonName.ButtonSouth);
+            SetupButton(buttonWest, new Vector2(0.48f, 0.25f), paths.buttonX, ButtonName.ButtonWest);
+            SetupButton(buttonNorth, new Vector2(0.58f, 0.44f), paths.buttonY, ButtonName.ButtonNorth);
 
-            buttonSouth.position = new Vector2(0.58f, 0.06f);
-            buttonSouth.scale = new Vector2(1f, 1f);
-            buttonSouth.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_a.png");
-            buttonSouth.name = ButtonsName.ButtonSouth.ToString();
+            SetupButton(leftShoulder, new Vector2(-0.44f, 0.78f), paths.leftBumper, ButtonName.LeftShoulder);
+            SetupButton(rightShoulder, new Vector2(0.44f, 0.78f), paths.rightBumper, ButtonName.RightShoulder);
+            SetupButton(leftTrigger, new Vector2(-0.71f, 0.78f), paths.leftTrigger, ButtonName.LeftTrigger);
+            SetupButton(rightTrigger, new Vector2(0.71f, 0.78f), paths.rightTrigger, ButtonName.RightTrigger);
 
-            buttonWest.position = new Vector2(0.48f, 0.25f);
-            buttonWest.scale = new Vector2(1f, 1f);
-            buttonWest.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_x.png");
-            buttonWest.name = ButtonsName.ButtonWest.ToString();
+            SetupButton(leftStickButton, new Vector2(-0.65f, -0.24f), paths.leftStickButton, ButtonName.LeftStickButton);
+            SetupButton(rightStickButton, new Vector2(0.65f, -0.24f), paths.rightStickButton, ButtonName.RightStickButton);
 
-            buttonNorth.position = new Vector2(0.58f, 0.44f);
-            buttonNorth.scale = new Vector2(1f, 1f);
-            buttonNorth.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_y.png");
-            buttonNorth.name = ButtonsName.ButtonNorth.ToString();
+            SetupButton(startButton, new Vector2(0.16f, 0.51f), paths.startButton, ButtonName.StartButton);
+            SetupButton(selectButton, new Vector2(-0.16f, 0.51f), paths.selectButton, ButtonName.SelectButton);
 
-            leftShoulder.position = new Vector2(-0.44f, 0.78f);
-            leftShoulder.scale = new Vector2(1f, 1f);
-            leftShoulder.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_lb.png");
-            leftShoulder.name = ButtonsName.LeftShoulder.ToString();
+            SetupButton(dPad, new Vector2(-0.39f, -0.57f), paths.dPad, ButtonName.DPad);
+            SetupButton(leftStick, new Vector2(-0.58f, 0.25f), paths.leftStick, ButtonName.LeftStick);
+            SetupButton(rightStick, new Vector2(0.39f, -0.57f), paths.rightStick, ButtonName.RightStick);
+        }
 
-            rightShoulder.position = new Vector2(0.44f, 0.78f);
-            rightShoulder.scale = new Vector2(1f, 1f);
-            rightShoulder.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_rb.png");
-            rightShoulder.name = ButtonsName.RightShoulder.ToString();
+        public void RefreshIcons(XboxResourcePaths paths)
+        {
+            if (buttonEast != null) buttonEast.iconImage = paths.buttonB;
+            if (buttonSouth != null) buttonSouth.iconImage = paths.buttonA;
+            if (buttonWest != null) buttonWest.iconImage = paths.buttonX;
+            if (buttonNorth != null) buttonNorth.iconImage = paths.buttonY;
 
-            leftTrigger.position = new Vector2(-0.71f, 0.78f);
-            leftTrigger.scale = new Vector2(1f, 1f);
-            leftTrigger.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_lt.png");
-            leftTrigger.name = ButtonsName.LeftTrigger.ToString();
+            if (leftShoulder != null) leftShoulder.iconImage = paths.leftBumper;
+            if (rightShoulder != null) rightShoulder.iconImage = paths.rightBumper;
+            if (leftTrigger != null) leftTrigger.iconImage = paths.leftTrigger;
+            if (rightTrigger != null) rightTrigger.iconImage = paths.rightTrigger;
 
-            rightTrigger.position = new Vector2(0.71f, 0.78f);
-            rightTrigger.scale = new Vector2(1f, 1f);
-            rightTrigger.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_rt.png");
-            rightTrigger.name = ButtonsName.RightTrigger.ToString();
+            if (leftStickButton != null) leftStickButton.iconImage = paths.leftStickButton;
+            if (rightStickButton != null) rightStickButton.iconImage = paths.rightStickButton;
 
-            leftStickButton.position = new Vector2(-0.65f, -0.24f);
-            leftStickButton.scale = new Vector2(1f, 1f);
-            leftStickButton.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_l3.png");
-            leftStickButton.name = ButtonsName.LeftStickButton.ToString();
+            if (startButton != null) startButton.iconImage = paths.startButton;
+            if (selectButton != null) selectButton.iconImage = paths.selectButton;
 
+            if (dPad != null) dPad.iconImage = paths.dPad;
+            if (leftStick != null) leftStick.iconImage = paths.leftStick;
+            if (rightStick != null) rightStick.iconImage = paths.rightStick;
+        }
 
-            rightStickButton.position = new Vector2(0.65f, -0.24f);
-            rightStickButton.scale = new Vector2(1f, 1f);
-            rightStickButton.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_r3.png");
-            rightStickButton.name = ButtonsName.RightStickButton.ToString();    
-
-            startButton.position = new Vector2(-0.16f, 0.51f);
-            startButton.scale = new Vector2(1f, 1f);
-            startButton.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_start.png");
-            startButton.name = ButtonsName.StartButton.ToString();
-
-            selectButton.position = new Vector2(-0.16f, 0.51f);
-            selectButton.scale = new Vector2(1f, 1f);
-            selectButton.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_button_select.png");
-            selectButton.name = ButtonsName.SelectButton.ToString();
-
-            dPad.position = new Vector2(-0.39f, -0.57f);
-            dPad.scale = new Vector2(1f, 1f);
-            dPad.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_dpad_none.png");
-            dPad.name = ButtonsName.DPad.ToString();
-
-            leftStick.position = new Vector2(-0.58f, 0.25f);
-            leftStick.scale = new Vector2(1f, 1f);
-            leftStick.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_left_stick.png");
-            leftStick.name = ButtonsName.LeftStick.ToString();
-
-            rightStick.position = new Vector2(0.39f, -0.57f);
-            rightStick.scale = new Vector2(1f, 1f);
-            rightStick.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_right_stick.png");
-            rightStick.name = ButtonsName.RightStick.ToString();
+        private static void SetupButton(ButtonProfile button, Vector2 position, Sprite sprite, ButtonName buttonName)
+        {
+            button.position = position;
+            button.scale = new Vector2(1f, 1f);
+            button.iconImage = sprite;
+            button.name = buttonName;
         }
     }
-   
+
     [Serializable]
-    public class DualShockProfile : Profile {
-                public void SetDefaultProfile()
+    public class DualShockProfile : Profile
+    {
+        public void SetDefaultProfile(PlayStationResourcePaths paths)
         {
-            // Initialize all button profiles if they're null
-            buttonEast = buttonEast ?? new ButtonProfile();
-            buttonSouth = buttonSouth ?? new ButtonProfile();
-            buttonWest = buttonWest ?? new ButtonProfile();
-            buttonNorth = buttonNorth ?? new ButtonProfile();
-            leftShoulder = leftShoulder ?? new ButtonProfile();
-            rightShoulder = rightShoulder ?? new ButtonProfile();
-            leftTrigger = leftTrigger ?? new ButtonProfile();
-            rightTrigger = rightTrigger ?? new ButtonProfile();
-            leftStickButton = leftStickButton ?? new ButtonProfile();
-            rightStickButton = rightStickButton ?? new ButtonProfile();
-            startButton = startButton ?? new ButtonProfile();
-            selectButton = selectButton ?? new ButtonProfile();
-            dPad = dPad ?? new ButtonProfile();
-            leftStick = leftStick ?? new ButtonProfile();
-            rightStick = rightStick ?? new ButtonProfile();
+            buttonPressTransformScale = 0.9f;
+            InitializeButtonProfiles();
 
-            buttonEast.position = new Vector2(0.69f, 0.25f);
-            buttonEast.scale = new Vector2(1f, 1f);
-            buttonEast.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_circle.png");
-            buttonEast.name = ButtonsName.ButtonEast.ToString();
+            SetupButton(buttonEast, new Vector2(0.69f, 0.25f), paths.buttonCircle, ButtonName.ButtonEast);
+            SetupButton(buttonSouth, new Vector2(0.58f, 0.06f), paths.buttonCross, ButtonName.ButtonSouth);
+            SetupButton(buttonWest, new Vector2(0.48f, 0.25f), paths.buttonSquare, ButtonName.ButtonWest);
+            SetupButton(buttonNorth, new Vector2(0.58f, 0.44f), paths.buttonTriangle, ButtonName.ButtonNorth);
 
-            buttonSouth.position = new Vector2(0.58f, 0.06f);
-            buttonSouth.scale = new Vector2(1f, 1f);
-            buttonSouth.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_square.png");
-            buttonSouth.name = ButtonsName.ButtonSouth.ToString();
+            SetupButton(leftShoulder, new Vector2(-0.44f, 0.78f), paths.l1Button, ButtonName.LeftShoulder);
+            SetupButton(rightShoulder, new Vector2(0.44f, 0.78f), paths.r1Button, ButtonName.RightShoulder);
+            SetupButton(leftTrigger, new Vector2(-0.71f, 0.78f), paths.l2Trigger, ButtonName.LeftTrigger);
+            SetupButton(rightTrigger, new Vector2(0.71f, 0.78f), paths.r2Trigger, ButtonName.RightTrigger);
 
-            buttonWest.position = new Vector2(0.48f, 0.25f);
-            buttonWest.scale = new Vector2(1f, 1f);
-            buttonWest.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_triangle.png");
-            buttonWest.name = ButtonsName.ButtonWest.ToString();
+            SetupButton(leftStickButton, new Vector2(-0.65f, -0.24f), paths.l3Button, ButtonName.LeftStickButton);
+            SetupButton(rightStickButton, new Vector2(0.65f, -0.24f), paths.r3Button, ButtonName.RightStickButton);
 
-            buttonNorth.position = new Vector2(0.58f, 0.44f);
-            buttonNorth.scale = new Vector2(1f, 1f);
-            buttonNorth.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_x.png");
-            buttonNorth.name = ButtonsName.ButtonNorth.ToString();
+            SetupButton(startButton, new Vector2(-0.16f, 0.51f), paths.optionsButton, ButtonName.StartButton);
+            SetupButton(selectButton, new Vector2(0.16f, 0.51f), paths.shareButton, ButtonName.SelectButton);
 
-            leftShoulder.position = new Vector2(-0.44f, 0.78f);
-            leftShoulder.scale = new Vector2(1f, 1f);
-            leftShoulder.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_l1.png");
-            leftShoulder.name = ButtonsName.LeftShoulder.ToString();
+            SetupButton(dPad, new Vector2(-0.58f, 0.25f), paths.dPad, ButtonName.DPad);
+            SetupButton(leftStick, new Vector2(-0.39f, -0.57f), paths.leftStick, ButtonName.LeftStick);
+            SetupButton(rightStick, new Vector2(0.39f, -0.57f), paths.rightStick, ButtonName.RightStick);
+        }
 
-            rightShoulder.position = new Vector2(0.44f, 0.78f);
-            rightShoulder.scale = new Vector2(1f, 1f);
-            rightShoulder.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_r1.png");
-            rightShoulder.name = ButtonsName.RightShoulder.ToString();
+        public void RefreshIcons(PlayStationResourcePaths paths)
+        {
+            if (buttonEast != null) buttonEast.iconImage = paths.buttonCircle;
+            if (buttonSouth != null) buttonSouth.iconImage = paths.buttonCross;
+            if (buttonWest != null) buttonWest.iconImage = paths.buttonSquare;
+            if (buttonNorth != null) buttonNorth.iconImage = paths.buttonTriangle;
 
-            leftTrigger.position = new Vector2(-0.71f, 0.78f);
-            leftTrigger.scale = new Vector2(1f, 1f);
-            leftTrigger.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_l2.png");
-            leftTrigger.name = ButtonsName.LeftTrigger.ToString();
+            if (leftShoulder != null) leftShoulder.iconImage = paths.l1Button;
+            if (rightShoulder != null) rightShoulder.iconImage = paths.r1Button;
+            if (leftTrigger != null) leftTrigger.iconImage = paths.l2Trigger;
+            if (rightTrigger != null) rightTrigger.iconImage = paths.r2Trigger;
 
-            rightTrigger.position = new Vector2(0.71f, 0.78f);
-            rightTrigger.scale = new Vector2(1f, 1f);
-            rightTrigger.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_r2.png");
-            rightTrigger.name = ButtonsName.RightTrigger.ToString();
+            if (leftStickButton != null) leftStickButton.iconImage = paths.l3Button;
+            if (rightStickButton != null) rightStickButton.iconImage = paths.r3Button;
 
-            leftStickButton.position = new Vector2(-0.65f, -0.24f);
-            leftStickButton.scale = new Vector2(1f, 1f);
-            leftStickButton.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_l3.png");
-            leftStickButton.name = ButtonsName.LeftStickButton.ToString();
+            if (startButton != null) startButton.iconImage = paths.optionsButton;
+            if (selectButton != null) selectButton.iconImage = paths.shareButton;
 
+            if (dPad != null) dPad.iconImage = paths.dPad;
+            if (leftStick != null) leftStick.iconImage = paths.leftStick;
+            if (rightStick != null) rightStick.iconImage = paths.rightStick;
+        }
 
-            rightStickButton.position = new Vector2(0.65f, -0.24f);
-            rightStickButton.scale = new Vector2(1f, 1f);
-            rightStickButton.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_r3.png");
-            rightStickButton.name = ButtonsName.RightStickButton.ToString();    
-
-            startButton.position = new Vector2(-0.16f, 0.51f);
-            startButton.scale = new Vector2(1f, 1f);
-            startButton.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_none.png");
-            startButton.name = ButtonsName.StartButton.ToString();
-
-            selectButton.position = new Vector2(-0.16f, 0.51f);
-            selectButton.scale = new Vector2(1f, 1f);
-            selectButton.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/DualShock/Using/playstation_button_options.png");
-            selectButton.name = ButtonsName.SelectButton.ToString();
-
-            dPad.position = new Vector2(-0.58f, 0.25f);
-            dPad.scale = new Vector2(1f, 1f);
-            dPad.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_dpad_none.png");
-            dPad.name = ButtonsName.DPad.ToString();
-
-            leftStick.position = new Vector2(-0.39f, -0.57f);
-            leftStick.scale = new Vector2(1f, 1f);
-            leftStick.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_left_stick.png");
-            leftStick.name = ButtonsName.LeftStick.ToString();
-
-            rightStick.position = new Vector2(0.39f, -0.57f);
-            rightStick.scale = new Vector2(1f, 1f);
-            rightStick.iconImage = Resources.Load<Sprite>("Assets/Sprites/KennyInput/Xbox/Using/xbox_right_stick.png");
-            rightStick.name = ButtonsName.RightStick.ToString();
+        private static void SetupButton(ButtonProfile button, Vector2 position, Sprite sprite, ButtonName buttonName)
+        {
+            button.position = position;
+            button.scale = new Vector2(1f, 1f);
+            button.iconImage = sprite;
+            button.name = buttonName;
         }
     }
 
     [Serializable]
     public class ButtonProfile
     {
-        public string name;
-
+        public ButtonName name;
         public Vector2 position;
         public Vector2 scale;
-
         public Sprite iconImage;
         public Sprite backgoundImage;
     }

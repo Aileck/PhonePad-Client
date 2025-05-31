@@ -31,18 +31,28 @@ public class GamepadMocker: MonoBehaviour
 
 
     private int gamepadID = -1; // -1 means not assigned
-    [SerializeField] private GamepadType gamepadType;
     private bool connected = false;
 
-    private int currentProfileIndex = 0;
     private void Start()
     {
-        gamepadType = AppLifeTimeManager.Instance.GetSessionGamepad();
+        SetButtons();
+    }
 
-        // Should not initialize here
-        //gamepadConfig.Initialize();
+    public void Update()
+    {
+        AppLifeTimeManager.Instance.GetWebSocket().Send_Input(GetGamepadStateAsJson());
+    }
 
-        // TODO: Fefactr to optimize this S/H/*/T
+    private void OnEnable()
+    {
+        SetButtons();
+    }
+
+    private void SetButtons()
+    {
+        int currentProfileIndex = AppLifeTimeManager.Instance.GetSessionConfigProfileIndex();
+        GamepadType gamepadType = AppLifeTimeManager.Instance.GetSessionGamepad();
+
         if (gamepadType == GamepadType.GAMEPAD_XBOX360)
         {
             XboxProfile profile = gamepadConfig.xboxProfiles[currentProfileIndex];
@@ -119,8 +129,9 @@ public class GamepadMocker: MonoBehaviour
             //buttonSelect.SetScale(profile.selectButton.scale);
             buttonSelect.SetIcon(profile.selectButton.iconImage);
         }
-        else {
-            DualShockProfile profile = gamepadConfig.dualShockProfiles[0];
+        else
+        {
+            DualShockProfile profile = gamepadConfig.GetDualShockProfile(currentProfileIndex);
 
             leftStick.SetProfile(profile);
             leftStick.SetNormalizedPosition(profile.leftStick.position);
@@ -194,19 +205,6 @@ public class GamepadMocker: MonoBehaviour
             //buttonSelect.SetScale(profile.selectButton.scale);
             buttonSelect.SetIcon(profile.selectButton.iconImage);
         }
-         
-
-    }
-
-    public GamepadMocker(GamepadType type)
-    {
-        //gamepadID = -1;
-        gamepadType = type; 
-    }
-
-    public void Update()
-    {
-        AppLifeTimeManager.Instance.GetWebSocket().Send_Input(GetGamepadStateAsJson());
     }
 
     // ---------------
@@ -216,17 +214,6 @@ public class GamepadMocker: MonoBehaviour
     public int GetID()
     {
         return gamepadID;
-    }
-
-    public void SetGamepadType(GamepadType type)
-    {
-        gamepadType = type;
-        // Notify the gamepad type change to the system or other components
-    }
-
-    public GamepadType GetGamepadType()
-    {
-        return gamepadType;
     }
 
     public Vector2 GetLeftStickInput()
@@ -247,16 +234,6 @@ public class GamepadMocker: MonoBehaviour
     public bool IsConnected()
     {
         return connected;
-    }
-
-    public void SetCurrentProfileIndex(int index) 
-    {
-        currentProfileIndex = index; 
-    }
-
-    public int GetCurrentProfileIndex()
-    {
-        return currentProfileIndex;
     }
 
     public GamepadData GetGamepadStateAsJson()

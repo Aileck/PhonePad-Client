@@ -308,6 +308,4 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
     {
         dPadBackground.localScale = scale;
     }
-
-
 }
