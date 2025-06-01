@@ -5,6 +5,7 @@ using static GamepadConfig;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class EditButtonManager : MonoBehaviour
 {
@@ -126,7 +127,8 @@ public class EditButtonManager : MonoBehaviour
         contentObj.transform.SetParent(viewportRect, false);
         tablePanel = contentObj.AddComponent<RectTransform>();
         Image contentImage = contentObj.AddComponent<Image>();
-        contentImage.color = new Color(1, 1, 1, 0.05f); 
+        contentImage.color = new Color(1, 1, 1, 0.05f);
+        contentImage.sprite = Resources.Load<Sprite>("Dark UI/Free/Button_Large_A");
 
         tablePanel.anchorMin = new Vector2(0, 1);
         tablePanel.anchorMax = new Vector2(1, 1);
@@ -177,7 +179,7 @@ public class EditButtonManager : MonoBehaviour
         scrollRect.verticalScrollbar = scrollbar;
 
         float totalWidth = (cellWidth * 4) + (spacing * 3);
-        scrollViewRect.sizeDelta = new Vector2(totalWidth + 20, viewportHeight); // 加20是为了容纳滚动条
+        scrollViewRect.sizeDelta = new Vector2(totalWidth + 20, viewportHeight); 
     }
     private void CreateTable()
     {
@@ -191,7 +193,7 @@ public class EditButtonManager : MonoBehaviour
         float totalWidth = (cellWidth * 4) + (spacing * 3);
         float totalHeight = (dataList.Count * cellHeight) + ((dataList.Count - 1) * spacing);
         
-        tablePanel.sizeDelta = new Vector2(0, totalHeight); // 宽度使用0因为我们使用了anchor来控制宽度
+        tablePanel.sizeDelta = new Vector2(0, totalHeight); 
 
         // Create header row
         CreateRow(0, dataList[0]);
@@ -225,7 +227,7 @@ public class EditButtonManager : MonoBehaviour
     {
         GameObject imageCell = CreateCell(rowIndex, 0, "Button");
         Image imageComponent = imageCell.GetComponent<Image>();
-        imageComponent.sprite = data.image2D ? data.image2D : null;
+        imageComponent.sprite = Resources.Load<Sprite>("Dark UI/Free/Button_Large_A");
         imageComponent.preserveAspect = true;
 
         if (data.image2D != null)
@@ -242,7 +244,7 @@ public class EditButtonManager : MonoBehaviour
             containerRect.sizeDelta = Vector2.zero;
             containerRect.anchoredPosition = Vector2.zero;
 
-            imageComponent.sprite = null;
+            imageComponent.sprite = Resources.Load<Sprite>("Dark UI/Free/Button_Large_A");
         }
 
         if (buttonProfile != null)
@@ -266,6 +268,7 @@ public class EditButtonManager : MonoBehaviour
         cellObj.transform.SetParent(tablePanel, false);
 
         Image cellImage = cellObj.AddComponent<Image>();
+        cellImage.sprite = Resources.Load<Sprite>("Dark UI/Free/Button_Large_A");
         cellImage.color = rowIndex == 0 ? new Color(0.8f, 0.8f, 0.8f, 1) : new Color(1, 1, 1, 0.5f);
 
         if (rowIndex == 0)
@@ -364,5 +367,13 @@ public class EditButtonManager : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+
+        if (scrollViewRect != null)
+        {
+            Destroy(scrollViewRect.gameObject);
+        }
+
+        tablePanel = null;
+        scrollViewRect = null;
     }
 }

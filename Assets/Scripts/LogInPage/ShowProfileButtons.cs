@@ -15,8 +15,17 @@ public class ShowProfileButtons : MonoBehaviour
     [SerializeField] private int xboxProfileIndex = 0;
     [SerializeField] private int playstationProfileIndex = 0;
 
+    private const string xboxPererence = "xbox_pererence";
+    private const string dualShockPreference = "dualshock_pererence";
+
     void Start()
     {
+        int xboxIndex = PlayerPrefs.GetInt(xboxPererence, 0);
+        int dualshockIndex = PlayerPrefs.GetInt(dualShockPreference, 0);
+
+        xboxProfileIndex = xboxIndex;
+        playstationProfileIndex = dualshockIndex;
+
         InitializeHolders();
         DrawButtons();
         ProfileSelector.OnSelectionChanged += HandleSelectionChanged;

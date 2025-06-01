@@ -12,6 +12,9 @@ public class ProfileSelector : MonoBehaviour
     [SerializeField] TMP_Dropdown xboxProfileSelector;
     [SerializeField] TMP_Dropdown dualShockProfileSelector;
 
+    private const string xboxPererence = "xbox_pererence";
+    private const string dualShockPreference = "dualshock_pererence";
+
     // Event that sends both profile indices
     public static event Action<int, int> OnSelectionChanged;
 
@@ -44,8 +47,11 @@ public class ProfileSelector : MonoBehaviour
         xboxProfileSelector.AddOptions(options);
         dualShockProfileSelector.AddOptions(options);
 
-        xboxProfileSelector.value = 0;
-        dualShockProfileSelector.value = 0;
+        int xboxIndex = PlayerPrefs.GetInt(xboxPererence, HARCODED_DEFAULT_PROFILE);
+        int dualshockIndex = PlayerPrefs.GetInt(dualShockPreference, HARCODED_DEFAULT_PROFILE);
+
+        xboxProfileSelector.value = xboxIndex;
+        dualShockProfileSelector.value = dualshockIndex;
 
         xboxProfileSelector.onValueChanged.AddListener(OnXboxProfileSelected);
         dualShockProfileSelector.onValueChanged.AddListener(OnDualShockProfileSelected);
@@ -63,6 +69,9 @@ public class ProfileSelector : MonoBehaviour
             OnSelectionChanged?.Invoke(xboxProfileIndex, dualShockProfileIndex);
 
             AppLifeTimeManager.Instance.SetSessionConfigProfileIndex(xboxProfileIndex);
+
+            // Save the selected Xbox profile index
+            PlayerPrefs.SetInt(xboxPererence, xboxProfileIndex);
         }
     }
 
@@ -78,6 +87,9 @@ public class ProfileSelector : MonoBehaviour
             OnSelectionChanged?.Invoke(xboxProfileIndex, dualShockProfileIndex);
 
             AppLifeTimeManager.Instance.SetSessionConfigProfileIndex(dualShockProfileIndex);
+
+            // Save the selected DualShock profile index
+            PlayerPrefs.SetInt(dualShockPreference, dualShockProfileIndex);
         }
     }
 

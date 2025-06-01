@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Android;
+using System.Collections;
 using ZXing;
 
-// Json format to handle from QR code
 [System.Serializable]
 public class ServerInfo
 {
@@ -32,12 +33,10 @@ public class QRScanner : MonoBehaviour
                 Color32[] pixels = webcamTexture.GetPixels32();
                 int width = webcamTexture.width;
                 int height = webcamTexture.height;
-
                 string result = barcodeReader.Decode(pixels, width, height).Text;
                 if (result != null)
                 {
                     TryParseServerInfo(result, out ServerInfo info);
-
                     if (info != null)
                     {
                         TryConnect(info.port, info.ip);
@@ -54,13 +53,107 @@ public class QRScanner : MonoBehaviour
 
     public void StartCamera()
     {
+        StartCoroutine(RequestCameraPermissionAndStart());
+    }
+
+    private IEnumerator RequestCameraPermissionAndStart()
+    {
+        if (!HasCameraPermission())
+        {
+            Debug.Log("Camera permission not granted, requesting permission...");
+
+            RequestCameraPermission();
+
+            yield return new WaitUntil(() => HasCameraPermission() || PermissionDenied());
+
+            if (!HasCameraPermission())
+            {
+                Debug.LogError("Camera permission denied. Cannot start camera.");
+                OnCameraPermissionDenied();
+                yield break;
+            }
+        }
+
+        if (WebCamTexture.devices.Length == 0)
+        {
+            ShowToast("No camera available on this device");
+            yield break;
+        }
+
+        Debug.Log("Camera permission granted, starting camera...");
+        StartCameraInternal();
+    }
+
+    private bool HasCameraPermission()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        return Permission.HasUserAuthorizedPermission(Permission.Camera);
+#elif UNITY_IOS && !UNITY_EDITOR
+        return Application.HasUserAuthorization(UserAuthorization.WebCam);
+#else
+        return true;
+#endif
+    }
+
+    private void RequestCameraPermission()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        Permission.RequestUserPermission(Permission.Camera);
+#elif UNITY_IOS && !UNITY_EDITOR
+        Application.RequestUserAuthorization(UserAuthorization.WebCam);
+#endif
+    }
+
+    private bool PermissionDenied()
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        return !Permission.HasUserAuthorizedPermission(Permission.Camera) && 
+               !AndroidPermissionHelper.IsPermissionRequestInProgress();
+#elif UNITY_IOS && !UNITY_EDITOR
+        return Application.HasUserAuthorization(UserAuthorization.WebCam) == false;
+#else
+        return false;
+#endif
+    }
+
+    private void OnCameraPermissionDenied()
+    {
+        Debug.LogError("Camera permission is required to scan QR codes.");
+        ShowToast("Camera permission denied");
+        ShowPermissionDeniedDialog();
+    }
+
+    private void ShowPermissionDeniedDialog()
+    {
+        Debug.Log("Please grant camera permission in device settings to use QR scanner feature.");
+    }
+
+    private void ShowToast(string message)
+    {
+#if UNITY_ANDROID && !UNITY_EDITOR
+        using (AndroidJavaClass unityPlayer = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+        using (AndroidJavaObject currentActivity = unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
+        using (AndroidJavaClass toastClass = new AndroidJavaClass("android.widget.Toast"))
+        {
+            currentActivity.Call("runOnUiThread", new AndroidJavaRunnable(() =>
+            {
+                using (AndroidJavaObject toast = toastClass.CallStatic<AndroidJavaObject>("makeText", currentActivity, message, 1))
+                {
+                    toast.Call("show");
+                }
+            }));
+        }
+#endif
+    }
+
+    private void StartCameraInternal()
+    {
         if (webcamTexture == null)
         {
             webcamTexture = new WebCamTexture();
             cameraDisplay.texture = webcamTexture;
             cameraDisplay.material.mainTexture = webcamTexture;
         }
-
         webcamTexture.Play();
         isScanning = true;
         cameraPanel.SetActive(true);
@@ -95,7 +188,6 @@ public class QRScanner : MonoBehaviour
 
         if (isConnected)
         {
-            Debug.Log("Connection successful!");
             cameraDisplay.gameObject.SetActive(false);
             AppLifeTimeManager.Instance.ToSelectGamepad();
 
@@ -104,7 +196,6 @@ public class QRScanner : MonoBehaviour
         {
 
         }
-        Debug.Log("End of function!");
     }
 
     void OnDestroy()
@@ -116,3 +207,19 @@ public class QRScanner : MonoBehaviour
     }
 }
 
+#if UNITY_ANDROID && !UNITY_EDITOR
+public static class AndroidPermissionHelper
+{
+    private static bool permissionRequestInProgress = false;
+    
+    public static bool IsPermissionRequestInProgress()
+    {
+        return permissionRequestInProgress;
+    }
+    
+    public static void SetPermissionRequestInProgress(bool inProgress)
+    {
+        permissionRequestInProgress = inProgress;
+    }
+}
+#endif

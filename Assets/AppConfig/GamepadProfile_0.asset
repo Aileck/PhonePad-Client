@@ -198,7 +198,7 @@ MonoBehaviour:
       toggle: 0
     buttonSouth:
       name: 1
-      position: {x: 0.58, y: 0.059999995}
+      position: {x: 0.58, y: 0.06}
       scale: {x: 1, y: 1}
       iconImage: {fileID: 21300000, guid: 2a81cfa437393a346a687229a264bf60, type: 3}
       backgoundImage: {fileID: 0}
@@ -207,7 +207,7 @@ MonoBehaviour:
       toggle: 0
     buttonWest:
       name: 2
-      position: {x: -0.33026096, y: 0.049155228}
+      position: {x: 0.48, y: 0.25}
       scale: {x: 1, y: 1}
       iconImage: {fileID: 21300000, guid: c1cc7d9e01608594fb0d60da0f4db4e7, type: 3}
       backgoundImage: {fileID: 0}
@@ -261,7 +261,7 @@ MonoBehaviour:
       toggle: 0
     leftStickButton:
       name: 8
-      position: {x: -0.65, y: -0.23999998}
+      position: {x: -0.65, y: -0.24}
       scale: {x: 1, y: 1}
       iconImage: {fileID: 21300000, guid: fa2d72fe9e49021459f1d9e26e8aeda9, type: 3}
       backgoundImage: {fileID: 0}
@@ -270,7 +270,7 @@ MonoBehaviour:
       toggle: 0
     rightStickButton:
       name: 9
-      position: {x: 0.65, y: -0.23999998}
+      position: {x: 0.65, y: -0.24}
       scale: {x: 1, y: 1}
       iconImage: {fileID: 21300000, guid: e88e757713a594b429752faef7b6d7a5, type: 3}
       backgoundImage: {fileID: 0}
@@ -297,7 +297,7 @@ MonoBehaviour:
       toggle: 0
     dPad:
       name: 12
-      position: {x: -0.39, y: -0.57}
+      position: {x: -0.58, y: 0.25}
       scale: {x: 1, y: 1}
       iconImage: {fileID: 21300000, guid: 8523e43d160db4142a52ae505be476a1, type: 3}
       backgoundImage: {fileID: 0}
@@ -306,7 +306,7 @@ MonoBehaviour:
       toggle: 0
     leftStick:
       name: 13
-      position: {x: 0.03840262, y: -0.15292709}
+      position: {x: -0.39, y: -0.57}
       scale: {x: 1, y: 1}
       iconImage: {fileID: 21300000, guid: d2b75f3cb608b914b89f111eb9745c9f, type: 3}
       backgoundImage: {fileID: 0}
@@ -574,7 +574,7 @@ MonoBehaviour:
       toggle: 0
     dPad:
       name: 12
-      position: {x: 0.0076806387, y: 0.0600786}
+      position: {x: -0.39, y: -0.57}
       scale: {x: 1, y: 1}
       iconImage: {fileID: 21300000, guid: 8523e43d160db4142a52ae505be476a1, type: 3}
       backgoundImage: {fileID: 0}
@@ -583,7 +583,7 @@ MonoBehaviour:
       toggle: 0
     leftStick:
       name: 13
-      position: {x: -0.39, y: -0.57}
+      position: {x: -0.58, y: 0.25}
       scale: {x: 1, y: 1}
       iconImage: {fileID: 21300000, guid: d2b75f3cb608b914b89f111eb9745c9f, type: 3}
       backgoundImage: {fileID: 0}
