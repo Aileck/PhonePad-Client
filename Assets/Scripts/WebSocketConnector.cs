@@ -197,7 +197,7 @@ public class WebSocketConnector : MonoBehaviour
 
     public void Send_Disconnect()
     {
-        if (websocket.State == WebSocketState.Open)
+        if (websocket != null && websocket.State == WebSocketState.Open)
         {
             WebSocketPayload payload = new WebSocketPayload
             {

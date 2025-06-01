@@ -175,7 +175,12 @@ public class EditLayOutManager : MonoBehaviour
         else if (gamepadType == GamepadType.GAMEPAD_DUALSHOCK)
         {
             DualShockProfile profile = gamepadConfig.GetDualShockProfile(profileIndex);
-
+            Debug.Log("Saving DualShock Profile: " + profileIndex);
+            if (profile == null)
+            {
+                Debug.LogError("Profile not found for index: " + profileIndex);
+                return;
+            }
             for (int i = panelRect.childCount - 1; i >= 0; i--)
             {
                 EditableButton editableButton = panelRect.GetChild(i).GetComponent<EditableButton>();
@@ -195,13 +200,13 @@ public class EditLayOutManager : MonoBehaviour
                 );
             }
 
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
         }
         // Optionally, you can provide feedback to the user that the layout has been saved
     }
 
     public void Button_CancelEdit()
     {
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
     }
 }

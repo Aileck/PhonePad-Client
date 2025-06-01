@@ -214,9 +214,38 @@ public class GamepadConfig : ScriptableObject
             ButtonProfile button = GetButtonProfile(buttonName);
             if (button != null)
             {
+                Debug.Log($"Updating position for {buttonName}: {newPosition}");
                 button.position = newPosition;
             }
         }
+
+        public void UpdateButtonVisibility(ButtonName buttonName, bool isVisible)
+        {
+            ButtonProfile button = GetButtonProfile(buttonName);
+            if (button != null)
+            {
+                button.isVisible = isVisible;
+            }
+        }
+
+        public void UpdateButtonToggle(ButtonName buttonName, bool toggle)
+        {
+            ButtonProfile button = GetButtonProfile(buttonName);
+            if (button != null)
+            {
+                button.toggle = toggle;
+            }
+        }
+
+        public void UpdateButtonPressToActivate(ButtonName buttonName, bool pressToActivate)
+        {
+            ButtonProfile button = GetButtonProfile(buttonName);
+            if (button != null)
+            {
+                button.pressToActivate = pressToActivate;
+            }
+        }
+
 
         protected ButtonProfile GetButtonProfile(ButtonName buttonName)
         {
@@ -266,7 +295,7 @@ public class GamepadConfig : ScriptableObject
             SetupButton(startButton, new Vector2(0.16f, 0.51f), paths.startButton, ButtonName.StartButton);
             SetupButton(selectButton, new Vector2(-0.16f, 0.51f), paths.selectButton, ButtonName.SelectButton);
 
-            SetupButton(dPad, new Vector2(-0.39f, -0.57f), paths.dPad, ButtonName.DPad);
+            SetupButton(dPad, new Vector2(-0.39f, -0.57f), paths.dPad, ButtonName.DPad, false);
             SetupButton(leftStick, new Vector2(-0.58f, 0.25f), paths.leftStick, ButtonName.LeftStick);
             SetupButton(rightStick, new Vector2(0.39f, -0.57f), paths.rightStick, ButtonName.RightStick);
         }
@@ -294,12 +323,13 @@ public class GamepadConfig : ScriptableObject
             if (rightStick != null) rightStick.iconImage = paths.rightStick;
         }
 
-        private static void SetupButton(ButtonProfile button, Vector2 position, Sprite sprite, ButtonName buttonName)
+        private static void SetupButton(ButtonProfile button, Vector2 position, Sprite sprite, ButtonName buttonName, bool pressToActivate = true)
         {
             button.position = position;
             button.scale = new Vector2(1f, 1f);
             button.iconImage = sprite;
             button.name = buttonName;
+            button.pressToActivate = pressToActivate;
         }
     }
 
@@ -327,7 +357,7 @@ public class GamepadConfig : ScriptableObject
             SetupButton(startButton, new Vector2(-0.16f, 0.51f), paths.optionsButton, ButtonName.StartButton);
             SetupButton(selectButton, new Vector2(0.16f, 0.51f), paths.shareButton, ButtonName.SelectButton);
 
-            SetupButton(dPad, new Vector2(-0.58f, 0.25f), paths.dPad, ButtonName.DPad);
+            SetupButton(dPad, new Vector2(-0.58f, 0.25f), paths.dPad, ButtonName.DPad, false);
             SetupButton(leftStick, new Vector2(-0.39f, -0.57f), paths.leftStick, ButtonName.LeftStick);
             SetupButton(rightStick, new Vector2(0.39f, -0.57f), paths.rightStick, ButtonName.RightStick);
         }
@@ -355,12 +385,13 @@ public class GamepadConfig : ScriptableObject
             if (rightStick != null) rightStick.iconImage = paths.rightStick;
         }
 
-        private static void SetupButton(ButtonProfile button, Vector2 position, Sprite sprite, ButtonName buttonName)
+        private static void SetupButton(ButtonProfile button, Vector2 position, Sprite sprite, ButtonName buttonName, bool pressToActivate = true)
         {
             button.position = position;
             button.scale = new Vector2(1f, 1f);
             button.iconImage = sprite;
             button.name = buttonName;
+            button.pressToActivate = pressToActivate;
         }
     }
 
@@ -368,9 +399,16 @@ public class GamepadConfig : ScriptableObject
     public class ButtonProfile
     {
         public ButtonName name;
+
         public Vector2 position;
         public Vector2 scale;
+
         public Sprite iconImage;
         public Sprite backgoundImage;
+
+        public bool isVisible = true;
+        public bool pressToActivate = true;
+        public bool toggle = false;
+
     }
 }
