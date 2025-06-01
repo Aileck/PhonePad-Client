@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using static GamepadConfig;
 
-public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IGamepadComponent
+public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IPointerEnterHandler, IPointerExitHandler, IGamepadComponent
 {
     [SerializeField] private GamepadAction action;
 
@@ -13,7 +13,7 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [SerializeField] private RectTransform stickKnob;
 
     private float virtualStickRadius;
-    
+
     private InputType lastInputType = InputType.VIRTUAL;
 
     [SerializeField] private Vector2 virtualStick;
@@ -21,24 +21,24 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private RectTransform referenceParent;
 
-    // Congfiguration
     private bool isDisabled = false;
     private Profile gamepadConfig;
 
+    private bool pressToActivate = true;
+    private bool toggleActive = false;
+    private bool isToggled = false;
+    private Vector2 toggledValue = Vector2.zero;
+    private bool isHovering = false;
 
     void Awake()
     {
         referenceParent = GameObject.FindGameObjectWithTag("Reference").GetComponent<RectTransform>();
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         physicalStick = InputActionManager.Instance.GetAction(action);
-
         virtualStickRadius = stickBackground.rect.width * 0.5f;
-
-
         ResetKnob();
     }
 
@@ -53,6 +53,28 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             lastInputType = InputType.PYSHICAL;
         }
+
+        if (!pressToActivate && isHovering)
+        {
+            Vector2 pointerPosition = Pointer.current.position.ReadValue();
+
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                stickBackground,
+                pointerPosition,
+                null,
+                out Vector2 localPoint))
+            {
+                Vector2 clampedInput = GetClampedStickInput(localPoint);
+                SetKnobPosition(clampedInput);
+
+                if (!toggleActive)
+                {
+                    SetVirtulInput(clampedInput);
+                }
+
+                SetLastInputType(InputType.VIRTUAL);
+            }
+        }
     }
 
     void FixedUpdate()
@@ -62,7 +84,6 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return;
         }
 
-        // Only update the virtual joystick if the gamepad is connected and no virtual input is being used
         if (gamepadConfig.syncVirtualInputWithGamepad &&
             lastInputType == InputType.PYSHICAL)
         {
@@ -76,35 +97,65 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     {
         if (gamepadConfig.ignorePhysicalGamepad)
         {
-            return virtualStick;
+            return GetVirtualInput();
         }
 
-        // If no gamepad is connected, return the virtual joystick input
         if (Gamepad.current == null)
         {
-            return virtualStick;
+            return GetVirtualInput();
         }
 
-        // Return depending on the last input type
         if (lastInputType == InputType.PYSHICAL)
         {
             Vector2 physicalInput = physicalStick.ReadValue<Vector2>();
-
             return physicalInput;
         }
         else
         {
-            return virtualStick;
+            return GetVirtualInput();
         }
+    }
+
+    private Vector2 GetVirtualInput()
+    {
+        if (toggleActive && isToggled)
+        {
+            return toggledValue;
+        }
+        return virtualStick;
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        OnDrag(eventData);
+        if (pressToActivate)
+        {
+            OnDrag(eventData);
+        }
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        isHovering = true;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        isHovering = false;
+
+        if (!pressToActivate && !toggleActive)
+        {
+            virtualStick = Vector2.zero;
+            ResetKnob();
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (pressToActivate && !isHovering)
+        {
+            return;
+        }
+
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
             stickBackground,
             eventData.position,
@@ -113,7 +164,19 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             Vector2 clampedInput = GetClampedStickInput(localPoint);
             SetKnobPosition(clampedInput);
-            SetVirtulInput(clampedInput);
+
+            if (toggleActive)
+            {
+                toggledValue = clampedInput / virtualStickRadius;
+                if (!isToggled)
+                {
+                    isToggled = true;
+                }
+            }
+            else
+            {
+                SetVirtulInput(clampedInput);
+            }
 
             SetLastInputType(InputType.VIRTUAL);
         }
@@ -121,8 +184,24 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        virtualStick = Vector2.zero;
-        ResetKnob();
+        if (toggleActive)
+        {
+            if (isToggled && virtualStick.magnitude < 0.1f)
+            {
+                isToggled = false;
+                toggledValue = Vector2.zero;
+                virtualStick = Vector2.zero;
+                ResetKnob();
+            }
+        }
+        else
+        {
+            if (pressToActivate || !isHovering)
+            {
+                virtualStick = Vector2.zero;
+                ResetKnob();
+            }
+        }
     }
 
     private void ResetKnob()
@@ -132,7 +211,6 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     private Vector2 GetClampedStickInput(Vector2 input)
     {
-        // Clamp input to joystick radius
         float magnitude = input.magnitude;
         Vector2 clampedInput = input;
 
@@ -154,8 +232,6 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         virtualStick = position / virtualStickRadius;
     }
 
-    // Implements IGamepadComponent interface
-
     public Vector2 GetNormalizedPosition()
     {
         Vector2 inputOffset = stickBackground.anchoredPosition;
@@ -163,7 +239,6 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         float maxHorizontal = referenceParent.rect.width / 2;
         float maxVertical = referenceParent.rect.height / 2;
 
-        // Normalize to range -1 to 1
         Vector2 normalized = new Vector2(
             Mathf.Clamp(inputOffset.x / maxHorizontal, -1f, 1f),
             Mathf.Clamp(inputOffset.y / maxVertical, -1f, 1f)
@@ -177,11 +252,9 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         normalizedPos.x = Mathf.Clamp(normalizedPos.x, -1f, 1f);
         normalizedPos.y = Mathf.Clamp(normalizedPos.y, -1f, 1f);
 
-        // Calculate the actual position based on the normalized values
         float posX = normalizedPos.x * (referenceParent.rect.width / 2);
         float posY = normalizedPos.y * (referenceParent.rect.height / 2);
 
-        // Set the anchored position
         stickBackground.anchoredPosition = new Vector2(posX, posY);
     }
 
@@ -197,7 +270,6 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void SetIcon(Sprite sprite)
     {
-        // Donot set icon for stick
     }
 
     public Vector2 GetScale()
@@ -215,4 +287,24 @@ public class StickComponent : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         isDisabled = disabled;
     }
 
+    public void SetVisibility(bool isVisible)
+    {
+        stickBackground.gameObject.SetActive(isVisible);
+        stickKnob.gameObject.SetActive(isVisible);
+    }
+
+    public void SetPressToActivate(bool isPressed)
+    {
+        pressToActivate = isPressed;
+    }
+
+    public void SetToggleActive(bool isActive)
+    {
+        toggleActive = isActive;
+        if (!isActive)
+        {
+            isToggled = false;
+            toggledValue = Vector2.zero;
+        }
+    }
 }

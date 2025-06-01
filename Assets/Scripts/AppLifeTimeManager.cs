@@ -37,6 +37,7 @@ public class AppLifeTimeManager : MonoBehaviour
     }
 
     public static event System.Action<AppState> OnStateChanged;
+    public static event System.Action OnCurrentProfileChanged;
 
     private AppState[] appStates;
     private AppState currentAppState;
@@ -115,6 +116,7 @@ public class AppLifeTimeManager : MonoBehaviour
     public void SetSessionConfigProfileIndex(int index)
     {
         sessionConfigProfileIndex = index;
+        InvokeSessionProfileChanged();
     }
     //public AppState CurrentState => currentAppState;
 
@@ -156,5 +158,10 @@ public class AppLifeTimeManager : MonoBehaviour
     private void InvokeStateChangeEvent()
     {
         OnStateChanged?.Invoke(currentAppState);
+    }
+
+    private void InvokeSessionProfileChanged()
+    {
+        OnCurrentProfileChanged?.Invoke();
     }
 }

@@ -31,9 +31,11 @@ public class GamepadConfig : ScriptableObject
             XboxProfile newProfile = new XboxProfile();
             newProfile.SetDefaultProfile(resourcePaths.xboxPaths);
             xboxProfiles.Add(newProfile);
+
+            return xboxProfiles[xboxProfiles.Count - 1];
         }
 
-        return xboxProfiles[xboxProfiles.Count - 1];
+        return xboxProfiles[index];
     }
 
     public DualShockProfile GetDualShockProfile(int index)
@@ -43,9 +45,11 @@ public class GamepadConfig : ScriptableObject
             DualShockProfile newProfile = new DualShockProfile();
             newProfile.SetDefaultProfile(resourcePaths.playStationPaths);
             dualShockProfiles.Add(newProfile);
+
+            return dualShockProfiles[dualShockProfiles.Count - 1];
         }
 
-        return dualShockProfiles[dualShockProfiles.Count - 1];
+        return dualShockProfiles[index];
     }
 
     public void AddDefaultXboxProfile()
@@ -53,6 +57,10 @@ public class GamepadConfig : ScriptableObject
         XboxProfile defaultProfile = new XboxProfile();
         defaultProfile.SetDefaultProfile(resourcePaths.xboxPaths);
         xboxProfiles.Add(defaultProfile);
+
+        XboxProfile customProfile = new XboxProfile();
+        customProfile.SetDefaultCustomProfile(resourcePaths.xboxPaths);
+        xboxProfiles.Add(customProfile);
     }
 
     public void AddDefaultDualShockProfile()
@@ -60,6 +68,10 @@ public class GamepadConfig : ScriptableObject
         DualShockProfile defaultProfile = new DualShockProfile();
         defaultProfile.SetDefaultProfile(resourcePaths.playStationPaths);
         dualShockProfiles.Add(defaultProfile);
+
+        DualShockProfile customProfile = new DualShockProfile();
+        customProfile.SetDefaultCustomProfile(resourcePaths.playStationPaths);
+        dualShockProfiles.Add(customProfile);
     }
 
     public void RefreshAllProfileIcons()
@@ -300,6 +312,14 @@ public class GamepadConfig : ScriptableObject
             SetupButton(rightStick, new Vector2(0.39f, -0.57f), paths.rightStick, ButtonName.RightStick);
         }
 
+        public void SetDefaultCustomProfile(XboxResourcePaths paths)
+        {
+            SetDefaultProfile(paths);
+
+            dPad.position = new Vector2(-0.58f, 0.25f);
+            leftStick.position = new Vector2(-0.39f, -0.57f);
+        }
+
         public void RefreshIcons(XboxResourcePaths paths)
         {
             if (buttonEast != null) buttonEast.iconImage = paths.buttonB;
@@ -360,6 +380,13 @@ public class GamepadConfig : ScriptableObject
             SetupButton(dPad, new Vector2(-0.58f, 0.25f), paths.dPad, ButtonName.DPad, false);
             SetupButton(leftStick, new Vector2(-0.39f, -0.57f), paths.leftStick, ButtonName.LeftStick);
             SetupButton(rightStick, new Vector2(0.39f, -0.57f), paths.rightStick, ButtonName.RightStick);
+        }
+
+        public void SetDefaultCustomProfile(PlayStationResourcePaths paths)
+        {
+            SetDefaultProfile(paths);
+            dPad.position = new Vector2(-0.39f, -0.57f);
+            leftStick.position = new Vector2(-0.58f, 0.25f);
         }
 
         public void RefreshIcons(PlayStationResourcePaths paths)

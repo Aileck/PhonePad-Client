@@ -31,23 +31,24 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
     private RectTransform referenceParent;
 
-    // Up, Down, Right, Left = Vector2.up, Vector2.down, Vector2.right, Vector2.left
-    // U_L, U_R, D_L, D_R = Vector2(1, 1), Vector2(-1, 1), Vector2(1, -1), Vector2(-1, -1)
     [SerializeField] private Vector2 virtualDPad;
 
     private InputType lastInputType = InputType.VIRTUAL;
-    // Congfiguration
+
     private Profile gamepadConfig;
+
+    private bool pressToActivate = true;
+    private bool toggleActive = false;
+    private bool isToggled = false;
+    private Vector2 toggledValue = Vector2.zero;
 
     void Awake()
     {
         referenceParent = GameObject.FindGameObjectWithTag("Reference").GetComponent<RectTransform>();
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Initialize all arrow sprites to be inactive
         DeactivateAllArrows();
 
         AddButtonEvents(upButton, Vector2.up);
@@ -60,7 +61,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
         AddButtonEvents(downRightButton, new Vector2(1, -1));
         AddButtonEvents(downLeftButton, new Vector2(-1, -1));
 
-        // Initialize the physical DPad actions
         physicalUp = InputActionManager.Instance.GetAction(GamepadAction.Up);
         physicalDown = InputActionManager.Instance.GetAction(GamepadAction.Down);
         physicalLeft = InputActionManager.Instance.GetAction(GamepadAction.Left);
@@ -74,7 +74,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
             return;
         }
 
-        // Check if any physical input is active
         if (isPhysicalInputActive())
         {
             lastInputType = InputType.PYSHICAL;
@@ -88,7 +87,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
             return;
         }
 
-        // Only update the animation  if the gamepad is connected and no virtual input is being used
         if (gamepadConfig.syncVirtualInputWithGamepad &&
             lastInputType == InputType.PYSHICAL)
         {
@@ -103,23 +101,20 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
                 ResetDPad();
             }
         }
-
     }
 
     public Vector2 GetDpadInput()
     {
         if (gamepadConfig.ignorePhysicalGamepad)
         {
-            return virtualDPad;
+            return GetVirtualDPadInput();
         }
 
-        // If no gamepad is connected, return the virtual input
         if (Gamepad.current == null)
         {
-            return virtualDPad;
+            return GetVirtualDPadInput();
         }
 
-        // Return depending on the last input type
         if (lastInputType == InputType.PYSHICAL)
         {
             Vector2 physicalInput = GetPhysicalPadInput();
@@ -127,9 +122,17 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
         }
         else
         {
-            return virtualDPad;
+            return GetVirtualDPadInput();
         }
+    }
 
+    private Vector2 GetVirtualDPadInput()
+    {
+        if (toggleActive && isToggled)
+        {
+            return toggledValue;
+        }
+        return virtualDPad;
     }
 
     public bool GetUpInput()
@@ -161,20 +164,101 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
         EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
 
         var pointerDown = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        pointerDown.callback.AddListener((_) => OnButtonPress(direction));
+        pointerDown.callback.AddListener((data) => OnButtonPointerDown((PointerEventData)data, direction));
         trigger.triggers.Add(pointerDown);
 
         var pointerUp = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
-        pointerUp.callback.AddListener((_) => ResetDPad());
-        pointerUp.callback.AddListener((_) => ResetDPadValue());
+        pointerUp.callback.AddListener((data) => OnButtonPointerUp((PointerEventData)data, direction));
         trigger.triggers.Add(pointerUp);
+
+        var pointerEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+        pointerEnter.callback.AddListener((data) => OnButtonPointerEnter((PointerEventData)data, direction));
+        trigger.triggers.Add(pointerEnter);
+
+        var pointerExit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+        pointerExit.callback.AddListener((data) => OnButtonPointerExit((PointerEventData)data, direction));
+        trigger.triggers.Add(pointerExit);
+    }
+
+    private void OnButtonPointerDown(PointerEventData eventData, Vector2 direction)
+    {
+        if (pressToActivate)
+        {
+            if (toggleActive)
+            {
+                if (isToggled && toggledValue == direction)
+                {
+                    isToggled = false;
+                    toggledValue = Vector2.zero;
+                    ResetDPad();
+                    ResetDPadValue();
+                }
+                else
+                {
+                    isToggled = true;
+                    toggledValue = direction;
+                    OnButtonPress(direction);
+                }
+            }
+            else
+            {
+                OnButtonPress(direction);
+            }
+        }
+    }
+
+    private void OnButtonPointerUp(PointerEventData eventData, Vector2 direction)
+    {
+        if (pressToActivate && !toggleActive)
+        {
+            ResetDPad();
+            ResetDPadValue();
+        }
+    }
+
+    private void OnButtonPointerEnter(PointerEventData eventData, Vector2 direction)
+    {
+        if (!pressToActivate)
+        {
+            if (toggleActive)
+            {
+                if (isToggled && toggledValue == direction)
+                {
+                    isToggled = false;
+                    toggledValue = Vector2.zero;
+                    ResetDPad();
+                    ResetDPadValue();
+                }
+                else
+                {
+                    isToggled = true;
+                    toggledValue = direction;
+                    OnButtonPress(direction);
+                }
+            }
+            else
+            {
+                OnButtonPress(direction);
+            }
+        }
+    }
+
+    private void OnButtonPointerExit(PointerEventData eventData, Vector2 direction)
+    {
+        if (!pressToActivate && !toggleActive)
+        {
+            ResetDPad();
+            ResetDPadValue();
+        }
     }
 
     private void OnButtonPress(Vector2 direction)
     {
-        virtualDPad = direction;
+        if (!toggleActive)
+        {
+            virtualDPad = direction;
+        }
         ActivateArrows(direction);
-
         SetLastInputType(InputType.VIRTUAL);
     }
 
@@ -182,27 +266,24 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
     {
         dPadBackground.localEulerAngles = Vector3.zero;
         dPadBackground.localScale = Vector3.one;
-
-        // Deactivate all arrow sprites when released
         DeactivateAllArrows();
     }
 
     private void ResetDPadValue()
     {
-        virtualDPad = Vector2.zero;
+        if (!toggleActive)
+        {
+            virtualDPad = Vector2.zero;
+        }
     }
 
     private void ActivateArrows(Vector2 direction)
     {
-        // Deactivate all arrows first
         DeactivateAllArrows();
 
-        // Apply only visual scale change
         float scaleAmount = gamepadConfig.buttonPressTransformScale;
         dPadBackground.localScale = new Vector3(scaleAmount, scaleAmount, 1);
 
-        // Activate arrows based on the direction
-        // Check horizontal direction
         if (direction.x > 0)
         {
             RightArrowSprite.gameObject.SetActive(true);
@@ -212,7 +293,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
             LeftArrowSprite.gameObject.SetActive(true);
         }
 
-        // Check vertical direction
         if (direction.y > 0)
         {
             UpArrowSprite.gameObject.SetActive(true);
@@ -225,7 +305,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
     private void DeactivateAllArrows()
     {
-        // Deactivate all arrow sprites
         if (UpArrowSprite != null) UpArrowSprite.gameObject.SetActive(false);
         if (DownArrowSprite != null) DownArrowSprite.gameObject.SetActive(false);
         if (LeftArrowSprite != null) LeftArrowSprite.gameObject.SetActive(false);
@@ -241,7 +320,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
     private Vector2 GetPhysicalPadInput()
     {
         float horizontalInput = -physicalLeft.ReadValue<float>() + physicalRight.ReadValue<float>();
-
         float verticalInput = physicalUp.ReadValue<float>() - physicalDown.ReadValue<float>();
 
         Vector2 physicalInput = new Vector2(horizontalInput, verticalInput);
@@ -254,7 +332,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
         return physicalInput;
     }
 
-    // Implementing IGamepadComponent interface
     public Vector2 GetNormalizedPosition()
     {
         Vector2 inputOffset = dPadBackground.anchoredPosition;
@@ -262,7 +339,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
         float maxHorizontal = referenceParent.rect.width / 2;
         float maxVertical = referenceParent.rect.height / 2;
 
-        // Normalize to range -1 to 1
         Vector2 normalized = new Vector2(
             Mathf.Clamp(inputOffset.x / maxHorizontal, -1f, 1f),
             Mathf.Clamp(inputOffset.y / maxVertical, -1f, 1f)
@@ -276,11 +352,9 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
         normalizedPos.x = Mathf.Clamp(normalizedPos.x, -1f, 1f);
         normalizedPos.y = Mathf.Clamp(normalizedPos.y, -1f, 1f);
 
-        // Calculate the actual position based on the normalized values
         float posX = normalizedPos.x * (referenceParent.rect.width / 2);
         float posY = normalizedPos.y * (referenceParent.rect.height / 2);
 
-        // Set the anchored position
         dPadBackground.anchoredPosition = new Vector2(posX, posY);
     }
 
@@ -296,7 +370,6 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
 
     public void SetIcon(Sprite sprite)
     {
-        // Donot set icon for dpad
     }
 
     public Vector2 GetScale()
@@ -307,5 +380,33 @@ public class DPadComponent : MonoBehaviour, IGamepadComponent
     public void SetScale(Vector2 scale)
     {
         dPadBackground.localScale = scale;
+    }
+
+    public void SetVisibility(bool isVisible)
+    {
+        Debug.Log($"Setting DPad visibility to {isVisible}");
+
+        dPadBackground.gameObject.SetActive(isVisible);
+        UpArrowSprite.gameObject.SetActive(isVisible);
+        DownArrowSprite.gameObject.SetActive(isVisible);
+        LeftArrowSprite.gameObject.SetActive(isVisible);
+        RightArrowSprite.gameObject.SetActive(isVisible);
+    }
+
+    public void SetPressToActivate(bool isPressed)
+    {
+        pressToActivate = isPressed;
+    }
+
+    public void SetToggleActive(bool isActive)
+    {
+        toggleActive = isActive;
+        if (!isActive)
+        {
+            isToggled = false;
+            toggledValue = Vector2.zero;
+            ResetDPad();
+            ResetDPadValue();
+        }
     }
 }

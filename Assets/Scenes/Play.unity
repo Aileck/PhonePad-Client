@@ -2894,7 +2894,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7414351799845453167, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -100.00012
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 7414351799845453167, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4276,6 +4276,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7414351799845453167, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
   m_PrefabInstance: {fileID: 951004340}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1462756463 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4238248145866287202, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
+  m_PrefabInstance: {fileID: 951004340}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1494875213
 GameObject:
   m_ObjectHideFlags: 0
@@ -4527,7 +4538,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7414351799845453167, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 100.0001
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7414351799845453167, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -4835,7 +4846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a615e65ccdb05674489917800e3e04e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveButton: {fileID: 1598141352}
+  saveButton: {fileID: 1462756463}
   cancelButton: {fileID: 372715118}
   stackManager: {fileID: 573484888}
 --- !u!1 &1738392821
@@ -5221,7 +5232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveButton: {fileID: 1598141352}
-  cancelButton: {fileID: 1598141352}
+  cancelButton: {fileID: 0}
   stackManager: {fileID: 573484888}
 --- !u!114 &1801005666
 MonoBehaviour:

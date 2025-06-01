@@ -15,22 +15,22 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
 
     private InputType lastInputType = InputType.VIRTUAL;
 
-    // Congfiguration
     private Profile gamepadConfig;
-
     private RectTransform referenceParent;
+
+    private bool pressToActivate = true;
+    private bool toggleActive = false;
+    private bool isToggled = false;
+    private bool isHovering = false;
 
     void Awake()
     {
         referenceParent = GameObject.FindGameObjectWithTag("Reference").GetComponent<RectTransform>();
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        // Initialize physical button action
         physicalButton = InputActionManager.Instance.GetAction(action);
-
-        // Add button events
         AddButtonEvents();
     }
 
@@ -54,7 +54,6 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
             return;
         }
 
-        // Only update the virtual button if the gamepad is connected and no virtual input is being used
         if (gamepadConfig.syncVirtualInputWithGamepad &&
             lastInputType == InputType.PYSHICAL)
         {
@@ -85,19 +84,92 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
         EventTrigger trigger = button.gameObject.AddComponent<EventTrigger>();
 
         var pointerDown = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
-        pointerDown.callback.AddListener((_) => OnButtonPress());
+        pointerDown.callback.AddListener((data) => OnButtonPointerDown((PointerEventData)data));
         trigger.triggers.Add(pointerDown);
 
         var pointerUp = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
-        pointerUp.callback.AddListener((_) => OnButtonRelease());
+        pointerUp.callback.AddListener((data) => OnButtonPointerUp((PointerEventData)data));
         trigger.triggers.Add(pointerUp);
+
+        var pointerEnter = new EventTrigger.Entry { eventID = EventTriggerType.PointerEnter };
+        pointerEnter.callback.AddListener((data) => OnButtonPointerEnter((PointerEventData)data));
+        trigger.triggers.Add(pointerEnter);
+
+        var pointerExit = new EventTrigger.Entry { eventID = EventTriggerType.PointerExit };
+        pointerExit.callback.AddListener((data) => OnButtonPointerExit((PointerEventData)data));
+        trigger.triggers.Add(pointerExit);
+    }
+
+    private void OnButtonPointerDown(PointerEventData eventData)
+    {
+        if (pressToActivate)
+        {
+            if (toggleActive)
+            {
+                isToggled = !isToggled;
+                if (isToggled)
+                {
+                    OnButtonPress();
+                }
+                else
+                {
+                    OnButtonRelease();
+                }
+            }
+            else
+            {
+                OnButtonPress();
+            }
+        }
+    }
+
+    private void OnButtonPointerUp(PointerEventData eventData)
+    {
+        if (pressToActivate && !toggleActive)
+        {
+            OnButtonRelease();
+        }
+    }
+
+    private void OnButtonPointerEnter(PointerEventData eventData)
+    {
+        isHovering = true;
+
+        if (!pressToActivate)
+        {
+            if (toggleActive)
+            {
+                isToggled = !isToggled;
+                if (isToggled)
+                {
+                    OnButtonPress();
+                }
+                else
+                {
+                    OnButtonRelease();
+                }
+            }
+            else
+            {
+                OnButtonPress();
+            }
+        }
+    }
+
+    private void OnButtonPointerExit(PointerEventData eventData)
+    {
+        isHovering = false;
+
+        if (!pressToActivate && !toggleActive)
+        {
+            OnButtonRelease();
+        }
     }
 
     private void OnButtonPress()
     {
         virtualButtonPressed = true;
         PressButton();
-
         SetLastInputType(InputType.VIRTUAL);
     }
 
@@ -109,11 +181,9 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
 
     private void PressButton()
     {
-        // Apply only visual scale change
         float scaleAmount = gamepadConfig.buttonPressTransformScale;
         button.transform.localScale = new Vector3(scaleAmount, scaleAmount, 1);
 
-        // Manuel set of the button color
         ColorBlock colors = button.colors;
         button.targetGraphic.color = colors.pressedColor;
     }
@@ -122,7 +192,6 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
     {
         button.transform.localScale = Vector3.one;
 
-        // Manuel reset of the button color
         ColorBlock colors = button.colors;
         button.targetGraphic.color = colors.normalColor;
     }
@@ -131,15 +200,14 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
     {
         if (gamepadConfig.ignorePhysicalGamepad)
         {
-            return virtualButtonPressed;
-        }
-        // If no gamepad is connected, return the virtual button state
-        if (Gamepad.current == null)
-        {
-            return virtualButtonPressed;
+            return GetVirtualButtonState();
         }
 
-        // Return depending on the last input type
+        if (Gamepad.current == null)
+        {
+            return GetVirtualButtonState();
+        }
+
         if (lastInputType == InputType.PYSHICAL)
         {
             bool physicalInput = physicalButton != null && physicalButton.IsPressed();
@@ -147,11 +215,19 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
         }
         else
         {
-            return virtualButtonPressed;
+            return GetVirtualButtonState();
         }
     }
 
-    // Implementing IGamepadComponent interface
+    private bool GetVirtualButtonState()
+    {
+        if (toggleActive)
+        {
+            return isToggled;
+        }
+        return virtualButtonPressed;
+    }
+
     public Vector2 GetNormalizedPosition()
     {
         Vector2 inputOffset = button.GetComponent<RectTransform>().anchoredPosition;
@@ -159,7 +235,6 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
         float maxHorizontal = referenceParent.rect.width / 2;
         float maxVertical = referenceParent.rect.height / 2;
 
-        // Normalize to range -1 to 1
         Vector2 normalized = new Vector2(
             Mathf.Clamp(inputOffset.x / maxHorizontal, -1f, 1f),
             Mathf.Clamp(inputOffset.y / maxVertical, -1f, 1f)
@@ -173,18 +248,15 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
         normalizedPos.x = Mathf.Clamp(normalizedPos.x, -1f, 1f);
         normalizedPos.y = Mathf.Clamp(normalizedPos.y, -1f, 1f);
 
-        // Calculate the actual position based on the normalized values
         float posX = normalizedPos.x * (referenceParent.rect.width / 2);
         float posY = normalizedPos.y * (referenceParent.rect.height / 2);
 
-        // Set the anchored position
         button.GetComponent<RectTransform>().anchoredPosition = new Vector2(posX, posY);
     }
 
     public void SetProfile(Profile config)
     {
         gamepadConfig = config;
-
     }
 
     public void SetLastInputType(InputType type)
@@ -207,4 +279,26 @@ public class ButtonComponent : MonoBehaviour, IGamepadComponent
         button.transform.localScale = scale;
     }
 
+    public void SetVisibility(bool isVisible)
+    {
+        button.gameObject.SetActive(isVisible);
+    }
+
+    public void SetPressToActivate(bool isPressed)
+    {
+        pressToActivate = isPressed;
+    }
+
+    public void SetToggleActive(bool isActive)
+    {
+        toggleActive = isActive;
+        if (!isActive)
+        {
+            isToggled = false;
+            if (virtualButtonPressed)
+            {
+                OnButtonRelease();
+            }
+        }
+    }
 }

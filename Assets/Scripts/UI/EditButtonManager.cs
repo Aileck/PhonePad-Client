@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using static GamepadConfig;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 
 public class EditButtonManager : MonoBehaviour
 {
@@ -56,54 +57,35 @@ public class EditButtonManager : MonoBehaviour
         if (gamepadType == GamepadType.GAMEPAD_XBOX360)
         {
             XboxProfile profile = gamepadConfig.xboxProfiles[profileIndex];
-
-            var buttonFields = typeof(XboxProfile).GetFields()
-                .Where(field => field.FieldType == typeof(ButtonProfile))
-                .ToArray();
-
-            foreach (var field in buttonFields)
-            {
-                ButtonProfile button = (ButtonProfile)field.GetValue(profile);
-
-                if (button != null)
-                {
-                    dataList.Add(new TableData
-                    {
-                        image2D = button.iconImage,
-                        toggle1 = button.isVisible,
-                        toggle2 = !button.pressToActivate, // Inverse of pressToActivate
-                        toggle3 = button.toggle
-                    });
-                }
-
-            }
+            CreateTableFromProfile(profile);
         }
         else if (gamepadType == GamepadType.GAMEPAD_DUALSHOCK)
         {
             DualShockProfile profile = gamepadConfig.dualShockProfiles[profileIndex];
+            CreateTableFromProfile(profile);
+        }
+    }
 
-            var dualShockButtonFields = typeof(DualShockProfile).GetFields()
-                .Where(field => field.FieldType == typeof(ButtonProfile))
-                .ToArray();
+    private void CreateTableFromProfile<T>(T profile) where T : GamepadConfig.Profile
+    {
+        var buttonFields = profile.GetType().GetFields()
+            .Where(field => field.FieldType == typeof(ButtonProfile))
+            .ToArray();
 
-            foreach (var field in dualShockButtonFields)
+        foreach (var field in buttonFields)
+        {
+            ButtonProfile buttonProfile = (ButtonProfile)field.GetValue(profile);
+            if (buttonProfile != null)
             {
-                ButtonProfile buttonProfile = (ButtonProfile)field.GetValue(profile);
-
-                if (buttonProfile != null)
+                dataList.Add(new TableData
                 {
-                    dataList.Add(new TableData
-                    {
-                        image2D = buttonProfile.iconImage,
-                        toggle1 = buttonProfile.isVisible,
-                        toggle2 = !buttonProfile.pressToActivate, // Inverse of pressToActivate
-                        toggle3 = buttonProfile.toggle
-                    });
-                }
-
+                    image2D = buttonProfile.iconImage,
+                    toggle1 = buttonProfile.isVisible,
+                    toggle2 = !buttonProfile.pressToActivate,
+                    toggle3 = buttonProfile.toggle
+                });
             }
         }
-
     }
 
     void Start()
@@ -211,22 +193,41 @@ public class EditButtonManager : MonoBehaviour
         
         tablePanel.sizeDelta = new Vector2(0, totalHeight); // 宽度使用0因为我们使用了anchor来控制宽度
 
-        for (int row = 0; row < dataList.Count; row++)
+        // Create header row
+        CreateRow(0, dataList[0]);
+
+        // Get current profile for button updates
+        GamepadType gamepadType = AppLifeTimeManager.Instance.GetSessionGamepad();
+        int profileIndex = AppLifeTimeManager.Instance.GetSessionConfigProfileIndex();
+        var buttonFields = gamepadType == GamepadType.GAMEPAD_XBOX360 
+            ? gamepadConfig.xboxProfiles[profileIndex].GetType().GetFields()
+                .Where(field => field.FieldType == typeof(ButtonProfile))
+                .ToArray()
+            : gamepadConfig.dualShockProfiles[profileIndex].GetType().GetFields()
+                .Where(field => field.FieldType == typeof(ButtonProfile))
+                .ToArray();
+
+        // Create data rows
+        for (int i = 1; i < dataList.Count; i++)
         {
-            CreateRow(row, dataList[row]);
+            var buttonProfile = (ButtonProfile)buttonFields[i - 1].GetValue(
+                gamepadType == GamepadType.GAMEPAD_XBOX360 
+                    ? gamepadConfig.xboxProfiles[profileIndex] 
+                    : (object)gamepadConfig.dualShockProfiles[profileIndex]
+            );
+            CreateRow(i, dataList[i], buttonProfile);
         }
 
         tablePanel.anchoredPosition = new Vector2(0, 0);
     }
 
-    private void CreateRow(int rowIndex, TableData data)
+    private void CreateRow(int rowIndex, TableData data, ButtonProfile buttonProfile = null)
     {
         GameObject imageCell = CreateCell(rowIndex, 0, "Button");
         Image imageComponent = imageCell.GetComponent<Image>();
         imageComponent.sprite = data.image2D ? data.image2D : null;
         imageComponent.preserveAspect = true;
 
-        // Center the image in the cell
         if (data.image2D != null)
         {
             GameObject imageContainer = new GameObject("ImageContainer");
@@ -244,9 +245,19 @@ public class EditButtonManager : MonoBehaviour
             imageComponent.sprite = null;
         }
 
-        CreateToggleCell(rowIndex, 1, "Is visible", data.toggle1);
-        CreateToggleCell(rowIndex, 2, "Swipe to Trigger", data.toggle2);
-        CreateToggleCell(rowIndex, 3, "Toggle Trigger", data.toggle3);
+        if (buttonProfile != null)
+        {
+            CreateToggleCell(rowIndex, 1, "Is visible", data.toggle1, buttonProfile, (value) => buttonProfile.isVisible = value);
+            CreateToggleCell(rowIndex, 2, "Swipe to Trigger", data.toggle2, buttonProfile, (value) => buttonProfile.pressToActivate = !value);
+            CreateToggleCell(rowIndex, 3, "Toggle Trigger", data.toggle3, buttonProfile, (value) => buttonProfile.toggle = value);
+        }
+        else
+        {
+            // Create header toggles without functionality
+            CreateToggleCell(rowIndex, 1, "Is visible", false);
+            CreateToggleCell(rowIndex, 2, "Swipe to Trigger", false);
+            CreateToggleCell(rowIndex, 3, "Toggle Trigger", false);
+        }
     }
 
     private GameObject CreateCell(int rowIndex, int colIndex, string label)
@@ -287,7 +298,7 @@ public class EditButtonManager : MonoBehaviour
         return cellObj;
     }
 
-    private void CreateToggleCell(int rowIndex, int colIndex, string label, bool isOn)
+    private void CreateToggleCell(int rowIndex, int colIndex, string label, bool isOn, ButtonProfile buttonProfile = null, System.Action<bool> onValueChanged = null)
     {
         GameObject cellObj = CreateCell(rowIndex, colIndex, label);
 
@@ -311,6 +322,19 @@ public class EditButtonManager : MonoBehaviour
             toggle.graphic = checkmarkImage;
             toggle.isOn = isOn;
 
+            if (buttonProfile != null && onValueChanged != null)
+            {
+                toggle.onValueChanged.AddListener((bool value) => {
+                    onValueChanged(value);
+                    if (gamepadConfig != null)
+                    {
+#if UNITY_EDITOR
+                        UnityEditor.EditorUtility.SetDirty(gamepadConfig);
+#endif
+                    }
+                });
+            }
+
             RectTransform toggleRect = toggleObj.GetComponent<RectTransform>();
             toggleRect.anchorMin = new Vector2(0.5f, 0.5f);
             toggleRect.anchorMax = new Vector2(0.5f, 0.5f);
@@ -328,6 +352,17 @@ public class EditButtonManager : MonoBehaviour
             checkmarkRect.anchorMax = new Vector2(0.9f, 0.9f);
             checkmarkRect.sizeDelta = Vector2.zero;
             checkmarkRect.anchoredPosition = Vector2.zero;
+        }
+    }
+
+    void OnDisable()
+    {
+        if (tablePanel != null)
+        {
+            foreach (Transform child in tablePanel)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 }

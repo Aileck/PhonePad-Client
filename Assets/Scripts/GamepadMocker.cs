@@ -60,74 +60,117 @@ public class GamepadMocker: MonoBehaviour
             leftStick.SetProfile(profile);
             leftStick.SetNormalizedPosition(profile.leftStick.position);
             //leftStick.SetScale(profile.leftStick.scale);
+            leftStick.SetVisibility(profile.leftStick.isVisible);
+            leftStick.SetPressToActivate(profile.leftStick.pressToActivate);
+            leftStick.SetToggleActive(profile.leftStick.toggle);
 
             rightStick.SetProfile(profile);
             rightStick.SetNormalizedPosition(profile.rightStick.position);
             //rightStick.SetScale(profile.rightStick.scale);
+            rightStick.SetVisibility(profile.rightStick.isVisible);
+            rightStick.SetPressToActivate(profile.rightStick.pressToActivate);
+            rightStick.SetToggleActive(profile.rightStick.toggle);
 
             dPad.SetProfile(profile);
             dPad.SetNormalizedPosition(profile.dPad.position);
             dPad.SetScale(profile.dPad.scale);
+            dPad.SetVisibility(profile.dPad.isVisible);
+            dPad.SetPressToActivate(profile.dPad.pressToActivate);
+            dPad.SetToggleActive(profile.dPad.toggle);
 
             buttonNorth.SetProfile(profile);
             buttonNorth.SetNormalizedPosition(profile.buttonNorth.position);
             //buttonNorth.SetScale(profile.buttonNorth.scale);
             buttonNorth.SetIcon(profile.buttonNorth.iconImage);
+            buttonNorth.SetVisibility(profile.buttonNorth.isVisible);
+            buttonNorth.SetPressToActivate(profile.buttonNorth.pressToActivate);
+            buttonNorth.SetToggleActive(profile.buttonNorth.toggle);
 
             buttonSouth.SetProfile(profile);
             buttonSouth.SetNormalizedPosition(profile.buttonSouth.position);
             //buttonSouth.SetScale(profile.buttonSouth.scale);
             buttonSouth.SetIcon(profile.buttonSouth.iconImage);
+            buttonSouth.SetVisibility(profile.buttonSouth.isVisible);
+            buttonSouth.SetPressToActivate(profile.buttonSouth.pressToActivate);
+            buttonSouth.SetToggleActive(profile.buttonSouth.toggle);
 
             buttonWest.SetProfile(profile);
             buttonWest.SetNormalizedPosition(profile.buttonWest.position);
             //buttonWest.SetScale(profile.buttonWest.scale);
             buttonWest.SetIcon(profile.buttonWest.iconImage);
+            buttonWest.SetVisibility(profile.buttonWest.isVisible);
+            buttonWest.SetPressToActivate(profile.buttonWest.pressToActivate);
+            buttonWest.SetToggleActive(profile.buttonWest.toggle);
 
             buttonEast.SetProfile(profile);
             buttonEast.SetNormalizedPosition(profile.buttonEast.position);
             //buttonEast.SetScale(profile.buttonEast.scale);
             buttonEast.SetIcon(profile.buttonEast.iconImage);
+            buttonEast.SetVisibility(profile.buttonEast.isVisible);
+            buttonEast.SetPressToActivate(profile.buttonEast.pressToActivate);
+            buttonEast.SetToggleActive(profile.buttonEast.toggle);
 
             leftStickButton.SetProfile(profile);
             leftStickButton.SetNormalizedPosition(profile.leftStickButton.position);
             //leftStickButton.SetScale(profile.leftStickButton.scale);
             leftStickButton.SetIcon(profile.leftStickButton.iconImage);
+            leftStickButton.SetVisibility(profile.leftStickButton.isVisible);
+            leftStickButton.SetPressToActivate(profile.leftStickButton.pressToActivate);
+            leftStickButton.SetToggleActive(profile.leftStickButton.toggle);
 
             rightStickButton.SetProfile(profile);
             rightStickButton.SetNormalizedPosition(profile.rightStickButton.position);
             //rightStickButton.SetScale(profile.rightStickButton.scale);
             rightStickButton.SetIcon(profile.rightStickButton.iconImage);
+            rightStickButton.SetVisibility(profile.rightStickButton.isVisible);
+            rightStickButton.SetPressToActivate(profile.rightStickButton.pressToActivate);
+            rightStickButton.SetToggleActive(profile.rightStickButton.toggle);
 
             leftShoulder.SetProfile(profile);
             leftShoulder.SetNormalizedPosition(profile.leftShoulder.position);
             //leftShoulder.SetScale(profile.leftShoulder.scale);
             leftShoulder.SetIcon(profile.leftShoulder.iconImage);
+            leftShoulder.SetVisibility(profile.leftShoulder.isVisible);
+            leftShoulder.SetPressToActivate(profile.leftShoulder.pressToActivate);
+            leftShoulder.SetToggleActive(profile.leftShoulder.toggle);
 
             rightShoulder.SetProfile(profile);
             rightShoulder.SetNormalizedPosition(profile.rightShoulder.position);
             //rightShoulder.SetScale(profile.rightShoulder.scale);
             rightShoulder.SetIcon(profile.rightShoulder.iconImage);
+            rightShoulder.SetVisibility(profile.rightShoulder.isVisible);
+            rightShoulder.SetPressToActivate(profile.rightShoulder.pressToActivate);
+            rightShoulder.SetToggleActive(profile.rightShoulder.toggle);
 
             leftTrigger.SetProfile(profile);
             leftTrigger.SetNormalizedPosition(profile.leftTrigger.position);
             //leftTrigger.SetScale(profile.leftTrigger.scale);
             leftTrigger.SetIcon(profile.leftTrigger.iconImage);
+            leftTrigger.SetVisibility(profile.leftTrigger.isVisible);
+            leftTrigger.SetPressToActivate(profile.leftTrigger.pressToActivate);
+            leftTrigger.SetToggleActive(profile.leftTrigger.toggle);
 
             rightTrigger.SetProfile(profile);
             rightTrigger.SetNormalizedPosition(profile.rightTrigger.position);
             //rightTrigger.SetScale(profile.rightTrigger.scale);
             rightTrigger.SetIcon(profile.rightTrigger.iconImage);
+            rightTrigger.SetVisibility(profile.rightTrigger.isVisible);
 
             buttonStart.SetProfile(profile);
             buttonStart.SetNormalizedPosition(profile.startButton.position);
             //buttonStart.SetScale(profile.startButton.scale);
             buttonStart.SetIcon(profile.startButton.iconImage);
+            buttonStart.SetVisibility(profile.startButton.isVisible);
+            buttonStart.SetPressToActivate(profile.startButton.pressToActivate);
+            buttonStart.SetToggleActive(profile.startButton.toggle);
 
             buttonSelect.SetProfile(profile);
             buttonSelect.SetNormalizedPosition(profile.selectButton.position);
             //buttonSelect.SetScale(profile.selectButton.scale);
             buttonSelect.SetIcon(profile.selectButton.iconImage);
+            buttonSelect.SetVisibility(profile.selectButton.isVisible);
+            buttonSelect.SetPressToActivate(profile.selectButton.pressToActivate);
+            buttonSelect.SetToggleActive(profile.selectButton.toggle);
         }
         else
         {
@@ -136,74 +179,120 @@ public class GamepadMocker: MonoBehaviour
             leftStick.SetProfile(profile);
             leftStick.SetNormalizedPosition(profile.leftStick.position);
             //leftStick.SetScale(profile.leftStick.scale);
+            leftStick.SetVisibility(profile.leftStick.isVisible);
+            leftStick.SetPressToActivate(profile.leftStick.pressToActivate);
+            leftStick.SetToggleActive(profile.leftStick.toggle);
 
             rightStick.SetProfile(profile);
             rightStick.SetNormalizedPosition(profile.rightStick.position);
             //rightStick.SetScale(profile.rightStick.scale);
+            rightStick.SetVisibility(profile.rightStick.isVisible);
+            rightStick.SetPressToActivate(profile.rightStick.pressToActivate);
+            rightStick.SetToggleActive(profile.rightStick.toggle);
 
             dPad.SetProfile(profile);
             dPad.SetNormalizedPosition(profile.dPad.position);
-            dPad.SetScale(profile.dPad.scale);
+            // dPad.SetScale(profile.dPad.scale);
+            dPad.SetVisibility(profile.dPad.isVisible);
+            dPad.SetPressToActivate(profile.dPad.pressToActivate);
+            dPad.SetToggleActive(profile.dPad.toggle);
 
             buttonNorth.SetProfile(profile);
             buttonNorth.SetNormalizedPosition(profile.buttonNorth.position);
             //buttonNorth.SetScale(profile.buttonNorth.scale);
             buttonNorth.SetIcon(profile.buttonNorth.iconImage);
+            buttonNorth.SetVisibility(profile.buttonNorth.isVisible);
+            buttonNorth.SetPressToActivate(profile.buttonNorth.pressToActivate);
+            buttonNorth.SetToggleActive(profile.buttonNorth.toggle);
 
             buttonSouth.SetProfile(profile);
             buttonSouth.SetNormalizedPosition(profile.buttonSouth.position);
             //buttonSouth.SetScale(profile.buttonSouth.scale);
             buttonSouth.SetIcon(profile.buttonSouth.iconImage);
+            buttonSouth.SetVisibility(profile.buttonSouth.isVisible);
+            buttonSouth.SetPressToActivate(profile.buttonSouth.pressToActivate);
+            buttonSouth.SetToggleActive(profile.buttonSouth.toggle);
 
             buttonWest.SetProfile(profile);
             buttonWest.SetNormalizedPosition(profile.buttonWest.position);
             //buttonWest.SetScale(profile.buttonWest.scale);
             buttonWest.SetIcon(profile.buttonWest.iconImage);
+            buttonWest.SetVisibility(profile.buttonWest.isVisible);
+            buttonWest.SetPressToActivate(profile.buttonWest.pressToActivate);
+            buttonWest.SetToggleActive(profile.buttonWest.toggle);
+
 
             buttonEast.SetProfile(profile);
             buttonEast.SetNormalizedPosition(profile.buttonEast.position);
             //buttonEast.SetScale(profile.buttonEast.scale);
             buttonEast.SetIcon(profile.buttonEast.iconImage);
+            buttonEast.SetVisibility(profile.buttonEast.isVisible);
+            buttonEast.SetPressToActivate(profile.buttonEast.pressToActivate);
+            buttonEast.SetToggleActive(profile.buttonEast.toggle);
 
             leftStickButton.SetProfile(profile);
             leftStickButton.SetNormalizedPosition(profile.leftStickButton.position);
             //leftStickButton.SetScale(profile.leftStickButton.scale);
             leftStickButton.SetIcon(profile.leftStickButton.iconImage);
+            leftStickButton.SetVisibility(profile.leftStickButton.isVisible);
+            leftStickButton.SetPressToActivate(profile.leftStickButton.pressToActivate);
+            leftStickButton.SetToggleActive(profile.leftStickButton.toggle);
 
             rightStickButton.SetProfile(profile);
             rightStickButton.SetNormalizedPosition(profile.rightStickButton.position);
             //rightStickButton.SetScale(profile.rightStickButton.scale);
             rightStickButton.SetIcon(profile.rightStickButton.iconImage);
+            rightStickButton.SetVisibility(profile.rightStickButton.isVisible);
+            rightStickButton.SetPressToActivate(profile.rightStickButton.pressToActivate);
+            rightStickButton.SetToggleActive(profile.rightStickButton.toggle);
 
             leftShoulder.SetProfile(profile);
             leftShoulder.SetNormalizedPosition(profile.leftShoulder.position);
             //leftShoulder.SetScale(profile.leftShoulder.scale);
             leftShoulder.SetIcon(profile.leftShoulder.iconImage);
+            leftShoulder.SetVisibility(profile.leftShoulder.isVisible);
+            leftShoulder.SetPressToActivate(profile.leftShoulder.pressToActivate);
+            leftShoulder.SetToggleActive(profile.leftShoulder.toggle);
 
             rightShoulder.SetProfile(profile);
             rightShoulder.SetNormalizedPosition(profile.rightShoulder.position);
             //rightShoulder.SetScale(profile.rightShoulder.scale);
             rightShoulder.SetIcon(profile.rightShoulder.iconImage);
+            rightShoulder.SetVisibility(profile.rightShoulder.isVisible);
+            rightShoulder.SetPressToActivate(profile.rightShoulder.pressToActivate);
+            rightShoulder.SetToggleActive(profile.rightShoulder.toggle);
 
             leftTrigger.SetProfile(profile);
             leftTrigger.SetNormalizedPosition(profile.leftTrigger.position);
             //leftTrigger.SetScale(profile.leftTrigger.scale);
             leftTrigger.SetIcon(profile.leftTrigger.iconImage);
+            leftTrigger.SetVisibility(profile.leftTrigger.isVisible);
+            leftTrigger.SetPressToActivate(profile.leftTrigger.pressToActivate);
+            leftTrigger.SetToggleActive(profile.leftTrigger.toggle);
 
             rightTrigger.SetProfile(profile);
             rightTrigger.SetNormalizedPosition(profile.rightTrigger.position);
             //rightTrigger.SetScale(profile.rightTrigger.scale);
             rightTrigger.SetIcon(profile.rightTrigger.iconImage);
+            rightTrigger.SetVisibility(profile.rightTrigger.isVisible);
+            rightTrigger.SetPressToActivate(profile.rightTrigger.pressToActivate);
+            rightTrigger.SetToggleActive(profile.rightTrigger.toggle);
 
             buttonStart.SetProfile(profile);
             buttonStart.SetNormalizedPosition(profile.startButton.position);
             //buttonStart.SetScale(profile.startButton.scale);
             buttonStart.SetIcon(profile.startButton.iconImage);
+            buttonStart.SetVisibility(profile.startButton.isVisible);
+            buttonStart.SetPressToActivate(profile.startButton.pressToActivate);
+            buttonStart.SetToggleActive(profile.startButton.toggle);
 
             buttonSelect.SetProfile(profile);
             buttonSelect.SetNormalizedPosition(profile.selectButton.position);
             //buttonSelect.SetScale(profile.selectButton.scale);
             buttonSelect.SetIcon(profile.selectButton.iconImage);
+            buttonSelect.SetVisibility(profile.selectButton.isVisible);
+            buttonSelect.SetPressToActivate(profile.selectButton.pressToActivate);
+            buttonSelect.SetToggleActive(profile.selectButton.toggle);
         }
     }
 

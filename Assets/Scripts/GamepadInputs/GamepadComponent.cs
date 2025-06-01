@@ -16,4 +16,7 @@ public interface IGamepadComponent
     void SetIcon(Sprite sprite);
     Vector2 GetScale();
     void SetScale(Vector2 scale);
+    void SetVisibility(bool isVisible);
+    void SetPressToActivate(bool isPressed);
+    void SetToggleActive(bool isActive);
 }

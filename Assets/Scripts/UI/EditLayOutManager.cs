@@ -103,8 +103,10 @@ public class EditLayOutManager : MonoBehaviour
                 Image image = imageGO.GetComponent<Image>();
                 image.sprite = button.iconImage;
 
-                image.rectTransform.anchoredPosition = new Vector2(posX, posY);
-                image.rectTransform.localScale = new Vector3(button.scale.x, button.scale.y, 1f);
+                EditableButton editableProperty = imageGO.AddComponent<EditableButton>();
+                editableProperty.Initialice(button.name, layoutPanel.GetComponent<RectTransform>(), image);
+                editableProperty.SetNormalizedPosition(normalizedPos);
+                editableProperty.SetScale(button.scale);
             }
         }
         else if (gamepadType == GamepadType.GAMEPAD_DUALSHOCK)
@@ -159,6 +161,11 @@ public class EditLayOutManager : MonoBehaviour
             {
                 EditableButton editableButton = panelRect.GetChild(i).GetComponent<EditableButton>();
 
+                if(editableButton == null)
+                {
+                    continue; 
+                }
+
                 profile.UpdateButtonPosition(
                     editableButton.GetButtonName(),
                     editableButton.GetNormalizedPosition()
@@ -175,12 +182,7 @@ public class EditLayOutManager : MonoBehaviour
         else if (gamepadType == GamepadType.GAMEPAD_DUALSHOCK)
         {
             DualShockProfile profile = gamepadConfig.GetDualShockProfile(profileIndex);
-            Debug.Log("Saving DualShock Profile: " + profileIndex);
-            if (profile == null)
-            {
-                Debug.LogError("Profile not found for index: " + profileIndex);
-                return;
-            }
+
             for (int i = panelRect.childCount - 1; i >= 0; i--)
             {
                 EditableButton editableButton = panelRect.GetChild(i).GetComponent<EditableButton>();
@@ -189,6 +191,7 @@ public class EditLayOutManager : MonoBehaviour
                 {
                     continue; // Skip if the button is not editable
                 }
+
                 profile.UpdateButtonPosition(
                     editableButton.GetButtonName(),
                     editableButton.GetNormalizedPosition()

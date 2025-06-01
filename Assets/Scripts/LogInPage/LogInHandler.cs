@@ -48,6 +48,7 @@ public class LogInHandler : MonoBehaviour
 
     public void Button_StartPlayDualShock4()
     {
+        AppLifeTimeManager.Instance.SetSessionGamepad(GamepadType.GAMEPAD_DUALSHOCK);
         AppLifeTimeManager.Instance.GetWebSocket().Send_RegisterGamepad(GamepadType.GAMEPAD_DUALSHOCK);
 
         AppLifeTimeManager.Instance.ToPlaying();
@@ -55,6 +56,8 @@ public class LogInHandler : MonoBehaviour
 
     public void Button_StartPlayXbox()
     {
+        AppLifeTimeManager.Instance.SetSessionGamepad(GamepadType.GAMEPAD_XBOX360);
+
         AppLifeTimeManager.Instance.GetWebSocket().Send_RegisterGamepad(GamepadType.GAMEPAD_XBOX360);
         
         AppLifeTimeManager.Instance.ToPlaying();
