@@ -4,8 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GamepadConfig;
 
+
 public class ProfileSelector : MonoBehaviour
 {
+    public class ProfileOptionData : TMP_Dropdown.OptionData
+    {
+        public int ProfileIndex { get; private set; }
+
+        public ProfileOptionData(string text, int profileIndex) : base(text)
+        {
+            ProfileIndex = profileIndex;
+        }
+    }
+
+
     const int HARCODED_DEFAULT_PROFILE = 0;
     const int HARCODED_CUSTOM_PROFILE = 1;
 
@@ -18,15 +30,7 @@ public class ProfileSelector : MonoBehaviour
     // Event that sends both profile indices
     public static event Action<int, int> OnSelectionChanged;
 
-    public class ProfileOptionData : TMP_Dropdown.OptionData
-    {
-        public int ProfileIndex { get; private set; }
 
-        public ProfileOptionData(string text, int profileIndex) : base(text)
-        {
-            ProfileIndex = profileIndex;
-        }
-    }
 
     void Start()
     {

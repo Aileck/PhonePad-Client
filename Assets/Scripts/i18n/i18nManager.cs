@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Languages;
 using Newtonsoft.Json;
 using TMPro;
 
 public class i18nManager : MonoBehaviour
 {
     public static i18nManager Instance { get; private set; }
-    [SerializeField] private Languages.Language currentLanguage = Languages.Language.en;
+    [SerializeField] private Language currentLanguage = Language.en;
     private Dictionary<string, string> translations = new Dictionary<string, string>();
+    private Dictionary<TextMeshProUGUI, string> originalKeys = new Dictionary<TextMeshProUGUI, string>();
+    private const string langPererence = "lang_pererence";
 
     private void Awake()
     {
@@ -15,6 +18,7 @@ public class i18nManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadConfigurationLanguage();
             LoadTranslation();
         }
         else
@@ -43,6 +47,11 @@ public class i18nManager : MonoBehaviour
         TranslateAllTextMeshPro();
     }
 
+    public Language GetCurrentLanguage()
+    {
+        return currentLanguage;
+    }
+
     public void LoadTranslation()
     {
         string langCode = currentLanguage.ToString();
@@ -52,10 +61,6 @@ public class i18nManager : MonoBehaviour
         {
             Debug.Log($"Loading translations from: {jsonPath}");
             translations = JsonConvert.DeserializeObject<Dictionary<string, string>>(json.text);
-            foreach (var kvp in translations)
-            {
-                Debug.Log($"Key: {kvp.Key}, Value: {kvp.Value}");
-            }
         }
         else
         {
@@ -67,10 +72,71 @@ public class i18nManager : MonoBehaviour
     public void TranslateAllTextMeshPro()
     {
         TextMeshProUGUI[] allTexts = FindObjectsOfType<TextMeshProUGUI>(true);
-
         foreach (TextMeshProUGUI textComponent in allTexts)
         {
-            textComponent.text = Translate(textComponent.text);
+            if (ShouldSkipTranslation(textComponent))
+            {
+                if (currentLanguage == Language.zh)
+                {
+                    textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSansSC-Regular SDF");
+                }
+                else
+                {
+                    textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSerif-Regular SDF");
+                }
+
+                continue;
+            }
+
+            if (!originalKeys.ContainsKey(textComponent))
+            {
+                originalKeys[textComponent] = textComponent.text;
+            }
+
+            string originalKey = originalKeys[textComponent];
+            textComponent.text = Translate(originalKey);
+
+            if (currentLanguage == Language.zh)
+            {
+                textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSansSC-Regular SDF");
+            }
+            else
+            {
+                textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSerif-Regular SDF");
+            }
+        }
+
+        CleanupDestroyedReferences();
+    }
+
+    private bool ShouldSkipTranslation(TextMeshProUGUI textComponent)
+    {
+        TMP_Dropdown dropdown = textComponent.GetComponentInParent<TMP_Dropdown>();
+        if (dropdown != null)
+        {
+            if (textComponent == dropdown.captionText)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void CleanupDestroyedReferences()
+    {
+        List<TextMeshProUGUI> keysToRemove = new List<TextMeshProUGUI>();
+        foreach (var kvp in originalKeys)
+        {
+            if (kvp.Key == null)
+            {
+                keysToRemove.Add(kvp.Key);
+            }
+        }
+
+        foreach (var key in keysToRemove)
+        {
+            originalKeys.Remove(key);
         }
     }
 
@@ -83,13 +149,42 @@ public class i18nManager : MonoBehaviour
         return key;
     }
 
-    public void SetLanguage(Languages.Language language)
+    public void SetLanguage(Language language)
     {
         currentLanguage = language;
+        PlayerPrefs.SetString(langPererence, language.ToString());
         LoadTranslation();
         TranslateAllTextMeshPro();
+    }
 
-        // NotoSansSC-Regular SDF for chinese
-        // NotoSerif-Regular SDF for the rest of languages
+    public void LoadConfigurationLanguage()
+    {
+        string langPreference = PlayerPrefs.GetString(langPererence, Language.en.ToString());
+        if (System.Enum.TryParse(langPreference, out Language language))
+        {
+            currentLanguage = language;
+        }
+        else
+        {
+            currentLanguage = Language.en;
+        }
+        Debug.Log($"Current language set to: {currentLanguage}");
+    }
+
+    public void TranslateSpecificText(TextMeshProUGUI textComponent, string key)
+    {
+        if (textComponent != null)
+        {
+            textComponent.text = Translate(key);
+
+            if (currentLanguage == Language.zh)
+            {
+                textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSansSC-Regular SDF");
+            }
+            else
+            {
+                textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSerif-Regular SDF");
+            }
+        }
     }
 }

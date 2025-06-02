@@ -1,0 +1,37 @@
+{
+    "lang_zh": "Chino",
+    "lang_en": "Inglés",
+    "lang_es": "Español",
+
+    "menu_login_help": "Abra la ventana de Phone2Pad, escanee el código QR en la pantalla o ingrese manualmente la IP y el Puerto. Asegúrese de que esté conectado a la misma red!",
+    "menu_login_error": "Error de conexión. Verifique la entrada y asegúrese de que ambos estén conectados a la misma red.",
+    "menu_connect_button": "Conectar",
+
+    "menu_select_gamepad_help": "Elige tu estilo de tecla preferido y layout. Puedes personalizar el layout más tarde.",
+    "menu_default_option": "Distribución por defecto",
+    "menu_custom_option": "Distribución personalizada",
+
+    "menu_xbox_360_style": "Estilo Xbox 360 ",
+    "menu_dualshock4_style": "Estilo DualShock 4",
+
+    "play_disconnect": "Desconectar",
+    "play_edit_layout": "Editar layout",
+    "play_edit_button": "Editar botón",
+
+    "play_button": "Botón",
+    "play_is_visible": "Es visible",
+
+    "play_disconnect": "Disconnect",
+    "play_edit_layout": "Edit layout",
+    "play_edit_button": "Edit button",
+
+    "play_button": "Key",
+    "play_is_visible": "Is visible",
+
+    "play_save": "Save",
+    "play_cancel": "Cancel",
+    "play_back": "Back",
+
+    "play_swipe_to_trigger": "Swipe to trigger",
+    "play_toggle_to_trigger": "Toggle to trigger"
+}
