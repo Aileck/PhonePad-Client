@@ -38,10 +38,13 @@ public class ProfileSelector : MonoBehaviour
         xboxProfileSelector.ClearOptions();
         dualShockProfileSelector.ClearOptions();
 
+        string defaultText = i18nManager.Instance.Translate("menu_default_option");
+        string customText = i18nManager.Instance.Translate("menu_custom_option");
+
         var options = new System.Collections.Generic.List<TMP_Dropdown.OptionData>
         {
-            new ProfileOptionData("Default distribution", HARCODED_DEFAULT_PROFILE),
-            new ProfileOptionData("Custom distribution", HARCODED_CUSTOM_PROFILE)
+            new ProfileOptionData(defaultText, HARCODED_DEFAULT_PROFILE),
+            new ProfileOptionData(customText, HARCODED_CUSTOM_PROFILE)
         };
 
         xboxProfileSelector.AddOptions(options);

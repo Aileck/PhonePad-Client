@@ -1,0 +1,26 @@
+{
+    "menu_login_help": "打开Phone2Pad窗口，扫描屏幕上的二维码或手动输入IP和端口。确保您连接到同一网络！",
+    "menu_login_error": "连接错误。检查输入并确保它们连接到同一网络。",
+    "menu_connect_button": "连接",
+
+    "menu_select_gamepad_help": "Choose your preferred key style and layout. You can customize layout later.",
+    "menu_default_option": "Default distribution",
+    "menu_custom_option": "Custom distribution",
+
+    "menu_xbox_360_style": "Xbox 360 style",
+    "menu_dualshock4_style": "DualShock 4 style",
+
+    "play_disconnect": "Disconnect",
+    "play_edit_layout": "Edit layout",
+    "play_edit_button": "Edit button",
+
+    "play_button": "Key",
+    "play_is_visible": "Is visible",
+
+    "play_save": "Save",
+    "play_cancel": "Cancel",
+    "play_back": "Back",
+
+    "play_swipe_to_trigger": "Swipe to trigger",
+    "play_toggle_to_trigger": "Toggle to trigger"
+}

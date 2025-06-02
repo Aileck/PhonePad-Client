@@ -5,21 +5,23 @@ using System.Collections;
 
 public class LogInHandler : MonoBehaviour
 {
+    // UI element to change based on app state
     [SerializeField] private GameObject loginPanel;
     [SerializeField] private GameObject selectGamepadPanel;
     [SerializeField] private TMP_Text helpText;
     [SerializeField] private TMP_InputField ipInputField;
     [SerializeField] private TMP_InputField portInputField;
-    [SerializeField] private RectTransform mainUIContainer;
-    [SerializeField] private float keyboardOffsetY = 100f;
+
+    // Keyboard
+    [SerializeField] private RectTransform uiRoot;
+    [SerializeField] private float keyboardOffsetMultiplier = 1.2f;
 
     private const string ipPrefKey = "server_ip";
     private const string portPrefKey = "server_port";
 
-    private TouchScreenKeyboard activeKeyboard;
-    private TMP_InputField currentActiveInputField;
-    private Vector3 originalUIPosition;
-    private bool isKeyboardActive = false;
+    private bool keyboardVisible = false;
+    private Vector2 originalUIPosition;
+    private int lastScreenHeight;
 
     void Start()
     {
@@ -28,12 +30,7 @@ public class LogInHandler : MonoBehaviour
         ipInputField.text = savedIP;
         portInputField.text = savedPort;
 
-        if (mainUIContainer != null)
-        {
-            originalUIPosition = mainUIContainer.anchoredPosition;
-        }
-
-        SetupInputFieldEvents();
+        InitializeKeyboardAdaptation();
     }
 
     void Update()
@@ -41,157 +38,188 @@ public class LogInHandler : MonoBehaviour
         CheckKeyboardStatus();
     }
 
-    private void SetupInputFieldEvents()
+    private void InitializeKeyboardAdaptation()
     {
-        ipInputField.onSelect.AddListener((string value) => {
-            OnInputFieldSelected(ipInputField);
-        });
-
-        ipInputField.onDeselect.AddListener((string value) => {
-            OnInputFieldDeselected();
-        });
-
-        portInputField.onSelect.AddListener((string value) => {
-            OnInputFieldSelected(portInputField);
-        });
-
-        portInputField.onDeselect.AddListener((string value) => {
-            OnInputFieldDeselected();
-        });
-    }
-
-    private void OnInputFieldSelected(TMP_InputField inputField)
-    {
-        currentActiveInputField = inputField;
-
-        if (Application.isMobilePlatform)
+        if (uiRoot == null)
         {
-            OpenVirtualKeyboard(inputField);
-        }
-        else
-        {
-            AdjustUIForKeyboard(true);
-        }
-    }
-
-    private void OnInputFieldDeselected()
-    {
-        CloseVirtualKeyboard();
-        AdjustUIForKeyboard(false);
-        currentActiveInputField = null;
-    }
-
-    private void OpenVirtualKeyboard(TMP_InputField inputField)
-    {
-        if (Application.isMobilePlatform)
-        {
-            TouchScreenKeyboardType keyboardType = TouchScreenKeyboardType.Default;
-
-            if (inputField == ipInputField)
+            Transform currentTransform = transform;
+            while (currentTransform.parent != null)
             {
-                keyboardType = TouchScreenKeyboardType.NumbersAndPunctuation;
-            }
-            else if (inputField == portInputField)
-            {
-                keyboardType = TouchScreenKeyboardType.NumberPad;
+                currentTransform = currentTransform.parent;
+                Canvas canvas = currentTransform.GetComponent<Canvas>();
+                if (canvas != null)
+                {
+                    uiRoot = canvas.GetComponent<RectTransform>();
+                    break;
+                }
             }
 
-            activeKeyboard = TouchScreenKeyboard.Open(
-                inputField.text,
-                keyboardType,
-                false,
-                false,
-                false,
-                false,
-                "",
-                0
-            );
-
-            isKeyboardActive = true;
-            AdjustUIForKeyboard(true);
+            if (uiRoot == null)
+            {
+                uiRoot = loginPanel.GetComponent<RectTransform>();
+            }
         }
-    }
 
-    private void CloseVirtualKeyboard()
-    {
-        if (activeKeyboard != null)
+        if (uiRoot != null)
         {
-            activeKeyboard.active = false;
-            activeKeyboard = null;
+            originalUIPosition = uiRoot.anchoredPosition;
+            Debug.Log($"Using UI Root: {uiRoot.name}, Original Position: {originalUIPosition}, Anchors: {uiRoot.anchorMin}-{uiRoot.anchorMax}");
         }
-        isKeyboardActive = false;
+
+        lastScreenHeight = Screen.height;
+
+        ipInputField.onSelect.AddListener(OnInputFieldSelected);
+        portInputField.onSelect.AddListener(OnInputFieldSelected);
+        ipInputField.onDeselect.AddListener(OnInputFieldDeselected);
+        portInputField.onDeselect.AddListener(OnInputFieldDeselected);
     }
 
     private void CheckKeyboardStatus()
     {
-        if (activeKeyboard != null && currentActiveInputField != null)
+        if (TouchScreenKeyboard.visible && !keyboardVisible)
         {
-            if (activeKeyboard.text != currentActiveInputField.text)
-            {
-                currentActiveInputField.text = activeKeyboard.text;
-            }
-
-            if (activeKeyboard.status == TouchScreenKeyboard.Status.Done ||
-                activeKeyboard.status == TouchScreenKeyboard.Status.Canceled)
-            {
-                OnInputFieldDeselected();
-            }
+            Debug.Log("TouchScreenKeyboard is visible, checking visibility...");
+            OnKeyboardShow();
         }
-
-        if (Application.isMobilePlatform)
+        else if (!TouchScreenKeyboard.visible && keyboardVisible)
         {
-            CheckSystemKeyboardHeight();
+            OnKeyboardHide();
         }
     }
 
-    private void CheckSystemKeyboardHeight()
+    private void OnInputFieldSelected(string value)
     {
-        Rect safeArea = Screen.safeArea;
-        float screenHeight = Screen.height;
+        StartCoroutine(DelayedKeyboardCheck());
+    }
 
-        bool keyboardVisible = (safeArea.height < screenHeight * 0.8f);
-
-        if (keyboardVisible && !isKeyboardActive)
+    private void OnInputFieldDeselected(string value)
+    {
+        if (!ipInputField.isFocused && !portInputField.isFocused)
         {
-            AdjustUIForKeyboard(true);
-            isKeyboardActive = true;
-        }
-        else if (!keyboardVisible && isKeyboardActive && activeKeyboard == null)
-        {
-            AdjustUIForKeyboard(false);
-            isKeyboardActive = false;
+            StartCoroutine(DelayedKeyboardHide());
         }
     }
 
-    private void AdjustUIForKeyboard(bool keyboardShown)
+    private IEnumerator DelayedKeyboardCheck()
     {
-        if (mainUIContainer == null) return;
-
-        if (keyboardShown)
+        yield return new WaitForSeconds(0.1f);
+        if (TouchScreenKeyboard.visible && !keyboardVisible)
         {
-            Vector3 newPosition = originalUIPosition;
-            newPosition.y += keyboardOffsetY;
-            mainUIContainer.anchoredPosition = newPosition;
+            OnKeyboardShow();
+        }
+    }
+
+    private IEnumerator DelayedKeyboardHide()
+    {
+        yield return new WaitForSeconds(0.1f);
+        if (!TouchScreenKeyboard.visible && keyboardVisible)
+        {
+            OnKeyboardHide();
+        }
+    }
+
+    private void OnKeyboardShow()
+    {
+        if (keyboardVisible || uiRoot == null) return;
+
+        keyboardVisible = true;
+
+        float keyboardHeight = GetKeyboardHeight();
+        Vector2 newPosition = originalUIPosition;
+
+        if (uiRoot.anchorMin.y == 0 && uiRoot.anchorMax.y == 0)
+        {
+            newPosition.y += keyboardHeight * keyboardOffsetMultiplier;
+        }
+        else if (uiRoot.anchorMin.y == 0.5f && uiRoot.anchorMax.y == 0.5f)
+        {
+            newPosition.y += keyboardHeight * keyboardOffsetMultiplier;
         }
         else
         {
-            mainUIContainer.anchoredPosition = originalUIPosition;
+            uiRoot.offsetMin = new Vector2(uiRoot.offsetMin.x, uiRoot.offsetMin.y + keyboardHeight * keyboardOffsetMultiplier);
+            uiRoot.offsetMax = new Vector2(uiRoot.offsetMax.x, uiRoot.offsetMax.y + keyboardHeight * keyboardOffsetMultiplier);
+            Debug.Log($"Using offset mode. New offsetMin: {uiRoot.offsetMin}, offsetMax: {uiRoot.offsetMax}");
+            return;
         }
+
+        Debug.Log($"Moving from {uiRoot.anchoredPosition} to {newPosition}");
+        StartCoroutine(MoveUISmooth(uiRoot.anchoredPosition, newPosition, 0.3f));
+
+        Debug.Log($"Keyboard shown, moving UI up by {keyboardHeight * keyboardOffsetMultiplier}");
+    }
+
+    private void OnKeyboardHide()
+    {
+        if (!keyboardVisible || uiRoot == null) return;
+
+        keyboardVisible = false;
+
+        if (uiRoot.anchorMin.y != 0 || uiRoot.anchorMax.y != 1)
+        {
+            uiRoot.offsetMin = new Vector2(uiRoot.offsetMin.x, uiRoot.offsetMin.y - GetKeyboardHeight() * keyboardOffsetMultiplier);
+            uiRoot.offsetMax = new Vector2(uiRoot.offsetMax.x, uiRoot.offsetMax.y - GetKeyboardHeight() * keyboardOffsetMultiplier);
+            Debug.Log($"Restoring offset mode. New offsetMin: {uiRoot.offsetMin}, offsetMax: {uiRoot.offsetMax}");
+            return;
+        }
+
+        Debug.Log($"Restoring to original position: {originalUIPosition}");
+        StartCoroutine(MoveUISmooth(uiRoot.anchoredPosition, originalUIPosition, 0.3f));
+
+        Debug.Log("Keyboard hidden, restoring UI position");
+    }
+
+    private float GetKeyboardHeight()
+    {
+        if (TouchScreenKeyboard.area.height > 0)
+        {
+            Debug.Log($"Keyboard area height: {TouchScreenKeyboard.area.height}");
+            return TouchScreenKeyboard.area.height;
+        }
+
+        float screenHeight = Screen.height;
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            return screenHeight * 0.4f;
+        }
+        else if (Application.platform == RuntimePlatform.IPhonePlayer)
+        {
+            return screenHeight * 0.35f;
+        }
+
+        return screenHeight * 0.4f;
+    }
+
+    private IEnumerator MoveUISmooth(Vector2 from, Vector2 to, float duration)
+    {
+        float elapsed = 0f;
+        Debug.Log($"Starting smooth move from {from} to {to}");
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            Vector2 currentPos = Vector2.Lerp(from, to, t);
+            uiRoot.anchoredPosition = currentPos;
+
+            yield return null;
+        }
+
+        uiRoot.anchoredPosition = to;
+        Debug.Log($"Move completed. Final position: {uiRoot.anchoredPosition}");
     }
 
     public async void Button_StartConnection()
     {
-        CloseVirtualKeyboard();
-        AdjustUIForKeyboard(false);
-
         string ip = ipInputField.text;
         string port = portInputField.text;
-
         PlayerPrefs.SetString(ipPrefKey, ip);
         PlayerPrefs.SetString(portPrefKey, port);
-
         bool isConnected = await AppLifeTimeManager.Instance.GetWebSocket().Send_ConnectionPetition(ip, port);
-
         if (isConnected)
         {
             Debug.Log("Connection successful!");
@@ -201,7 +229,6 @@ public class LogInHandler : MonoBehaviour
         {
             helpText.text = "Failed to connect. Please check your IP and port.";
         }
-
         Debug.Log("End of function!");
     }
 
@@ -230,17 +257,14 @@ public class LogInHandler : MonoBehaviour
 
         if (ipInputField != null)
         {
-            ipInputField.onSelect.RemoveAllListeners();
-            ipInputField.onDeselect.RemoveAllListeners();
+            ipInputField.onSelect.RemoveListener(OnInputFieldSelected);
+            ipInputField.onDeselect.RemoveListener(OnInputFieldDeselected);
         }
-
         if (portInputField != null)
         {
-            portInputField.onSelect.RemoveAllListeners();
-            portInputField.onDeselect.RemoveAllListeners();
+            portInputField.onSelect.RemoveListener(OnInputFieldSelected);
+            portInputField.onDeselect.RemoveListener(OnInputFieldDeselected);
         }
-
-        CloseVirtualKeyboard();
     }
 
     private void HandleStateChange(AppLifeTimeManager.AppState state)
@@ -250,12 +274,23 @@ public class LogInHandler : MonoBehaviour
             case AppLifeTimeManager.AppState.RequestingLogin:
                 loginPanel.SetActive(true);
                 selectGamepadPanel.SetActive(false);
+                helpText.text = i18nManager.Instance.Translate("menu_login_help");
+                if (uiRoot != null && !keyboardVisible)
+                {
+                    uiRoot.anchoredPosition = originalUIPosition;
+                }
                 break;
+
             case AppLifeTimeManager.AppState.SelectingGamepad:
                 loginPanel.SetActive(false);
                 selectGamepadPanel.SetActive(true);
-                CloseVirtualKeyboard();
-                AdjustUIForKeyboard(false);
+                helpText.text = i18nManager.Instance.Translate("menu_select_gamepad_help");
+
+                if (keyboardVisible)
+                {
+                    OnKeyboardHide();
+                }
+
                 break;
         }
     }

@@ -1,0 +1,26 @@
+{
+    "menu_login_help": "Open the Phone2Pad window, scan the QR code on the screen or manually enter the IP and Port. Make sure you are connected to the same network!",
+    "menu_login_error": "Connection error. Check input and same they are connected to the same network.",
+    "menu_connect_button": "Connect",
+
+    "menu_select_gamepad_help": "Choose your preferred key style and layout. You can customize layout later.",
+    "menu_default_option": "Default distribution",
+    "menu_custom_option": "Custom distribution",
+
+    "menu_xbox_360_style": "Xbox 360 style",
+    "menu_dualshock4_style": "DualShock 4 style",
+
+    "play_disconnect": "Disconnect",
+    "play_edit_layout": "Edit layout",
+    "play_edit_button": "Edit button",
+
+    "play_button": "Key",
+    "play_is_visible": "Is visible",
+
+    "play_save": "Save",
+    "play_cancel": "Cancel",
+    "play_back": "Back",
+
+    "play_swipe_to_trigger": "Swipe to trigger",
+    "play_toggle_to_trigger": "Toggle to trigger"
+}
