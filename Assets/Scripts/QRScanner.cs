@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.Android;
 using System.Collections;
 using ZXing;
+using TMPro;
 
 [System.Serializable]
 public class ServerInfo
@@ -15,6 +16,7 @@ public class QRScanner : MonoBehaviour
 {
     public GameObject cameraPanel;
     public RawImage cameraDisplay;
+    public TMP_Text errorText;
 
     private WebCamTexture webcamTexture;
     private IBarcodeReader barcodeReader = new BarcodeReader();
@@ -184,17 +186,22 @@ public class QRScanner : MonoBehaviour
 
     private async void TryConnect(string port, string ip)
     {
+        errorText.gameObject.SetActive(true);
+        errorText.text = i18nManager.Instance.Translate("menu_login_connecting");
+
         bool isConnected = await AppLifeTimeManager.Instance.GetWebSocket().Send_ConnectionPetition(ip, port);
 
         if (isConnected)
         {
             cameraDisplay.gameObject.SetActive(false);
             AppLifeTimeManager.Instance.ToSelectGamepad();
+            errorText.gameObject.SetActive(false);
 
         }
         else
         {
-
+            errorText.gameObject.SetActive(true);
+            errorText.text = i18nManager.Instance.Translate("menu_login_error");
         }
     }
 

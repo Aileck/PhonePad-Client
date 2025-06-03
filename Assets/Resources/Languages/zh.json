@@ -4,6 +4,7 @@
     "lang_es": "Español",
 
     "menu_login_help": "打开 Phone2Pad 电脑版，扫描屏幕上的二维码或手动输入IP和端口。确保您连接到同一网络！",
+    "menu_login_connecting": "连接中...请稍候。",
     "menu_login_error": "连接错误。检查输入并确保两个设备连接到同一网络。",
     "menu_connect_button": "连接",
 

@@ -4,6 +4,7 @@
     "lang_es": "Español",
 
     "menu_login_help": "Abra la ventana de Phone2Pad, escanee el código QR en la pantalla o ingrese manualmente la IP y el Puerto. Asegúrese de que esté conectado a la misma red!",
+    "menu_login_connecting": "Conectando...Espere por favor.",
     "menu_login_error": "Error de conexión. Verifique la entrada y asegúrese de que ambos estén conectados a la misma red.",
     "menu_connect_button": "Conectar",
 

@@ -498,7 +498,7 @@ MonoBehaviour:
       iconImage: {fileID: 21300000, guid: 249d4bba0cb1ea34885188873bdf736c, type: 3}
       backgoundImage: {fileID: 0}
       isVisible: 1
-      pressToActivate: 1
+      pressToActivate: 0
       toggle: 0
     leftShoulder:
       name: 4

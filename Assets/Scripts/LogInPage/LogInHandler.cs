@@ -9,6 +9,7 @@ public class LogInHandler : MonoBehaviour
     [SerializeField] private GameObject loginPanel;
     [SerializeField] private GameObject selectGamepadPanel;
     [SerializeField] private TMP_Text helpText;
+    [SerializeField] private TMP_Text errorText;
     [SerializeField] private TMP_InputField ipInputField;
     [SerializeField] private TMP_InputField portInputField;
 
@@ -63,7 +64,6 @@ public class LogInHandler : MonoBehaviour
         if (uiRoot != null)
         {
             originalUIPosition = uiRoot.anchoredPosition;
-            Debug.Log($"Using UI Root: {uiRoot.name}, Original Position: {originalUIPosition}, Anchors: {uiRoot.anchorMin}-{uiRoot.anchorMax}");
         }
 
         lastScreenHeight = Screen.height;
@@ -78,7 +78,6 @@ public class LogInHandler : MonoBehaviour
     {
         if (TouchScreenKeyboard.visible && !keyboardVisible)
         {
-            Debug.Log("TouchScreenKeyboard is visible, checking visibility...");
             OnKeyboardShow();
         }
         else if (!TouchScreenKeyboard.visible && keyboardVisible)
@@ -139,14 +138,11 @@ public class LogInHandler : MonoBehaviour
         {
             uiRoot.offsetMin = new Vector2(uiRoot.offsetMin.x, uiRoot.offsetMin.y + keyboardHeight * keyboardOffsetMultiplier);
             uiRoot.offsetMax = new Vector2(uiRoot.offsetMax.x, uiRoot.offsetMax.y + keyboardHeight * keyboardOffsetMultiplier);
-            Debug.Log($"Using offset mode. New offsetMin: {uiRoot.offsetMin}, offsetMax: {uiRoot.offsetMax}");
             return;
         }
 
-        Debug.Log($"Moving from {uiRoot.anchoredPosition} to {newPosition}");
         StartCoroutine(MoveUISmooth(uiRoot.anchoredPosition, newPosition, 0.3f));
 
-        Debug.Log($"Keyboard shown, moving UI up by {keyboardHeight * keyboardOffsetMultiplier}");
     }
 
     private void OnKeyboardHide()
@@ -159,21 +155,16 @@ public class LogInHandler : MonoBehaviour
         {
             uiRoot.offsetMin = new Vector2(uiRoot.offsetMin.x, uiRoot.offsetMin.y - GetKeyboardHeight() * keyboardOffsetMultiplier);
             uiRoot.offsetMax = new Vector2(uiRoot.offsetMax.x, uiRoot.offsetMax.y - GetKeyboardHeight() * keyboardOffsetMultiplier);
-            Debug.Log($"Restoring offset mode. New offsetMin: {uiRoot.offsetMin}, offsetMax: {uiRoot.offsetMax}");
             return;
         }
 
-        Debug.Log($"Restoring to original position: {originalUIPosition}");
         StartCoroutine(MoveUISmooth(uiRoot.anchoredPosition, originalUIPosition, 0.3f));
-
-        Debug.Log("Keyboard hidden, restoring UI position");
     }
 
     private float GetKeyboardHeight()
     {
         if (TouchScreenKeyboard.area.height > 0)
         {
-            Debug.Log($"Keyboard area height: {TouchScreenKeyboard.area.height}");
             return TouchScreenKeyboard.area.height;
         }
 
@@ -194,7 +185,6 @@ public class LogInHandler : MonoBehaviour
     private IEnumerator MoveUISmooth(Vector2 from, Vector2 to, float duration)
     {
         float elapsed = 0f;
-        Debug.Log($"Starting smooth move from {from} to {to}");
 
         while (elapsed < duration)
         {
@@ -210,7 +200,6 @@ public class LogInHandler : MonoBehaviour
         }
 
         uiRoot.anchoredPosition = to;
-        Debug.Log($"Move completed. Final position: {uiRoot.anchoredPosition}");
     }
 
     public async void Button_StartConnection()
@@ -219,17 +208,21 @@ public class LogInHandler : MonoBehaviour
         string port = portInputField.text;
         PlayerPrefs.SetString(ipPrefKey, ip);
         PlayerPrefs.SetString(portPrefKey, port);
+
+        errorText.gameObject.SetActive(true);
+        errorText.text = i18nManager.Instance.Translate("menu_login_connecting");
+
         bool isConnected = await AppLifeTimeManager.Instance.GetWebSocket().Send_ConnectionPetition(ip, port);
+
         if (isConnected)
         {
-            Debug.Log("Connection successful!");
             AppLifeTimeManager.Instance.ToSelectGamepad();
         }
         else
         {
-            helpText.text = "Failed to connect. Please check your IP and port.";
+            errorText.gameObject.SetActive(true);
+            errorText.text = i18nManager.Instance.Translate("menu_login_error");
         }
-        Debug.Log("End of function!");
     }
 
     public void Button_StartPlayDualShock4()
@@ -285,6 +278,7 @@ public class LogInHandler : MonoBehaviour
                 loginPanel.SetActive(false);
                 selectGamepadPanel.SetActive(true);
                 helpText.text = i18nManager.Instance.Translate("menu_select_gamepad_help");
+                errorText.gameObject.SetActive(false);
 
                 if (keyboardVisible)
                 {

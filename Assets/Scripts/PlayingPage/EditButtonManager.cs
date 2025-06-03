@@ -319,6 +319,7 @@ public class EditButtonManager : MonoBehaviour
             GameObject background = new GameObject("Background");
             background.transform.SetParent(toggleObj.transform, false);
             Image backgroundImage = background.AddComponent<Image>();
+            backgroundImage.sprite = Resources.Load<Sprite>("Dark UI/Free/32");
             backgroundImage.color = Color.white;
 
             GameObject checkmark = new GameObject("Checkmark");
