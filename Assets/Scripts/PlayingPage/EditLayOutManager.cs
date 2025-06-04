@@ -177,6 +177,8 @@ public class EditLayOutManager : MonoBehaviour
                 );
             }
 
+            // Save configuration after updating
+            AppLifeTimeManager.Instance.SaveGamepadConfig();
             this.gameObject.SetActive(false);
         }
         else if (gamepadType == GamepadType.GAMEPAD_DUALSHOCK)
@@ -203,9 +205,10 @@ public class EditLayOutManager : MonoBehaviour
                 );
             }
 
-            //this.gameObject.SetActive(false);
+            // Save configuration after updating
+            AppLifeTimeManager.Instance.SaveGamepadConfig();
+            this.gameObject.SetActive(false);
         }
-        // Optionally, you can provide feedback to the user that the layout has been saved
     }
 
     public void Button_CancelEdit()

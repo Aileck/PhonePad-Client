@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class AppLifeTimeManager : MonoBehaviour
 {
@@ -49,6 +50,10 @@ public class AppLifeTimeManager : MonoBehaviour
     [SerializeField] GamepadType sessionGamepad = GamepadType.GAMEPAD_XBOX360;
     [SerializeField] int sessionConfigProfileIndex = 0;
 
+    private const string CONFIG_FILENAME = "gamepad_config.json";
+    [SerializeField] private GamepadConfig gamepadConfig;
+    [SerializeField] private bool deleteConfigOnStart = false;
+
     void Awake()
     {
         if (_instance == null)
@@ -81,6 +86,84 @@ public class AppLifeTimeManager : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         webSocketConnector = gameObject.GetComponent<WebSocketConnector>();
+
+        // Check if we should delete the config file
+        if (deleteConfigOnStart)
+        {
+            DeleteGamepadConfig();
+        }
+
+        // Load gamepad configuration
+        LoadGamepadConfig();
+    }
+
+    private string GetConfigPath()
+    {
+        return Path.Combine(Application.persistentDataPath, CONFIG_FILENAME);
+    }
+
+    private void LoadGamepadConfig()
+    {
+        if (gamepadConfig == null)
+        {
+            Debug.LogError("GamepadConfig reference not set in AppLifeTimeManager!");
+            return;
+        }
+
+        string configPath = GetConfigPath();
+        if (File.Exists(configPath))
+        {
+            try
+            {
+                gamepadConfig.LoadFromJson(configPath);
+                Debug.Log("Loaded gamepad configuration from: " + configPath);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to load gamepad configuration: {e.Message}");
+            }
+        }
+        else
+        {
+            Debug.Log("No existing gamepad configuration found. Using defaults.");
+        }
+    }
+
+    public void SaveGamepadConfig()
+    {
+        if (gamepadConfig == null)
+        {
+            Debug.LogError("GamepadConfig reference not set in AppLifeTimeManager!");
+            return;
+        }
+
+        try
+        {
+            string configPath = GetConfigPath();
+            gamepadConfig.SaveToJson(configPath);
+            Debug.Log("Saved gamepad configuration to: " + configPath);
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to save gamepad configuration: {e.Message}");
+        }
+    }
+
+    private void DeleteGamepadConfig()
+    {
+        string configPath = GetConfigPath();
+        if (File.Exists(configPath))
+        {
+            try
+            {
+                File.Delete(configPath);
+                Debug.Log("Deleted existing gamepad configuration file: " + configPath);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to delete gamepad configuration file: {e.Message}");
+            }
+        }
     }
 
     public AppState GetCurrentState()

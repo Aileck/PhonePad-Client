@@ -337,9 +337,9 @@ public class EditButtonManager : MonoBehaviour
                     onValueChanged(value);
                     if (gamepadConfig != null)
                     {
-#if UNITY_EDITOR
+                        #if UNITY_EDITOR
                         UnityEditor.EditorUtility.SetDirty(gamepadConfig);
-#endif
+                        #endif
                     }
                 });
             }
@@ -381,5 +381,10 @@ public class EditButtonManager : MonoBehaviour
 
         tablePanel = null;
         scrollViewRect = null;
+    }
+
+    public void Button_Save()
+    {
+        AppLifeTimeManager.Instance.SaveGamepadConfig();
     }
 }

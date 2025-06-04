@@ -6315,9 +6315,25 @@ PrefabInstance:
       value: Save
       objectReference: {fileID: 0}
     - target: {fileID: 4238248145866287202, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4238248145866287202, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1694617292}
+      objectReference: {fileID: 1801005666}
+    - target: {fileID: 4238248145866287202, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Button_SaveLayout
+      objectReference: {fileID: 0}
+    - target: {fileID: 4238248145866287202, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: EditButtonManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4238248145866287202, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4267373826673659877, guid: d023c67036c510544913fca8fa24e4cf, type: 3}
       propertyPath: m_text
       value: play_save

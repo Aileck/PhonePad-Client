@@ -1,6 +1,8 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using Newtonsoft.Json;
 
 [CreateAssetMenu(fileName = "GamepadConfig", menuName = "Scriptable Objects/GamepadConfig")]
 public class GamepadConfig : ScriptableObject
@@ -94,6 +96,168 @@ public class GamepadConfig : ScriptableObject
     private void OnValidate()
     {
         RefreshAllProfileIcons();
+    }
+
+    public void SaveToJson(string filePath)
+    {
+        var configData = new GamepadConfigData();
+        
+        // Convert Xbox profiles
+        foreach (var profile in xboxProfiles)
+        {
+            var profileData = new XboxProfileData();
+            ConvertProfileToData(profile, profileData);
+            configData.xboxProfiles.Add(profileData);
+        }
+
+        // Convert DualShock profiles
+        foreach (var profile in dualShockProfiles)
+        {
+            var profileData = new DualShockProfileData();
+            ConvertProfileToData(profile, profileData);
+            configData.dualShockProfiles.Add(profileData);
+        }
+
+        string jsonString = JsonConvert.SerializeObject(configData, Formatting.Indented);
+        File.WriteAllText(filePath, jsonString);
+    }
+
+    public void LoadFromJson(string filePath)
+    {
+        if (!File.Exists(filePath))
+        {
+            Debug.LogError($"Config file not found at {filePath}");
+            return;
+        }
+
+        string jsonString = File.ReadAllText(filePath);
+        var configData = JsonConvert.DeserializeObject<GamepadConfigData>(jsonString);
+
+        // Clear existing profiles
+        xboxProfiles.Clear();
+        dualShockProfiles.Clear();
+
+        // Load Xbox profiles
+        foreach (var profileData in configData.xboxProfiles)
+        {
+            var profile = new XboxProfile();
+            ConvertDataToProfile(profileData, profile);
+            xboxProfiles.Add(profile);
+        }
+
+        // Load DualShock profiles
+        foreach (var profileData in configData.dualShockProfiles)
+        {
+            var profile = new DualShockProfile();
+            ConvertDataToProfile(profileData, profile);
+            dualShockProfiles.Add(profile);
+        }
+
+        RefreshAllProfileIcons();
+    }
+
+    private void ConvertProfileToData(Profile profile, ProfileData data)
+    {
+        data.buttonPressTransformScale = profile.buttonPressTransformScale;
+        data.syncVirtualInputWithGamepad = profile.syncVirtualInputWithGamepad;
+        data.ignorePhysicalGamepad = profile.ignorePhysicalGamepad;
+
+        data.buttonEast = ConvertButtonToData(profile.buttonEast);
+        data.buttonSouth = ConvertButtonToData(profile.buttonSouth);
+        data.buttonWest = ConvertButtonToData(profile.buttonWest);
+        data.buttonNorth = ConvertButtonToData(profile.buttonNorth);
+        data.leftShoulder = ConvertButtonToData(profile.leftShoulder);
+        data.rightShoulder = ConvertButtonToData(profile.rightShoulder);
+        data.leftTrigger = ConvertButtonToData(profile.leftTrigger);
+        data.rightTrigger = ConvertButtonToData(profile.rightTrigger);
+        data.leftStickButton = ConvertButtonToData(profile.leftStickButton);
+        data.rightStickButton = ConvertButtonToData(profile.rightStickButton);
+        data.dPad = ConvertButtonToData(profile.dPad);
+        data.leftStick = ConvertButtonToData(profile.leftStick);
+        data.rightStick = ConvertButtonToData(profile.rightStick);
+    }
+
+    private void ConvertDataToProfile(ProfileData data, Profile profile)
+    {
+        profile.buttonPressTransformScale = data.buttonPressTransformScale;
+        profile.syncVirtualInputWithGamepad = data.syncVirtualInputWithGamepad;
+        profile.ignorePhysicalGamepad = data.ignorePhysicalGamepad;
+
+        profile.InitializeButtonProfiles();
+
+        ConvertDataToButton(data.buttonEast, profile.buttonEast);
+        ConvertDataToButton(data.buttonSouth, profile.buttonSouth);
+        ConvertDataToButton(data.buttonWest, profile.buttonWest);
+        ConvertDataToButton(data.buttonNorth, profile.buttonNorth);
+        ConvertDataToButton(data.leftShoulder, profile.leftShoulder);
+        ConvertDataToButton(data.rightShoulder, profile.rightShoulder);
+        ConvertDataToButton(data.leftTrigger, profile.leftTrigger);
+        ConvertDataToButton(data.rightTrigger, profile.rightTrigger);
+        ConvertDataToButton(data.leftStickButton, profile.leftStickButton);
+        ConvertDataToButton(data.rightStickButton, profile.rightStickButton);
+        ConvertDataToButton(data.dPad, profile.dPad);
+        ConvertDataToButton(data.leftStick, profile.leftStick);
+        ConvertDataToButton(data.rightStick, profile.rightStick);
+    }
+
+    private ButtonProfileData ConvertButtonToData(ButtonProfile button)
+    {
+        if (button == null) return null;
+
+        string iconPath = null;
+        string backgroundPath = null;
+
+#if UNITY_EDITOR
+        iconPath = button.iconImage != null ? UnityEditor.AssetDatabase.GetAssetPath(button.iconImage) : null;
+        backgroundPath = button.backgoundImage != null ? UnityEditor.AssetDatabase.GetAssetPath(button.backgoundImage) : null;
+#else
+        // In runtime, we assume all sprites are in Resources folder
+        iconPath = button.iconImage != null ? $"Assets/Resources/{button.iconImage.name}" : null;
+        backgroundPath = button.backgoundImage != null ? $"Assets/Resources/{button.backgoundImage.name}" : null;
+#endif
+
+        return new ButtonProfileData
+        {
+            name = button.name,
+            position = button.position,
+            scale = button.scale,
+            iconImagePath = iconPath,
+            backgroundImagePath = backgroundPath,
+            isVisible = button.isVisible,
+            pressToActivate = button.pressToActivate,
+            toggle = button.toggle
+        };
+    }
+
+    private void ConvertDataToButton(ButtonProfileData data, ButtonProfile button)
+    {
+        if (data == null || button == null) return;
+
+        button.name = data.name;
+        button.position = data.position;
+        button.scale = data.scale;
+        
+#if UNITY_EDITOR
+        button.iconImage = !string.IsNullOrEmpty(data.iconImagePath) ? 
+            UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(data.iconImagePath) : null;
+        button.backgoundImage = !string.IsNullOrEmpty(data.backgroundImagePath) ? 
+            UnityEditor.AssetDatabase.LoadAssetAtPath<Sprite>(data.backgroundImagePath) : null;
+#else
+        button.iconImage = !string.IsNullOrEmpty(data.iconImagePath) ? 
+            LoadSpriteFromResources(data.iconImagePath) : null;
+        button.backgoundImage = !string.IsNullOrEmpty(data.backgroundImagePath) ? 
+            LoadSpriteFromResources(data.backgroundImagePath) : null;
+#endif
+        button.isVisible = data.isVisible;
+        button.pressToActivate = data.pressToActivate;
+        button.toggle = data.toggle;
+    }
+
+    private Sprite LoadSpriteFromResources(string path)
+    {
+        // Remove "Assets/Resources/" from the path and the file extension
+        string resourcePath = path.Replace("Assets/Resources/", "").Replace(".png", "").Replace(".jpg", "");
+        return Resources.Load<Sprite>(resourcePath);
     }
 
     [Serializable]
@@ -193,7 +357,7 @@ public class GamepadConfig : ScriptableObject
         public ButtonProfile leftStick;
         public ButtonProfile rightStick;
 
-        protected void InitializeButtonProfiles()
+        public void InitializeButtonProfiles()
         {
             buttonEast = buttonEast ?? new ButtonProfile();
             buttonSouth = buttonSouth ?? new ButtonProfile();
