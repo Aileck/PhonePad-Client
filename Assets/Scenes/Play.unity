@@ -3288,6 +3288,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 5339502764859605865, guid: 4e33263516506ad438ac3ad4b9717277, type: 3}
+      propertyPath: gamepadConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 9f3a3ce90b613de4bb7ce1f1962b6e4c, type: 2}
+    - target: {fileID: 5339502764859605865, guid: 4e33263516506ad438ac3ad4b9717277, type: 3}
       propertyPath: sessionGamepad
       value: 1
       objectReference: {fileID: 0}

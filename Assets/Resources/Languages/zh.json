@@ -6,6 +6,10 @@
     "menu_login_help": "打开 Phone2Pad 电脑版，扫描屏幕上的二维码或手动输入IP和端口。确保您连接到同一网络！",
     "menu_login_connecting": "连接中...请稍候。",
     "menu_login_error": "连接错误。检查输入并确保两个设备连接到同一网络。",
+    "menu_login_max_conn": "达到最大连接数。请检查最大连接数限制。",
+    "menu_login_timeout": "连接超时。确保两个设备连接到同一网络。",
+    "menu_login_unknown": "未知错误。请重试。",
+    "menu_login_no_camera": "未检测到相机或相机权限被拒绝。",
     "menu_connect_button": "连接",
 
     "menu_select_gamepad_help": "选择您喜欢的按键风格和布局。您可以稍后自定义布局。",

@@ -21,13 +21,6 @@ public class WebSocketConnector : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        // Get the saved IP address from PlayerPrefs
-        //string savedIP = PlayerPrefs.GetString(ipPrefKey, "192.168.1.100");
-
-        //inputField.text = savedIP;
-
-        // The ping coroutine is not neccesary for now
-        //StartPingCoroutine();
     }
 
     // Update is called once per frame
@@ -49,8 +42,10 @@ public class WebSocketConnector : MonoBehaviour
         }
     }
 
-    public async Task<bool> Send_ConnectionPetition(string ip, string port)
+    public async Task<PetitionStatus> Send_ConnectionPetition(string ip, string port)
     {
+        PetitionStatus status = new PetitionStatus();
+
         string wsUrl = "ws://" + ip + ":" + port;
         websocket = new WebSocket(wsUrl);
 
@@ -72,6 +67,7 @@ public class WebSocketConnector : MonoBehaviour
 
             Debug.Log("Connection open!");
             connectionTcs.SetResult(true); 
+            status.message = PetitionStatusMessagge.OK;
         };
 
         websocket.OnError += (e) =>
@@ -96,7 +92,17 @@ public class WebSocketConnector : MonoBehaviour
 
             if (response.action.Equals("handshake_ack"))
             {
-                Debug.Log("Connected! ");
+                if (response.status.Equals(PayloadType.E_MAX_CONN))
+                {
+                    status.success = false;
+                    status.message = PetitionStatusMessagge.MAX_CONNECTION;
+                }
+                else
+                {
+                    connectionTcs.SetResult(true);
+                    status.message = PetitionStatusMessagge.OK;
+                }
+
             }
             else if (response.action.Equals("register_ack"))
             {
@@ -138,11 +144,15 @@ public class WebSocketConnector : MonoBehaviour
 
         if (completedTask == timeoutTask)
         {
-            Debug.Log("Connection timeout!");
-            return false;
+            status.success = false;
+            status.message = PetitionStatusMessagge.TIME_OUT;
+
+            return status;
         }
 
-        return connectionTcs.Task.Result;
+        status.success = connectionTcs.Task.Result;
+
+        return status;
     }
 
     public void Send_RegisterGamepad(GamepadType type)

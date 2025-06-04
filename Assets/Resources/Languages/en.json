@@ -6,7 +6,13 @@
     "menu_login_help": "Open the Phone2Pad window, scan the QR code on the screen or manually enter the IP and Port. Make sure you are connected to the same network!",
     "menu_login_connecting": "Connecting...Please wait.",
     "menu_login_error": "Connection error. Check input and same they are connected to the same network.",
+    "menu_login_max_conn": "Maximum number of connections reached. Please check the maximum connections allowed.",
+    "menu_login_timeout": "Connection timeout. Ensure both devices are connected to the network.",
+    "menu_login_unknown": "Unknown error. Please try again.",
+    "menu_login_no_camera": "No camera detected or camera permission denied.",
+
     "menu_connect_button": "Connect",
+
 
     "menu_select_gamepad_help": "Choose your preferred key style and layout. You can customize layout later.",
     "menu_default_option": "Default distribution",

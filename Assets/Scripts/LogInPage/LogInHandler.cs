@@ -27,7 +27,7 @@ public class LogInHandler : MonoBehaviour
     void Start()
     {
         string savedIP = PlayerPrefs.GetString(ipPrefKey, "192.168.1.100");
-        string savedPort = PlayerPrefs.GetString(portPrefKey, "8080");
+        string savedPort = PlayerPrefs.GetString(portPrefKey, "60001");
         ipInputField.text = savedIP;
         portInputField.text = savedPort;
 
@@ -212,16 +212,28 @@ public class LogInHandler : MonoBehaviour
         errorText.gameObject.SetActive(true);
         errorText.text = i18nManager.Instance.Translate("menu_login_connecting");
 
-        bool isConnected = await AppLifeTimeManager.Instance.GetWebSocket().Send_ConnectionPetition(ip, port);
+        PetitionStatus isConnected = await AppLifeTimeManager.Instance.GetWebSocket().Send_ConnectionPetition(ip, port);
 
-        if (isConnected)
+        if (isConnected.success)
         {
             AppLifeTimeManager.Instance.ToSelectGamepad();
         }
         else
         {
             errorText.gameObject.SetActive(true);
-            errorText.text = i18nManager.Instance.Translate("menu_login_error");
+
+            if (isConnected.message == PetitionStatusMessagge.TIME_OUT)
+            {
+                errorText.text = i18nManager.Instance.Translate("menu_login_timeout");
+            }
+            else if (isConnected.message == PetitionStatusMessagge.MAX_CONNECTION)
+            {
+                errorText.text = i18nManager.Instance.Translate("menu_login_max_connections");
+            }
+            else
+            {
+                errorText.text = i18nManager.Instance.Translate("menu_login_error");
+            }
         }
     }
 

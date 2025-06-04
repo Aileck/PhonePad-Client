@@ -491,7 +491,7 @@ MonoBehaviour:
   m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_CustomCaretColor: 0
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
-  m_Text: 
+  m_Text: 60001
   m_CaretBlinkRate: 0.85
   m_CaretWidth: 1
   m_ReadOnly: 0
@@ -3297,7 +3297,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u200B"
+  m_text: "60001\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0ac6ef77ef3e706448bf12b51c8ead0d, type: 2}
   m_sharedMaterial: {fileID: -3226135097889047410, guid: 0ac6ef77ef3e706448bf12b51c8ead0d, type: 2}
@@ -8306,6 +8306,9 @@ MonoBehaviour:
   cameraPanel: {fileID: 2086442858}
   cameraDisplay: {fileID: 601244633}
   errorText: {fileID: 1198115122}
+  ipInputField: {fileID: 1317101077}
+  portInputField: {fileID: 93444020}
+  handler: {fileID: 1985918050}
 --- !u!4 &1561975621
 Transform:
   m_ObjectHideFlags: 0
@@ -9660,7 +9663,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1859942656}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
@@ -9673,7 +9676,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 8000
+  m_text: 60001
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0ac6ef77ef3e706448bf12b51c8ead0d, type: 2}
   m_sharedMaterial: {fileID: -3226135097889047410, guid: 0ac6ef77ef3e706448bf12b51c8ead0d, type: 2}
@@ -11280,6 +11283,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5339502764859605865, guid: 4e33263516506ad438ac3ad4b9717277, type: 3}
+      propertyPath: gamepadConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: 9f3a3ce90b613de4bb7ce1f1962b6e4c, type: 2}
     - target: {fileID: 5339502764859605865, guid: 4e33263516506ad438ac3ad4b9717277, type: 3}
       propertyPath: webSocketConnector
       value: 

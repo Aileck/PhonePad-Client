@@ -6,6 +6,10 @@
     "menu_login_help": "Abra la ventana de Phone2Pad, escanee el código QR en la pantalla o ingrese manualmente la IP y el Puerto. Asegúrese de que esté conectado a la misma red!",
     "menu_login_connecting": "Conectando...Espere por favor.",
     "menu_login_error": "Error de conexión. Verifique la entrada y asegúrese de que ambos estén conectados a la misma red.",
+    "menu_login_max_conn": "Se ha alcanzado el máximo número de conexiones. Por favor, compruebe el máximo número de conexiones permitidas.",
+    "menu_login_timeout": "Tiempo de espera agotado. Asegúrese de que ambos dispositivos estén conectados a la red.",
+    "menu_login_unknown": "Error desconocido. Por favor, inténtelo de nuevo.",
+    "menu_login_no_camera": "No se ha detectado una cámara o se ha denegado el permiso de cámara.",
     "menu_connect_button": "Conectar",
 
     "menu_select_gamepad_help": "Elige tu estilo de tecla preferido y layout. Puedes personalizar el layout más tarde.",

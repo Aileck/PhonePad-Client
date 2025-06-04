@@ -18,6 +18,11 @@ public class QRScanner : MonoBehaviour
     public RawImage cameraDisplay;
     public TMP_Text errorText;
 
+    [SerializeField] private TMP_InputField ipInputField;
+    [SerializeField] private TMP_InputField portInputField;
+
+    public LogInHandler handler;
+
     private WebCamTexture webcamTexture;
     private IBarcodeReader barcodeReader = new BarcodeReader();
     private bool isScanning = false;
@@ -41,7 +46,9 @@ public class QRScanner : MonoBehaviour
                     TryParseServerInfo(result, out ServerInfo info);
                     if (info != null)
                     {
-                        TryConnect(info.port, info.ip);
+                        ipInputField.text = info.ip;
+                        portInputField.text = info.port;
+                        handler.Button_StartConnection();
                         StopCamera();
                     }
                 }
@@ -181,27 +188,6 @@ public class QRScanner : MonoBehaviour
         catch (System.Exception ex)
         {
             Debug.LogError("Failed to parse JSON: " + ex.Message);
-        }
-    }
-
-    private async void TryConnect(string port, string ip)
-    {
-        errorText.gameObject.SetActive(true);
-        errorText.text = i18nManager.Instance.Translate("menu_login_connecting");
-
-        bool isConnected = await AppLifeTimeManager.Instance.GetWebSocket().Send_ConnectionPetition(ip, port);
-
-        if (isConnected)
-        {
-            cameraDisplay.gameObject.SetActive(false);
-            AppLifeTimeManager.Instance.ToSelectGamepad();
-            errorText.gameObject.SetActive(false);
-
-        }
-        else
-        {
-            errorText.gameObject.SetActive(true);
-            errorText.text = i18nManager.Instance.Translate("menu_login_error");
         }
     }
 
