@@ -12,6 +12,7 @@ public class LogInHandler : MonoBehaviour
     [SerializeField] private TMP_Text errorText;
     [SerializeField] private TMP_InputField ipInputField;
     [SerializeField] private TMP_InputField portInputField;
+    [SerializeField] private ProfileSelector selector;
 
     // Keyboard
     [SerializeField] private RectTransform uiRoot;
@@ -241,6 +242,7 @@ public class LogInHandler : MonoBehaviour
     {
         AppLifeTimeManager.Instance.SetSessionGamepad(GamepadType.GAMEPAD_DUALSHOCK);
         AppLifeTimeManager.Instance.GetWebSocket().Send_RegisterGamepad(GamepadType.GAMEPAD_DUALSHOCK);
+        AppLifeTimeManager.Instance.SetSessionConfigProfileIndex(selector.GetCurrentDualShockProfileIndex());
         AppLifeTimeManager.Instance.ToPlaying();
     }
 
@@ -248,6 +250,7 @@ public class LogInHandler : MonoBehaviour
     {
         AppLifeTimeManager.Instance.SetSessionGamepad(GamepadType.GAMEPAD_XBOX360);
         AppLifeTimeManager.Instance.GetWebSocket().Send_RegisterGamepad(GamepadType.GAMEPAD_XBOX360);
+        AppLifeTimeManager.Instance.SetSessionConfigProfileIndex(selector.GetCurrentXboxProfileIndex());
         AppLifeTimeManager.Instance.ToPlaying();
     }
 

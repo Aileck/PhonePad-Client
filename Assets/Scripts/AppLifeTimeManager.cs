@@ -82,7 +82,6 @@ public class AppLifeTimeManager : MonoBehaviour
         currentAppState = AppState.RequestingLogin;
 
         // App configuration
-        Application.targetFrameRate = 120;
         QualitySettings.vSyncCount = 0;
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         webSocketConnector = gameObject.GetComponent<WebSocketConnector>();

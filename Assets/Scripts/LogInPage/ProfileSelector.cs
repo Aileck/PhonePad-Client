@@ -100,13 +100,13 @@ public class ProfileSelector : MonoBehaviour
         }
     }
 
-    private int GetCurrentXboxProfileIndex()
+    public int GetCurrentXboxProfileIndex()
     {
         var selectedOption = xboxProfileSelector.options[xboxProfileSelector.value] as ProfileOptionData;
         return selectedOption?.ProfileIndex ?? HARCODED_DEFAULT_PROFILE;
     }
 
-    private int GetCurrentDualShockProfileIndex()
+    public int GetCurrentDualShockProfileIndex()
     {
         var selectedOption = dualShockProfileSelector.options[dualShockProfileSelector.value] as ProfileOptionData;
         return selectedOption?.ProfileIndex ?? HARCODED_DEFAULT_PROFILE;
