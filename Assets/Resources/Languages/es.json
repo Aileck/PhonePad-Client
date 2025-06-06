@@ -11,6 +11,7 @@
     "menu_login_unknown": "Error desconocido. Por favor, inténtelo de nuevo.",
     "menu_login_no_camera": "No se ha detectado una cámara o se ha denegado el permiso de cámara.",
     "menu_connect_button": "Conectar",
+    "menu_connect_scan": "Escanear código QR",
 
     "menu_select_gamepad_help": "Elige tu estilo de tecla preferido y layout. Puedes personalizar el layout más tarde.",
     "menu_default_option": "Distribución por defecto",
@@ -19,6 +20,18 @@
     "menu_xbox_360_style": "Estilo Xbox 360 ",
     "menu_dualshock4_style": "Estilo DualShock 4",
 
+    "menu_sponsor_copied": "Copiado correctamente",
+
+    "menu_help_main": "Phone2Pad es una aplicación que convierte tu teléfono en un mando para juegos en tu ordenador.<br>Consta de dos partes: la <color=#FFA500>aplicación móvil</color> en tu teléfono y la <color=#FFA500>versión de escritorio de Phone2Pad</color> en tu ordenador. <color=#FFA500>Ambas deben funcionar conjuntamente</color> para permitir toda la funcionalidad.<br>Con Phone2Pad, puedes utilizar <color=#FFA500>botones virtuales</color> en tu teléfono para controlar juegos, o conectar un <color=#FFA500>mando físico</color> y enviar su entrada a tu ordenador. <color=#FFA500>Es compatible con los diseños de mando Xbox 360 y DualShock 4</color>.",
+    "menu_help_disclaimer": "*La mención de nombres como Xbox y DualShock es solo para describir la compatibilidad y no implica ninguna afiliación.",
+    "menu_sponsor_main": "¡Gracias por usar Phone2Pad!<br>Esta aplicación es completamente gratuita, pero su desarrollo y mantenimiento requieren mucho tiempo y esfuerzo.<br>Si te resulta útil, por favor considera <color=#FFA500>apoyarme</color>.<br><br>Mi próximo plan es añadir <color=#FFA500>giroscopio</color> y <color=#FFA500>barras táctiles</color>, soportar <color=#FFA500>botones personalizables</color>, <color=#FFA500>reconocimiento automático de conexión</color> y <color=#FFA500>conectividad Bluetooth</color>, y considerar expandirme a <color=#FFA500>más plataformas</color>.<br><br>Tu opinión es bienvenida, ¡tu aporte me ayudará a <color=#FFA500>seguir mejorando</color>!",
+    "menu_sponsor_support": "Apoyamiento",
+    "menu_sponsor_contact": "Contáctame",
+
+    "menu_help_download": "Descargar en:",
+    "menu_help_itchio": "itch.io",
+    "menu_help_baidu": "Baidu Cloud",
+
     "play_disconnect": "Desconectar",
     "play_edit_layout": "Editar layout",
     "play_edit_button": "Editar botón",
@@ -26,17 +39,12 @@
     "play_button": "Botón",
     "play_is_visible": "Es visible",
 
-    "play_disconnect": "Disconnect",
-    "play_edit_layout": "Edit layout",
-    "play_edit_button": "Edit button",
-
-    "play_button": "Key",
-    "play_is_visible": "Is visible",
-
     "play_save": "Save",
     "play_cancel": "Cancel",
     "play_back": "Back",
 
     "play_swipe_to_trigger": "Swipe to trigger",
-    "play_toggle_to_trigger": "Toggle to trigger"
+    "play_toggle_to_trigger": "Toggle to trigger",
+
+    "fonts": "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzáéíóúüñÁÉÍÓÚÜÑ¡¿"
 }

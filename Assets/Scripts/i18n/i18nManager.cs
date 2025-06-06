@@ -6,6 +6,9 @@ using TMPro;
 
 public class i18nManager : MonoBehaviour
 {
+    private const string simplifiedChineseFontFamily = "Fonts/NotoSansSC-Regular SDF";
+    private const string genericFontFamily = "Fonts/LiberationSerif-Regular SDF";
+
     public static i18nManager Instance { get; private set; }
     [SerializeField] private Language currentLanguage = Language.en;
     private Dictionary<string, string> translations = new Dictionary<string, string>();
@@ -71,18 +74,18 @@ public class i18nManager : MonoBehaviour
 
     public void TranslateAllTextMeshPro()
     {
-        TextMeshProUGUI[] allTexts = FindObjectsOfType<TextMeshProUGUI>(true);
+        TextMeshProUGUI[] allTexts = FindObjectsByType<TextMeshProUGUI>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         foreach (TextMeshProUGUI textComponent in allTexts)
         {
             if (ShouldSkipTranslation(textComponent))
             {
                 if (currentLanguage == Language.zh)
                 {
-                    textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSansSC-Regular SDF");
+                    textComponent.font = Resources.Load<TMP_FontAsset>(simplifiedChineseFontFamily);
                 }
                 else
                 {
-                    textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSerif-Regular SDF");
+                    textComponent.font = Resources.Load<TMP_FontAsset>(genericFontFamily);
                 }
 
                 continue;
@@ -98,11 +101,11 @@ public class i18nManager : MonoBehaviour
 
             if (currentLanguage == Language.zh)
             {
-                textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSansSC-Regular SDF");
+                textComponent.font = Resources.Load<TMP_FontAsset>(simplifiedChineseFontFamily);
             }
             else
             {
-                textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSerif-Regular SDF");
+                textComponent.font = Resources.Load<TMP_FontAsset>(genericFontFamily);
             }
         }
 
@@ -179,11 +182,11 @@ public class i18nManager : MonoBehaviour
 
             if (currentLanguage == Language.zh)
             {
-                textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSansSC-Regular SDF");
+                textComponent.font = Resources.Load<TMP_FontAsset>(simplifiedChineseFontFamily);
             }
             else
             {
-                textComponent.font = Resources.Load<TMP_FontAsset>("Fonts/NotoSerif-Regular SDF");
+                textComponent.font = Resources.Load<TMP_FontAsset>(genericFontFamily);
             }
         }
     }

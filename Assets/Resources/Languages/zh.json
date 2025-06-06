@@ -11,10 +11,24 @@
     "menu_login_unknown": "未知错误。请重试。",
     "menu_login_no_camera": "未检测到相机或相机权限被拒绝。",
     "menu_connect_button": "连接",
+    "menu_connect_scan": "扫描二维码",
+
+    "menu_help_main": "Phone2Pad 是一款可以将你的手机变成电脑游戏手柄的应用程序。<br><color=#FFA500>它由两个部分组成</color>：手机上的<color=#FFA500>移动应用</color>和电脑上的<color=#FFA500>Phone2Pad 桌面版</color>。<color=#FFA500>两者需要协同工作</color>才能实现完整功能。<br>通过 Phone2Pad，你可以使用手机上的<color=#FFA500>虚拟按钮</color>控制游戏，或连接<color=#FFA500>实体手柄</color>将输入发送至电脑。<color=#FFA500>支持 Xbox 360 和 DualShock 4 控制器布局</color>。",
+    "menu_help_disclaimer": "*提及 Xbox、DualShock 等名称仅为描述兼容性用途，不代表任何隶属关系。",
+
+    "menu_help_download": "下载方式:",
+    "menu_help_itchio": "itch.io",
+    "menu_help_baidu": "百度云",
 
     "menu_select_gamepad_help": "选择您喜欢的按键风格和布局。您可以稍后自定义布局。",
     "menu_default_option": "默认布局",
     "menu_custom_option": "自定义布局",
+
+    "menu_sponsor_main": "感谢你使用 Phone2Pad！<br>这个应用完全免费，但它的开发和维护需要大量的时间和精力。<br>如果你觉得它对你有帮助，请考虑<color=#FFA500>支持我</color>。<br><br>我接下来的计划包括加入<color=#FFA500>陀螺仪</color>和<color=#FFA500>触控条</color>，支持<color=#FFA500>可自定义按键</color>、<color=#FFA500>自动连接识别</color>与<color=#FFA500>蓝牙连接</color>，并考虑拓展到<color=#FFA500>更多平台</color>。<br><br>欢迎提供反馈，你的建议将帮助我<color=#FFA500>不断改进</color>！",
+    "menu_sponsor_support": "支持",
+    "menu_sponsor_contact": "联系我",
+
+    "menu_sponsor_copied": "复制成功",
 
     "menu_xbox_360_style": "Xbox 360 风格",
     "menu_dualshock4_style": "DualShock 4 风格",
@@ -33,4 +47,5 @@
     "play_swipe_to_trigger": "Swipe to trigger",
     "play_toggle_to_trigger": "Toggle to trigger",
 
+    "fonts": "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzáéíóúüñÁÉÍÓÚÜÑ¡¿"
 }
