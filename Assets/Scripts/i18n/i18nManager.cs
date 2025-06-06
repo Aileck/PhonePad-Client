@@ -190,4 +190,16 @@ public class i18nManager : MonoBehaviour
             }
         }
     }
+
+    public string GetCurrentFont()
+    {
+        if(currentLanguage == Language.zh)
+        {
+            return simplifiedChineseFontFamily;
+        }
+        else
+        {
+            return genericFontFamily;
+        }
+    }
 }

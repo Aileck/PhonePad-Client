@@ -1,7 +1,8 @@
+
 {
     "lang_zh": "中文",
-    "lang_en": "English",
-    "lang_es": "Español",
+    "lang_en": "英语",
+    "lang_es": "西班牙语",
 
     "menu_login_help": "打开 Phone2Pad 电脑版，扫描屏幕上的二维码或手动输入IP和端口。确保您连接到同一网络！",
     "menu_login_connecting": "连接中...请稍候。",
@@ -33,19 +34,19 @@
     "menu_xbox_360_style": "Xbox 360 风格",
     "menu_dualshock4_style": "DualShock 4 风格",
 
-    "play_disconnect": "Disconnect",
-    "play_edit_layout": "Edit layout",
-    "play_edit_button": "Edit button",
+    "play_disconnect": "断开连接",
+    "play_edit_layout": "编辑布局",
+    "play_edit_button": "编辑按键",
 
-    "play_button": "Key",
-    "play_is_visible": "Is visible",
+    "play_button": "按键",
+    "play_is_visible": "是否可见",
 
-    "play_save": "Save",
-    "play_cancel": "Cancel",
-    "play_back": "Back",
+    "play_save": "保存",
+    "play_cancel": "取消",
+    "play_back": "返回",
 
-    "play_swipe_to_trigger": "Swipe to trigger",
-    "play_toggle_to_trigger": "Toggle to trigger",
+    "play_swipe_to_trigger": "滑动触发",
+    "play_toggle_to_trigger": "开关触发",
 
     "fonts": "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzáéíóúüñÁÉÍÓÚÜÑ¡¿"
 }

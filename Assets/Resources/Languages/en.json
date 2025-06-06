@@ -2,49 +2,50 @@
     "lang_zh": "Chinese",
     "lang_en": "English",
     "lang_es": "Spanish",
-
-    "menu_login_help": "Open the Phone2Pad window, scan the QR code on the screen or manually enter the IP and Port. Make sure you are connected to the same network!",
-    "menu_login_connecting": "Connecting...Please wait.",
-    "menu_login_error": "Connection error. Check input and same they are connected to the same network.",
-    "menu_login_max_conn": "Maximum number of connections reached. Please check the maximum connections allowed.",
-    "menu_login_timeout": "Connection timeout. Ensure both devices are connected to the network.",
+  
+    "menu_login_help": "Open the Phone2Pad desktop version, scan the QR code on the screen or manually enter the IP and port. Make sure you are connected to the same network!",
+    "menu_login_connecting": "Connecting... Please wait.",
+    "menu_login_error": "Connection error. Check the input and ensure both devices are on the same network.",
+    "menu_login_max_conn": "Maximum number of connections reached. Please check the connection limit.",
+    "menu_login_timeout": "Connection timed out. Ensure both devices are on the same network.",
     "menu_login_unknown": "Unknown error. Please try again.",
     "menu_login_no_camera": "No camera detected or camera permission denied.",
-
     "menu_connect_button": "Connect",
-    "menu_connect_scan": "Scan QR code",
-    
-    "menu_help_main": "Phone2Pad is an app that turns your phone into a game controller for your computer.<br><color=#FFA500>It consists of two parts</color>: the <color=#FFA500>mobile app</color> on your phone and the <color=#FFA500>Phone2Pad desktop version</color> on your computer. <color=#FFA500>Both need to work together</color> to enable full functionality.<br>With Phone2Pad, you can use <color=#FFA500>virtual buttons</color> on your phone to control games, or connect a <color=#FFA500>physical gamepad</color> and send its input to your computer. <color=#FFA500>It supports Xbox 360 and DualShock 4 controller layouts</color>.",
-    "menu_help_disclaimer": "*Mention of names such as Xbox and DualShock is for compatibility description only and does not imply any affiliation.",
-
-    "menu_help_download": "Download on:",
+    "menu_connect_scan": "Scan QR Code",
+  
+    "menu_help_main": "Phone2Pad is an app that turns your phone into a PC game controller.<br><color=#FFA500>It consists of two parts</color>: the <color=#FFA500>mobile app</color> on your phone and the <color=#FFA500>Phone2Pad desktop version</color> on your PC. <color=#FFA500>Both must work together</color> for full functionality.<br>With Phone2Pad, you can use <color=#FFA500>virtual buttons</color> on your phone to control games or connect a <color=#FFA500>physical gamepad</color> to send input to your PC. <color=#FFA500>Supports Xbox 360 and DualShock 4 layouts</color>.",
+    "menu_help_disclaimer": "*Mentions of Xbox, DualShock, etc. are only for compatibility description purposes and do not imply any affiliation.",
+  
+    "menu_help_download": "Download methods:",
     "menu_help_itchio": "itch.io",
     "menu_help_baidu": "Baidu Cloud",
-
-    "menu_sponsor_main": "Thank you for using Phone2Pad!<br>This app is completely free, but its development and maintenance require significant time and effort.<br>If you find it helpful, please consider <color=#FFA500>supporting me</color>.<br><br>My next plan is to add <color=#FFA500>gyro</color> and <color=#FFA500>touchbars</color>, support <color=#FFA500>customizable buttons</color>, <color=#FFA500>automatic connection recognition</color> and <color=#FFA500>Bluetooth connectivity</color>, and consider expanding to <color=#FFA500>more platforms</color>.<br><br>Your feedback is welcome, your input will help me <color=#FFA500>keep improving</color>!",
+  
+    "menu_select_gamepad_help": "Choose your preferred button style and layout. You can customize the layout later.",
+    "menu_default_option": "Default layout",
+    "menu_custom_option": "Custom layout",
+  
+    "menu_sponsor_main": "Thank you for using Phone2Pad!<br>This app is completely free, but development and maintenance require a lot of time and effort.<br>If you find it helpful, please consider <color=#FFA500>supporting me</color>.<br><br>My future plans include adding <color=#FFA500>gyroscope</color> and <color=#FFA500>touchpad</color> support, <color=#FFA500>customizable buttons</color>, <color=#FFA500>auto connection detection</color>, and <color=#FFA500>Bluetooth support</color>, and potentially expanding to <color=#FFA500>more platforms</color>.<br><br>Your feedback is welcome and helps me <color=#FFA500>keep improving</color>!",
     "menu_sponsor_support": "Support",
-    "menu_sponsor_contact": "Contact me",
-
+    "menu_sponsor_contact": "Contact Me",
+  
     "menu_sponsor_copied": "Copied successfully",
-
-    "menu_select_gamepad_help": "Choose your preferred key style and layout. You can customize layout later.",
-    "menu_default_option": "Default distribution",
-    "menu_custom_option": "Custom distribution",
-
-    "menu_xbox_360_style": "Xbox 360 style",
-    "menu_dualshock4_style": "DualShock 4 style",
-
+  
+    "menu_xbox_360_style": "Xbox 360 Style",
+    "menu_dualshock4_style": "DualShock 4 Style",
+  
     "play_disconnect": "Disconnect",
-    "play_edit_layout": "Edit layout",
-    "play_edit_button": "Edit button",
-
-    "play_button": "Key",
-    "play_is_visible": "Is visible",
-
+    "play_edit_layout": "Edit Layout",
+    "play_edit_button": "Edit Button",
+  
+    "play_button": "Button",
+    "play_is_visible": "Is Visible",
+  
     "play_save": "Save",
     "play_cancel": "Cancel",
     "play_back": "Back",
-
+  
     "play_swipe_to_trigger": "Swipe to trigger",
-    "play_toggle_to_trigger": "Toggle to trigger"
-}
+    "play_toggle_to_trigger": "Toggle to trigger",
+  
+    "fonts": "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzáéíóúüñÁÉÍÓÚÜÑ¡¿"
+  }

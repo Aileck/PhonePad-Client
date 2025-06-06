@@ -2,49 +2,50 @@
     "lang_zh": "Chino",
     "lang_en": "Inglés",
     "lang_es": "Español",
-
-    "menu_login_help": "Abra la ventana de Phone2Pad, escanee el código QR en la pantalla o ingrese manualmente la IP y el Puerto. Asegúrese de que esté conectado a la misma red!",
-    "menu_login_connecting": "Conectando...Espere por favor.",
-    "menu_login_error": "Error de conexión. Verifique la entrada y asegúrese de que ambos estén conectados a la misma red.",
-    "menu_login_max_conn": "Se ha alcanzado el máximo número de conexiones. Por favor, compruebe el máximo número de conexiones permitidas.",
-    "menu_login_timeout": "Tiempo de espera agotado. Asegúrese de que ambos dispositivos estén conectados a la red.",
-    "menu_login_unknown": "Error desconocido. Por favor, inténtelo de nuevo.",
-    "menu_login_no_camera": "No se ha detectado una cámara o se ha denegado el permiso de cámara.",
+  
+    "menu_login_help": "Abre la versión de escritorio de Phone2Pad y escanea el código QR en pantalla o introduce manualmente la IP y el puerto. ¡Asegúrate de estar conectado a la misma red!",
+    "menu_login_connecting": "Conectando... Por favor, espera.",
+    "menu_login_error": "Error de conexión. Comprueba los datos introducidos y asegúrate de que ambos dispositivos estén en la misma red.",
+    "menu_login_max_conn": "Se ha alcanzado el número máximo de conexiones. Comprueba el límite de conexiones.",
+    "menu_login_timeout": "Tiempo de conexión agotado. Asegúrate de que ambos dispositivos estén en la misma red.",
+    "menu_login_unknown": "Error desconocido. Inténtalo de nuevo.",
+    "menu_login_no_camera": "No se ha detectado cámara o se ha denegado el permiso de la cámara.",
     "menu_connect_button": "Conectar",
     "menu_connect_scan": "Escanear código QR",
-
-    "menu_select_gamepad_help": "Elige tu estilo de tecla preferido y layout. Puedes personalizar el layout más tarde.",
-    "menu_default_option": "Distribución por defecto",
-    "menu_custom_option": "Distribución personalizada",
-
-    "menu_xbox_360_style": "Estilo Xbox 360 ",
-    "menu_dualshock4_style": "Estilo DualShock 4",
-
-    "menu_sponsor_copied": "Copiado correctamente",
-
-    "menu_help_main": "Phone2Pad es una aplicación que convierte tu teléfono en un mando para juegos en tu ordenador.<br>Consta de dos partes: la <color=#FFA500>aplicación móvil</color> en tu teléfono y la <color=#FFA500>versión de escritorio de Phone2Pad</color> en tu ordenador. <color=#FFA500>Ambas deben funcionar conjuntamente</color> para permitir toda la funcionalidad.<br>Con Phone2Pad, puedes utilizar <color=#FFA500>botones virtuales</color> en tu teléfono para controlar juegos, o conectar un <color=#FFA500>mando físico</color> y enviar su entrada a tu ordenador. <color=#FFA500>Es compatible con los diseños de mando Xbox 360 y DualShock 4</color>.",
-    "menu_help_disclaimer": "*La mención de nombres como Xbox y DualShock es solo para describir la compatibilidad y no implica ninguna afiliación.",
-    "menu_sponsor_main": "¡Gracias por usar Phone2Pad!<br>Esta aplicación es completamente gratuita, pero su desarrollo y mantenimiento requieren mucho tiempo y esfuerzo.<br>Si te resulta útil, por favor considera <color=#FFA500>apoyarme</color>.<br><br>Mi próximo plan es añadir <color=#FFA500>giroscopio</color> y <color=#FFA500>barras táctiles</color>, soportar <color=#FFA500>botones personalizables</color>, <color=#FFA500>reconocimiento automático de conexión</color> y <color=#FFA500>conectividad Bluetooth</color>, y considerar expandirme a <color=#FFA500>más plataformas</color>.<br><br>Tu opinión es bienvenida, ¡tu aporte me ayudará a <color=#FFA500>seguir mejorando</color>!",
-    "menu_sponsor_support": "Apoyamiento",
-    "menu_sponsor_contact": "Contáctame",
-
-    "menu_help_download": "Descargar en:",
+  
+    "menu_help_main": "Phone2Pad es una aplicación que convierte tu móvil en un mando para juegos de PC.<br><color=#FFA500>Consta de dos partes</color>: la <color=#FFA500>aplicación móvil</color> en el teléfono y la <color=#FFA500>versión de escritorio</color> en el ordenador. <color=#FFA500>Ambas deben funcionar conjuntamente</color> para una funcionalidad completa.<br>Con Phone2Pad puedes usar <color=#FFA500>botones virtuales</color> o conectar un <color=#FFA500>mando físico</color> para enviar entradas al PC. <color=#FFA500>Compatible con diseños de mando Xbox 360 y DualShock 4</color>.",
+    "menu_help_disclaimer": "*Las menciones de Xbox, DualShock, etc. son únicamente para describir compatibilidad y no implican ninguna afiliación.",
+  
+    "menu_help_download": "Métodos de descarga:",
     "menu_help_itchio": "itch.io",
     "menu_help_baidu": "Baidu Cloud",
-
+  
+    "menu_select_gamepad_help": "Elige el estilo y diseño de botones que prefieras. Puedes personalizarlo más tarde.",
+    "menu_default_option": "Diseño por defecto",
+    "menu_custom_option": "Diseño personalizado",
+  
+    "menu_sponsor_main": "¡Gracias por usar Phone2Pad!<br>Esta aplicación es completamente gratuita, pero su desarrollo y mantenimiento requieren mucho tiempo y esfuerzo.<br>Si te ha resultado útil, considera <color=#FFA500>apoyarme</color>.<br><br>Mis planes futuros incluyen soporte para <color=#FFA500>giroscopio</color> y <color=#FFA500>panel táctil</color>, <color=#FFA500>botones personalizables</color>, <color=#FFA500>detección automática de conexión</color> y <color=#FFA500>conexión Bluetooth</color>, así como ampliar a <color=#FFA500>más plataformas</color>.<br><br>¡Tu opinión es bienvenida y me ayuda a <color=#FFA500>seguir mejorando</color>!",
+    "menu_sponsor_support": "Apoyo",
+    "menu_sponsor_contact": "Contáctame",
+  
+    "menu_sponsor_copied": "Copiado con éxito",
+  
+    "menu_xbox_360_style": "Estilo Xbox 360",
+    "menu_dualshock4_style": "Estilo DualShock 4",
+  
     "play_disconnect": "Desconectar",
-    "play_edit_layout": "Editar layout",
+    "play_edit_layout": "Editar distribución",
     "play_edit_button": "Editar botón",
-
+  
     "play_button": "Botón",
     "play_is_visible": "Es visible",
-
-    "play_save": "Save",
-    "play_cancel": "Cancel",
-    "play_back": "Back",
-
-    "play_swipe_to_trigger": "Swipe to trigger",
-    "play_toggle_to_trigger": "Toggle to trigger",
-
+  
+    "play_save": "Guardar",
+    "play_cancel": "Cancelar",
+    "play_back": "Volver",
+  
+    "play_swipe_to_trigger": "Deslizar para activar",
+    "play_toggle_to_trigger": "Conmutar para activar",
+  
     "fonts": "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzáéíóúüñÁÉÍÓÚÜÑ¡¿"
-}
+  }

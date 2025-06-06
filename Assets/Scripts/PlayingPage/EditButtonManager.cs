@@ -285,6 +285,7 @@ public class EditButtonManager : MonoBehaviour
             textComponent.alignment = TextAlignmentOptions.Center;
             textComponent.color = Color.black;
             textComponent.text = label;
+            textComponent.font = Resources.Load<TMP_FontAsset>(i18nManager.Instance.GetCurrentFont());
 
             RectTransform textRectTransform = textObj.GetComponent<RectTransform>();
             textRectTransform.anchorMin = Vector2.zero;
